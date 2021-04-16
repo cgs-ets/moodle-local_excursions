@@ -218,6 +218,11 @@
   font-size: 80%;
   margin-top: -17px;
 }
+#page-local-excursions-activity .helpguide {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 #page-local-excursions-activity .status {
   font-size: 30px;
   margin: 0;
@@ -392,6 +397,9 @@
 }
 #page-local-excursions-activity.activity-status-3 .approved-functions {
   display: block;
+}
+#page-local-excursions-activity.activity-status-3 .helpguide {
+  display: none;
 }
 #page-local-excursions-activity .modal-PREVIEWEMAIL .modal-body {
   background: #fcefdc;

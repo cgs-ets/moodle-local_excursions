@@ -25,6 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_excursions';
-$plugin->version = 2021032505;
+$plugin->version = 2021041600;
 $plugin->requires = 2018051703;
 $plugin->maturity = MATURITY_ALPHA;

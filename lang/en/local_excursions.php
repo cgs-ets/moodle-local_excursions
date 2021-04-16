@@ -63,6 +63,7 @@ $string['activityform:notes'] = 'Details <br><small>Summary of event</small>';
 $string['activityform:transport'] = 'Transport <br><small>E.g. walking, bus, taxi, including authorised driver</small>';
 $string['activityform:timestart'] = 'Start time';
 $string['activityform:timeend'] = 'End time';
+$string['helpguide'] = '<a target="_blank" href="https://kb.cgs.act.edu.au/guides/excursion-planning/">Activity Planning KB Guide</a>';
 
 $string['activityform:staffincharge'] = 'Staff member in charge';
 $string['activityform:accompanyingstaff'] = 'Accompanying staff';
