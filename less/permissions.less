@@ -1,0 +1,50 @@
+#page-local-excursions-permissions {
+	.activity-details {
+		margin-bottom: 25px;
+	}
+	.permissions {
+		table {
+			label {
+				margin: 0;
+				margin-right: 15px;
+			}
+			width: auto;
+			td {
+				vertical-align: middle;
+				border: 1px solid #ddd;
+			}
+		}
+		.permission {
+			transition: opacity 0.3s;
+		    .c-responsemessage {
+		    	display: none;
+		    }
+			&.submitting {
+				pointer-events: none;
+				opacity: 0.6;
+			}
+			&[data-status="1"] {
+			    background: #d4edda;
+			    .c-responsemessage {
+			    	display: table-cell;
+			    }
+			}
+			&[data-status="2"] {
+			    background: #f8d7da;
+			    .c-responsemessage {
+			    	display: table-cell;
+			    }
+			}
+		}
+		&.past-due-date, &.past-limit {
+			.permission-yes, .permission-no {
+				background-color: #e9ecef !important;
+			  	-webkit-user-select: none;
+			  	-moz-user-select: none;
+			  	-ms-user-select: none;
+			  	user-select: none !important;
+			  	pointer-events:none !important;
+			}
+		}
+	}
+}

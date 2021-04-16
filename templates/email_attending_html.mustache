@@ -1,0 +1,57 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   local_excursions
+    @copyright 2021 Michael Vangelovski
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_excursions/email_attending_html
+
+    Template for approval email html.
+
+}}
+
+<p>Dear {{studentname}},</p>
+
+<p>{{parentname}} has provided permission and indicated that you will be attending the following activity.</p>
+
+<!-- Details -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <table border="0" cellspacing="0" cellpadding="20">
+                <tr>
+                    <td style="border-radius: 3px;" bgcolor="#f0f4f6">
+                        <div style="font-size: 15px;font-family: Helvetica, Arial, sans-serif;text-decoration: none;border-radius: 3px;display: block;">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                {{#activitydetails}}
+                                    <tr><td>{{{activitydetails}}}</td></tr>
+                                {{/activitydetails}}
+                                {{^activitydetails}}
+                                    {{>local_excursions/email_activity_details_html}}
+                                {{/activitydetails}}
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr> 
+        <td height="20"></td> 
+    </tr>
+</table>

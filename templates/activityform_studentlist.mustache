@@ -1,0 +1,100 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   local_excursions
+    @copyright 2021 Michael Vangelovski
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_excursions/activityform_studentlist
+
+    View for the student list component.
+}}
+<div class="student-list-wrap {{#students.0}}has-students{{/students.0}} {{#permissions}}permissions-enabled{{/permissions}} {{#permissionshelper.issystem}}invitetype-system{{/permissionshelper.issystem}} {{#permissionshelper.ismanual}}invitetype-manual{{/permissionshelper.ismanual}} {{#messagehistory.0}}has-message-history{{/messagehistory.0}}">
+
+    <div class="spinner"><div class="circle spin"></div></div>
+
+    <div class="permissions">
+        <input name="enable-permissions" type="checkbox" data-activityid="{{id}}" {{#permissions}}checked{{/permissions}}>
+        {{#str}}enablepermissions, local_excursions{{/str}}
+        <div class="not-approved-yet"><span>If checked, the ability to notify parents and track responses will be available once the activity is approved.</span></div>
+        {{>local_excursions/activityform_studentlist_permissionsform}}
+    </div>
+
+    <div class="changes-not-saved-message"><div class="alert alert-danger">{{#str}}savechangesrequired, local_excursions{{/str}}</div></div>
+
+    <div class="student-list">
+        <a id="btn-checkall" class="btn" href="#"><i class="fa fa-check-square" aria-hidden="true"></i>
+ {{#str}}activityform:checkall, local_excursions{{/str}}</a>
+        <a id="btn-uncheckall" class="btn" href="#"><i class="fa fa-square-o" aria-hidden="true"></i>
+ {{#str}}activityform:uncheckall, local_excursions{{/str}}</a>
+        <table class="table">    
+            <thead>
+                <tr>
+                    <th class="header c-checkbox" scope="col"></th>
+                    <th class="header c-name" scope="col">Name</th>          
+                    <th class="header c-permissions">Permissions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{>local_excursions/activityform_studentlist_rows}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="no-students">
+        <p>No students have been added.</p>
+    </div>
+
+    <div class="actions">
+        <a id="btn-addstudents" class="btn btn-secondary" href="#">
+            <i class="fa fa-plus" aria-hidden="true"></i> 
+            <span class="add-students">{{#str}}activityform:addstudents, local_excursions{{/str}}</span>
+            <span class="add-more-students">{{#str}}activityform:addmorestudents, local_excursions{{/str}}</span>
+        </a>
+        <a id="btn-deletestudents" class="btn btn-secondary" href="#"><i class="fa fa-trash" aria-hidden="true"></i> {{#str}}activityform:removeselected, local_excursions{{/str}}</a>
+        <a id="btn-preparemessage" class="btn btn-secondary" href="#"><i class="fa fa-envelope" aria-hidden="true"></i> {{#str}}activityform:preparemessage, local_excursions{{/str}}</a>
+    </div>
+
+    <div class="prepare-message">
+        <div class="spinner"><div class="circle spin"></div></div>
+        <h5>{{#str}}activityform:preparemessage, local_excursions{{/str}}</h5>
+        {{>local_excursions/preview_permissions_email}}
+        <a id="btn-sendpermissions" class="btn btn-primary" href="#">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i> Send email to parents
+        </a>
+        <div class="sent-animation">
+            <div>
+                <div class='animation'>
+                    <div class='i-mail'>
+                        <div class='mail-anim'></div>
+                    </div>
+                    <div class='line'></div>
+                    <div class='i-success'>
+                        <div class='success-anim'></div>
+                    </div>
+                </div>
+                <div class='message'>
+                    {{#str}}messagequeued, local_excursions{{/str}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="message-history">
+        {{>local_excursions/activityform_studentlist_messagehistory}}
+    </div>
+</div>

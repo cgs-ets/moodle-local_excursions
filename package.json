@@ -1,0 +1,28 @@
+{
+  "name": "local_excursions",
+  "private": true,
+  "description": "Grading system for CGS Primary",
+  "devDependencies": {
+    "grunt": "^1.1.0",
+    "grunt-contrib-less": "^2.0.0",
+    "grunt-contrib-uglify": "^4.0.1"
+  },
+  "engines": {
+    "node": ">=8.9 <9"
+  },
+  "version": "1.0.0",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt-contrib-watch": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://cgs-ets@bitbucket.org/cgs-ets/moodle-local_excursions.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/cgs-ets/moodle-local_excursions#readme"
+}

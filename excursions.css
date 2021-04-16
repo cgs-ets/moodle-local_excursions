@@ -1,0 +1,1073 @@
+/* Helpers */
+.path-local-excursions .spinner {
+  display: none;
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.path-local-excursions .spinner .circle {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: #000;
+  border-left-color: #000;
+  text-indent: -9999px;
+  margin: 0 auto;
+}
+.path-local-excursions .spin {
+  -webkit-animation: lgsspin 0.4s linear 0s infinite;
+  -moz-animation: lgsspin 0.4s linear 0s infinite;
+  -o-animation: lgsspin 0.4s linear 0s infinite;
+  animation: lgsspin 0.4s linear 0s infinite;
+}
+@-webkit-keyframes lgsspin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes lgsspin {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes lgsspin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.path-local-excursions .i-mail:after,
+.path-local-excursions .i-mail .mail-anim:after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 15px;
+  height: 7px;
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+}
+.path-local-excursions .i-mail:before,
+.path-local-excursions .i-mail .mail-anim:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 7px;
+  height: 6px;
+  background: black;
+}
+.path-local-excursions .i-success:after,
+.path-local-excursions .i-success .success-anim:after {
+  content: "";
+  position: absolute;
+  bottom: 12px;
+  left: 11px;
+  width: 15px;
+  height: 8px;
+  border-bottom: 2px solid #5cb85c;
+  border-left: 2px solid #5cb85c;
+  transform: rotate(-45deg);
+}
+.path-local-excursions .animation {
+  width: 540px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.path-local-excursions .i-mail,
+.path-local-excursions .i-mail .mail-anim {
+  width: 40px;
+  height: 30px;
+  border-radius: 5% 5%;
+  border: 2px solid black;
+  position: relative;
+  animation: transformS 0.3s linear;
+}
+@keyframes transformS {
+  50% {
+    transform: scale(0.5, 0.5);
+    opacity: 0.5;
+  }
+}
+.path-local-excursions .i-mail .mail-anim {
+  margin: -2px 0 0 -2px;
+  animation: moveL 0.8s linear;
+}
+@keyframes moveL {
+  100% {
+    transform: translateX(220px) rotateY(90deg);
+  }
+}
+.path-local-excursions .line {
+  padding: 1px 210px;
+  background-image: linear-gradient(to right, #000 30%, rgba(255, 255, 255, 0) 0%);
+  background-position: top;
+  background-size: 15px 2px;
+  background-repeat: repeat-x;
+}
+.path-local-excursions .i-success,
+.path-local-excursions .i-success .success-anim {
+  width: 40px;
+  height: 30px;
+  border-radius: 5% 5%;
+  border: 2px solid #5cb85c;
+  position: relative;
+  animation: transformB 0.3s 1.4s linear forwards;
+}
+.path-local-excursions .i-success:after,
+.path-local-excursions .i-success .success-anim:after {
+  animation: transformBA 0.3s 1.4s linear forwards;
+}
+@keyframes transformB {
+  50% {
+    transform: scale(1.5, 1.5);
+    background: #5cb85c;
+  }
+  100% {
+    background: #5cb85c;
+  }
+}
+@keyframes transformBA {
+  100% {
+    border-bottom: 2px solid #fff;
+    border-left: 2px solid #fff;
+  }
+}
+.path-local-excursions .i-success .success-anim {
+  margin: -2px 0 0 -2px;
+  animation: moveR 0.8s 1s linear;
+}
+@keyframes moveR {
+  0% {
+    transform: translateX(-220px) rotateY(90deg);
+  }
+  50% {
+    transform: translateX(0) rotateY(0);
+  }
+}
+#page-local-excursions-activity #page-content .action-menu {
+  display: none !important;
+}
+#page-local-excursions-activity #page-content .collapse-all {
+  display: none;
+}
+#page-local-excursions-activity #region-main {
+  position: relative;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] {
+  position: relative;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] .col-md-3 {
+  max-width: 170px;
+  margin-right: 0;
+  padding-right: 0;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] fieldset#id_actions .ftoggler {
+  display: none;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] .custom-footer-buttons {
+  padding: 25px 0 30px;
+  text-align: left;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] #id_general legend {
+  display: none;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] legend a.fheader {
+  background: none !important;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] fieldset {
+  margin-left: 0 !important;
+  margin-bottom: 20px;
+  padding-bottom: 30px;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] fieldset#id_paperwork .row.form-group {
+  background: #f0f4f8;
+  padding: 20px 0;
+  margin: 2px 0px;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] .medical-report-link i {
+  margin-right: 4px;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] .medical-report-description {
+  margin-top: 5px;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] input[type="text"],
+#page-local-excursions-activity form[data-form="excursions-activity"] textarea {
+  width: 100%;
+  max-width: 550px;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] #fitem_id_campusdesc {
+  font-size: 80%;
+  margin-top: -17px;
+}
+#page-local-excursions-activity .status {
+  font-size: 30px;
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+  padding: 0.75rem 1.25rem;
+  position: relative;
+  border-bottom: 1px solid #dee2e6;
+}
+#page-local-excursions-activity .status i {
+  display: block;
+}
+#page-local-excursions-activity .status[data-status="2"] {
+  color: #856404;
+  background-color: #fff3cd;
+}
+#page-local-excursions-activity .status[data-status="3"] {
+  color: #155724;
+  background-color: #d4edda;
+}
+#page-local-excursions-activity .approvals {
+  display: none;
+  font-size: 85%;
+  position: relative;
+  width: 25%;
+  top: -21px;
+  height: 100%;
+  border-left: 1px solid #ccc;
+  background-color: #EEF2F7;
+  overflow: hidden;
+  float: right;
+  right: -20px;
+  min-height: 1500px;
+  border-bottom: 1px solid #ccc;
+}
+#page-local-excursions-activity .approvals .workflow {
+  box-shadow: 0 1px 6px 0px #555;
+}
+#page-local-excursions-activity .approvals .workflow h5 {
+  margin: 0;
+  padding: 10px;
+  background: #fff;
+}
+#page-local-excursions-activity .approvals .workflow table {
+  margin: 0;
+}
+#page-local-excursions-activity .approvals .workflow tr {
+  transition: opacity 0.3s;
+}
+#page-local-excursions-activity .approvals .workflow tr.submitting {
+  pointer-events: none;
+  opacity: 0.4;
+}
+#page-local-excursions-activity .approvals .workflow tr[data-status="0"] {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+#page-local-excursions-activity .approvals .workflow tr[data-status="1"] {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+#page-local-excursions-activity .approvals .workflow tr[data-status="2"] {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+#page-local-excursions-activity .approvals .workflow td {
+  vertical-align: middle;
+}
+#page-local-excursions-activity .approvals .workflow .c-photo {
+  width: 46px;
+  text-align: center;
+  padding: 7px 0 7px 10px;
+}
+#page-local-excursions-activity .approvals .workflow .c-photo img {
+  width: 35px;
+  height: 35px;
+}
+#page-local-excursions-activity .approvals .workflow .c-status {
+  width: 65px;
+  text-align: center;
+}
+#page-local-excursions-activity .approvals .reply-form {
+  padding: 0;
+  position: relative;
+  margin: 25px 10px 20px 10px;
+  transition: opacity 0.3s;
+}
+#page-local-excursions-activity .approvals .reply-form.submitting {
+  pointer-events: none;
+  opacity: 0.7;
+}
+#page-local-excursions-activity .approvals .reply-form textarea {
+  font-size: 85%;
+  padding: 10px;
+}
+#page-local-excursions-activity .approvals .reply-form .btn {
+  margin: 5px 0;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  padding: 4px;
+  position: absolute;
+  right: -6px;
+  bottom: -9px;
+}
+#page-local-excursions-activity .approvals .comments {
+  margin: 0;
+  border-top: 1px solid #ddd;
+  transition: opacity 0.3s;
+}
+#page-local-excursions-activity .approvals .comments.loading {
+  opacity: 0.7;
+}
+#page-local-excursions-activity .approvals .comments .box {
+  padding: 15px 10px 10px 57px;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  min-height: 65px;
+}
+#page-local-excursions-activity .approvals .comments .box img {
+  margin-right: 4px;
+  position: absolute;
+  left: 10px;
+}
+#page-local-excursions-activity .approvals .comments .comment-time {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  text-align: right;
+  font-size: 83%;
+}
+#page-local-excursions-activity .approvals .comments .delete-comment {
+  position: absolute;
+  bottom: 6px;
+  right: 7px;
+}
+#page-local-excursions-activity .approved-functions {
+  display: none;
+}
+#page-local-excursions-activity.activity-status-2 .approvals,
+#page-local-excursions-activity.activity-status-3 .approvals {
+  display: block;
+}
+#page-local-excursions-activity.activity-status-2 form[data-form="excursions-activity"],
+#page-local-excursions-activity.activity-status-3 form[data-form="excursions-activity"] {
+  position: relative;
+  float: left;
+  width: 75%;
+}
+#page-local-excursions-activity form > .status {
+  display: none;
+}
+#page-local-excursions-activity.activity-status-3 .approvals .workflow h5 {
+  background: #e2e4e6;
+}
+#page-local-excursions-activity.activity-status-3 form > .status {
+  display: block;
+  text-align: left;
+  margin-top: -21px;
+  margin-bottom: 21px;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+#page-local-excursions-activity.activity-status-3 form > .status i {
+  display: inline-block;
+}
+#page-local-excursions-activity.activity-status-3 .approvals .status {
+  display: none;
+}
+#page-local-excursions-activity.activity-status-3 .approved-functions {
+  display: block;
+}
+#page-local-excursions-activity .modal-PREVIEWEMAIL .modal-body {
+  background: #fcefdc;
+}
+#page-local-excursions-activity #fitem_id_staffinchargejson {
+  display: none;
+}
+#page-local-excursions-activity #fitem_id_staffinchargejson > div {
+  display: none;
+}
+#page-local-excursions-activity #fitem_id_staffinchargejson.has-danger {
+  display: block;
+  height: 22px;
+  overflow: hidden;
+}
+#page-local-excursions-activity #fitem_id_staffinchargejson.has-danger:before {
+  content: "You must complete the staff in charge.";
+  color: red;
+  width: 100%;
+  height: 22px;
+  margin-left: 15px;
+}
+#page-local-excursions-activity #staffincharge.has-tags .recipient-input-wrap {
+  display: none;
+}
+#page-local-excursions-activity #fitem_id_accompanyingstaffjson {
+  display: none;
+}
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_general > .fcontainer input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_staff > .fcontainer input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .permissions input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_riskassessment input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_attachments input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_general > .fcontainer select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_staff > .fcontainer select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .permissions select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_riskassessment select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_attachments select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_general > .fcontainer textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_staff > .fcontainer textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .permissions textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_riskassessment textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_attachments textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_general > .fcontainer a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_staff > .fcontainer a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .permissions a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_riskassessment a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_attachments a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_general > .fcontainer .form-check > label,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #id_staff > .fcontainer .form-check > label,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .permissions .form-check > label,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list .form-check > label,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_riskassessment .form-check > label,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) #fitem_id_attachments .form-check > label,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions .form-check > label {
+  background-color: #e9ecef !important;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions input,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions select,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions textarea,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions a,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list .c-checkbox,
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions .c-checkbox {
+  display: none;
+}
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .alert {
+  display: none !important;
+}
+/* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
+#page-local-excursions-activity {
+  /* Component styling */
+  /* Add students modal*/
+  /* Recipient selector */
+}
+#page-local-excursions-activity #fitem_id_studentlistjson {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap {
+  background-color: #f0f4f8;
+  padding: 25px 20px 25px 30px;
+}
+#page-local-excursions-activity .student-list-wrap .heading {
+  font-size: 110%;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+#page-local-excursions-activity .student-list-wrap .table {
+  width: auto;
+  background-color: #fff;
+}
+#page-local-excursions-activity .student-list-wrap .table td {
+  vertical-align: middle;
+  border-top: 0 none;
+}
+#page-local-excursions-activity .student-list-wrap .c-checkbox {
+  width: 37px;
+}
+#page-local-excursions-activity .student-list-wrap .c-permissions {
+  display: none;
+  background: #f0f4f8;
+  border: 1px solid #f0f4f8;
+}
+#page-local-excursions-activity .student-list-wrap td.c-permissions {
+  padding: 0;
+}
+#page-local-excursions-activity .student-list-wrap td.c-permissions .parent-permission {
+  display: inline-block;
+  background: #e2e3e5;
+  padding: 12px;
+  min-width: 59px;
+  height: 59px;
+}
+#page-local-excursions-activity .student-list-wrap td.c-permissions .parent-permission[data-response="1"] {
+  background: #c3e6cb;
+}
+#page-local-excursions-activity .student-list-wrap td.c-permissions .parent-permission[data-response="2"] {
+  background: #f5c6cb;
+}
+#page-local-excursions-activity .student-list-wrap th.header {
+  background-color: #fff;
+  border-bottom: 2px solid #ccc;
+  border-top: 1px solid #dee2e6;
+  border-left: 0;
+}
+#page-local-excursions-activity .student-list-wrap .student-list {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .student-list .btn {
+  padding: 0;
+  margin-right: 10px;
+}
+#page-local-excursions-activity .student-list-wrap #btn-addstudents .add-more-students {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap #btn-deletestudents {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap #btn-preparemessage {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .medical-report-link {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .permissions {
+  display: none;
+  margin: 0 0 20px;
+}
+#page-local-excursions-activity .student-list-wrap .permissions input[name="enable-permissions"] {
+  margin-bottom: 10px;
+}
+#page-local-excursions-activity .student-list-wrap .permissions .alert-warning {
+  border: 1px solid #ecd7bc;
+}
+#page-local-excursions-activity .student-list-wrap .permissions .not-approved-yet span {
+  font-size: 80%;
+  margin-left: 18px;
+  margin-top: -7px;
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap .permissions .permissions-form {
+  display: none;
+  border-bottom: 1px solid #ddd;
+}
+#page-local-excursions-activity .student-list-wrap .permissions #fitem_id_invitetype {
+  margin-top: 10px;
+}
+#page-local-excursions-activity .student-list-wrap .permissions #fitem_id_invitetype .alert {
+  display: none;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+#page-local-excursions-activity .student-list-wrap .permissions #fitem_id_invitetype pre {
+  background: #ddd;
+  padding: 7px 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+#page-local-excursions-activity .student-list-wrap .permissions select {
+  display: inline-block;
+  width: auto;
+  word-wrap: normal;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  vertical-align: middle;
+  background: url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 4 5\'%3e%3cpath fill=\'%23373a3c\' d=\'M2 0L0 2h4zm0 5L0 3h4z\'/%3e%3c/svg%3e") no-repeat right 0.75rem center / 8px 10px;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0;
+  appearance: none;
+}
+#page-local-excursions-activity .student-list-wrap.permissions-enabled .permissions .not-approved-yet {
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap.permissions-enabled .message-history .reminder-alert {
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message {
+  display: none;
+  padding: 20px;
+  background: #fcefdc;
+  margin: 20px -20px -24px -29px;
+  overflow: hidden;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message .preview-message {
+  margin-bottom: 25px;
+  margin-top: 15px;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message #btn-sendpermissions {
+  float: right;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message.submitting .spinner {
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message.submitting h5,
+#page-local-excursions-activity .student-list-wrap .prepare-message.sent h5 {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message.submitting .preview-message,
+#page-local-excursions-activity .student-list-wrap .prepare-message.sent .preview-message {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message.submitting #btn-sendpermissions,
+#page-local-excursions-activity .student-list-wrap .prepare-message.sent #btn-sendpermissions {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message .sent-animation {
+  display: none;
+  text-align: center;
+  max-width: 500px;
+  margin: 10px auto;
+}
+#page-local-excursions-activity .student-list-wrap .prepare-message.sent .sent-animation {
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap.has-students .permissions {
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap.has-students .student-list {
+  display: table;
+}
+#page-local-excursions-activity .student-list-wrap.has-students #btn-addstudents .add-students {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap.has-students #btn-addstudents .add-more-students {
+  display: inline;
+}
+#page-local-excursions-activity .student-list-wrap.has-students .no-students {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap.has-students .medical-report-link {
+  display: inline-block;
+}
+#page-local-excursions-activity .student-list-wrap.has-selected #btn-deletestudents {
+  display: inline-block;
+}
+#page-local-excursions-activity .student-list-wrap.permissions-enabled.has-selected.invitetype-system .prepare-message.active {
+  display: block;
+}
+#page-local-excursions-activity .student-list-wrap .changes-not-saved-message {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap .message-history table td {
+  padding: 3px 8px;
+}
+#page-local-excursions-activity .student-list-wrap .message-history .c-students span:after {
+  content: ", ";
+}
+#page-local-excursions-activity .student-list-wrap .message-history .c-students span:last-of-type:after {
+  content: "";
+}
+#page-local-excursions-activity .student-list-wrap .message-history .reminder-alert {
+  display: none;
+}
+#page-local-excursions-activity .student-list-wrap.has-message-history .message-history {
+  margin-top: 23px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+#page-local-excursions-activity .student-list-wrap.loading .spinner,
+#page-local-excursions-activity.preloading .spinner {
+  display: block !important;
+  margin: 10px auto 25px ​auto;
+}
+#page-local-excursions-activity .student-list-wrap.loading .permissions,
+#page-local-excursions-activity.preloading .permissions {
+  display: none !important;
+}
+#page-local-excursions-activity .student-list-wrap.loading .student-list,
+#page-local-excursions-activity.preloading .student-list {
+  display: none !important;
+}
+#page-local-excursions-activity .student-list-wrap.loading .no-students,
+#page-local-excursions-activity.preloading .no-students {
+  display: none !important;
+}
+#page-local-excursions-activity .student-list-wrap.loading .actions,
+#page-local-excursions-activity.preloading .actions {
+  display: none !important;
+}
+#page-local-excursions-activity .student-list-wrap.loading .prepare-message,
+#page-local-excursions-activity.preloading .prepare-message {
+  display: none !important;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled .permissions .not-approved-yet {
+  display: none;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled .permissions .permissions-form {
+  display: block;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled.has-selected.invitetype-system #btn-preparemessage:not(.opened) {
+  display: inline-block;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled.changes-not-saved .changes-not-saved-message {
+  display: block;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled.changes-not-saved .permissions-form {
+  display: none;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled.changes-not-saved .prepare-message {
+  display: none;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled.changes-not-saved #btn-preparemessage {
+  display: none !important;
+}
+#page-local-excursions-activity.activity-status-3 .student-list-wrap.permissions-enabled .table .c-permissions {
+  display: table-cell;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .modal-header {
+  display: none;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-options {
+  background: #F6F8Fa;
+  padding: 20px;
+  margin: -16px;
+  margin-bottom: 17px;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-individual,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-course,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-taglist {
+  display: none;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-individual input,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-course input,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-taglist input,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-individual select,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-course select,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-taglist select {
+  max-width: 500px;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .student-selector.individual .addby-individual {
+  display: block;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .student-selector.course .addby-course {
+  display: block;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .student-selector.taglist .addby-taglist {
+  display: block;
+}
+#page-local-excursions-activity .recipient-selector .recipient-selection {
+  display: none;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+#page-local-excursions-activity .recipient-selector .recipient-tag {
+  background: #deeaff;
+  padding: 8px 12px;
+  font-weight: 800;
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+#page-local-excursions-activity .recipient-selector .recipient-input-wrap {
+  position: relative;
+  max-width: 550px;
+}
+#page-local-excursions-activity .recipient-selector .recipient-autocomplete {
+  background-color: #fff;
+  box-shadow: none;
+}
+#page-local-excursions-activity .recipient-selector .spinner {
+  display: none;
+  position: absolute;
+  top: 9px;
+  right: 0;
+}
+#page-local-excursions-activity .recipient-selector .spinner .circle {
+  display: block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: #313131;
+  border-left-color: #313131;
+  text-indent: -9999px;
+  margin: 0 auto;
+}
+#page-local-excursions-activity .recipient-selector .spinner .spin {
+  -webkit-animation: mcspin 0.4s linear 0s infinite;
+  -moz-animation: mcspin 0.4s linear 0s infinite;
+  -o-animation: mcspin 0.4s linear 0s infinite;
+  animation: mcspin 0.4s linear 0s infinite;
+}
+@-webkit-keyframes mcspin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes mcspin {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes mcspin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+#page-local-excursions-activity .recipient-selector.searching .spinner,
+#page-local-excursions-activity .recipient-selector.adding-tag .spinner {
+  display: block;
+}
+#page-local-excursions-activity .recipient-selector .recipient-results {
+  display: none;
+  max-width: 500px;
+  padding: 3px 0;
+  border: 1px solid #ccc;
+  border-top: 0 none;
+  background-color: #fff;
+}
+#page-local-excursions-activity .recipient-selector .recipient-results.active {
+  display: block;
+}
+#page-local-excursions-activity .recipient-selector .recipient-result {
+  display: block;
+  padding: 3px 11px;
+  cursor: pointer;
+}
+#page-local-excursions-activity .recipient-selector .recipient-result:hover {
+  background: #f2f2f2;
+}
+#page-local-excursions-activity .recipient-selector .recipient-result .highlighted-text {
+  font-weight: 600;
+}
+#page-local-excursions-activity .recipient-selector.has-tags .recipient-selection {
+  display: block;
+}
+#page-local-excursions-activity .recipient-selector.has-tags.allow-single .recipient-input-wrap {
+  display: none;
+}
+#page-local-excursions-activity .recipient-selector.has-tags.allow-single .recipient-results {
+  display: none;
+}
+#page-local-excursions-activity .browser-window {
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 60px 80px rgba(0, 0, 0, 0.12);
+  text-align: left;
+  width: 800px;
+  display: block;
+  border-radius: 5px;
+  background-color: #fff;
+}
+#page-local-excursions-activity .browser-window .top-bar {
+  height: 30px;
+  border-radius: 5px 5px 0 0;
+  border-top: thin solid #eaeae9;
+  border-bottom: thin solid #dfdfde;
+  background: linear-gradient(#e7e7e6, #e2e2e1);
+}
+#page-local-excursions-activity .browser-window .circle {
+  height: 8px;
+  width: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: white;
+}
+#page-local-excursions-activity .browser-window .circles {
+  font-size: 15px;
+  margin: 1px 11px;
+}
+#page-local-excursions-activity .browser-window .window-title {
+  font-size: 10px;
+  color: #555;
+  font-family: monospace;
+}
+#page-local-excursions-activity .browser-window .content {
+  margin: 0;
+  width: 100%;
+  display: inline-block;
+  border-radius: 0 0 5px 5px;
+  background-color: #fafafa;
+  padding: 20px;
+}
+#page-local-excursions-activity .browser-window .content textarea {
+  width: 100%;
+  height: 80px;
+  border: 1px solid #ccc;
+  padding: 5px 9px;
+}
+#page-local-excursions-activity .browser-window .content a {
+  pointer-events: none;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-status.published i {
+  color: green;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-status.in-review i {
+  color: orange;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-name {
+  max-width: 200px;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-outcomes {
+  max-width: 270px;
+}
+#page-local-excursions-index .generaltable tbody tr.activity.past,
+#page-local-excursions-index .generaltable tbody tr.activity.past:nth-of-type(odd) {
+  background: rgba(0, 0, 0, 0.3);
+}
+#page-local-excursions-index .header {
+  padding: 20px 0;
+}
+#page-local-excursions-index .list-activities {
+  padding: 20px;
+  background: #f2f4f6;
+}
+#page-local-excursions-index .list-activities h5 {
+  margin: 0;
+}
+#page-local-excursions-index .list-activities small {
+  margin-bottom: 10px;
+  display: block;
+}
+#page-local-excursions-index .th-id {
+  width: 50px;
+}
+#page-local-excursions-index .th-timestart,
+#page-local-excursions-index .th-timeend {
+  width: 80px;
+  text-align: center;
+  padding-left: 0;
+}
+#page-local-excursions-index .c-timestart,
+#page-local-excursions-index .c-timeend {
+  padding-left: 0;
+  vertical-align: bottom;
+}
+#page-local-excursions-index .cal-date {
+  width: 50px;
+  margin: 0 auto;
+  line-height: 1;
+}
+#page-local-excursions-index .cal-date .cal-month {
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+  width: 50px;
+  border: 2px solid #66A8D8;
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  font-family: monospace;
+  padding: 2px 0;
+}
+#page-local-excursions-index .cal-date .cal-day {
+  background: #66A8D8;
+  color: #fff;
+  display: inline-block;
+  text-align: center;
+  width: 50px;
+  font-size: 17px;
+  font-family: monospace;
+  font-weight: 600;
+  padding: 4px 0;
+}
+#page-local-excursions-index .cal-date .cal-year {
+  text-align: center;
+  width: 50px;
+  font-size: 10px;
+  font-family: monospace;
+  border: 2px solid #66A8D8;
+  line-height: 11px;
+  border-top: 0;
+  border-bottom: 0;
+  margin-top: -2px;
+}
+#page-local-excursions-index .cal-date .cal-time {
+  font-size: 12px;
+  font-family: monospace;
+  text-align: center;
+  width: 50px;
+  background: #ccc;
+  border-radius: 0 0 3px 3px;
+  background: #717171;
+  color: #fff;
+  padding: 2px 0;
+}
+#page-local-excursions-index .cal-date.same-day .cal-month,
+#page-local-excursions-index .cal-date.same-day .cal-day,
+#page-local-excursions-index .cal-date.same-day .cal-year {
+  display: none;
+}
+#page-local-excursions-index .cal-date.same-day .cal-time {
+  border-radius: 3px;
+}
+#page-local-excursions-permissions .activity-details {
+  margin-bottom: 25px;
+}
+#page-local-excursions-permissions .permissions table {
+  width: auto;
+}
+#page-local-excursions-permissions .permissions table label {
+  margin: 0;
+  margin-right: 15px;
+}
+#page-local-excursions-permissions .permissions table td {
+  vertical-align: middle;
+  border: 1px solid #ddd;
+}
+#page-local-excursions-permissions .permissions .permission {
+  transition: opacity 0.3s;
+}
+#page-local-excursions-permissions .permissions .permission .c-responsemessage {
+  display: none;
+}
+#page-local-excursions-permissions .permissions .permission.submitting {
+  pointer-events: none;
+  opacity: 0.6;
+}
+#page-local-excursions-permissions .permissions .permission[data-status="1"] {
+  background: #d4edda;
+}
+#page-local-excursions-permissions .permissions .permission[data-status="1"] .c-responsemessage {
+  display: table-cell;
+}
+#page-local-excursions-permissions .permissions .permission[data-status="2"] {
+  background: #f8d7da;
+}
+#page-local-excursions-permissions .permissions .permission[data-status="2"] .c-responsemessage {
+  display: table-cell;
+}
+#page-local-excursions-permissions .permissions.past-due-date .permission-yes,
+#page-local-excursions-permissions .permissions.past-limit .permission-yes,
+#page-local-excursions-permissions .permissions.past-due-date .permission-no,
+#page-local-excursions-permissions .permissions.past-limit .permission-no {
+  background-color: #e9ecef !important;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none !important;
+  pointer-events: none !important;
+}

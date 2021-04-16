@@ -1,0 +1,493 @@
+/* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
+#page-local-excursions-activity {
+
+	#fitem_id_studentlistjson {
+    	display: none;
+    }
+
+	/* Component styling */
+	.student-list-wrap {
+    	background-color: #f0f4f8;
+    	padding: 25px 20px 25px 30px;
+    	.heading {
+    		font-size: 110%;
+		    font-weight: 600;
+		    margin-bottom: 7px;
+    	}
+		.table {
+			width: auto;
+			background-color: #fff;
+			td {
+    			vertical-align: middle;
+    			border-top: 0 none;
+			}
+		}
+		.c-checkbox {
+		    width: 37px;
+		}
+		.c-permissions {
+		    display: none;
+		    background: #f0f4f8;
+    		border: 1px solid #f0f4f8;
+		}
+		td.c-permissions {
+		    padding: 0;
+		    .parent-permission {
+			    display: inline-block;
+			    background: #e2e3e5;
+			    padding: 12px;
+			    min-width: 59px;
+			    height: 59px;
+			    &[data-response="1"] {
+			    	background: #c3e6cb;
+			    }
+			    &[data-response="2"] {
+			    	background: #f5c6cb;
+			    }
+		    }
+		}
+		th.header {
+		    background-color: #fff;
+		    border-bottom: 2px solid #ccc;
+		    border-top: 1px solid #dee2e6;
+		    border-left: 0;
+		}
+		.student-list {
+			display: none;
+			.btn {
+			    padding: 0;
+			    margin-right: 10px;
+			}
+		}
+		#btn-addstudents {
+			.add-more-students {
+				display: none;
+			}
+		}
+		#btn-deletestudents {
+			display: none;
+		}
+		#btn-preparemessage {
+			display: none;
+		}
+		.medical-report-link {
+			display: none;
+		}
+		.permissions {
+			display: none;
+			margin: 0 0 20px;
+			input[name="enable-permissions"] {
+				margin-bottom: 10px;
+			}
+			.alert-warning {
+				border: 1px solid #ecd7bc;
+			}
+			.not-approved-yet {
+				span {
+					font-size: 80%;
+				    margin-left: 18px;
+				    margin-top: -7px;
+    				display: block;
+				}
+			}
+			.permissions-form {
+				display: none;
+		    	border-bottom: 1px solid #ddd;
+			}
+
+			#fitem_id_invitetype {
+    			margin-top: 10px;
+				.alert {
+					display: none;
+					margin-top: 15px;
+					margin-left: 15px;
+				}
+				pre {
+					background: #ddd;
+				    padding: 7px 10px;
+				    margin-top: 10px;
+				    margin-bottom: 5px;
+				}
+			}
+			select {
+			    display: inline-block;
+			    width: auto;
+			    word-wrap: normal;
+			    height: calc(1.5em + .75rem + 2px);
+			    padding: .375rem 1.75rem .375rem .75rem;
+			    font-size: .9375rem;
+			    font-weight: 400;
+			    line-height: 1.5;
+			    color: #495057;
+			    vertical-align: middle;
+			    background: url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 4 5\'%3e%3cpath fill=\'%23373a3c\' d=\'M2 0L0 2h4zm0 5L0 3h4z\'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+			    background-color: #fff;
+			    border: 1px solid #ced4da;
+			    border-radius: 0;
+			    appearance: none;
+			}
+		}
+		&.permissions-enabled {
+			.permissions {
+				.not-approved-yet {
+					display: block;
+				}
+			}
+			.message-history {
+			    .reminder-alert {
+			    	display: block;
+			    }
+			}
+		}
+		.prepare-message {
+			display: none;
+			padding: 20px;
+    		background: #fcefdc;
+    		margin: 20px -20px -24px -29px;
+    		overflow: hidden;
+			.preview-message {
+			    margin-bottom: 25px;
+			    margin-top: 15px;
+			}
+			#btn-sendpermissions {
+				float: right;
+			}
+			&.submitting {
+				.spinner {
+					display: block;
+				}
+			}
+			&.submitting, &.sent {
+				h5 {
+					display: none;
+				}
+				.preview-message {
+					display: none;
+				}
+				#btn-sendpermissions {
+					display: none;
+				}
+			}
+			.sent-animation {
+				display: none;
+				text-align: center;
+			    max-width: 500px;
+			    margin: 10px auto;
+			}
+			&.sent {
+				.sent-animation {
+					display: block;
+				}
+			}
+		}
+
+		&.has-students {
+			.permissions {
+				display: block;
+			}
+			.student-list {
+				display: table;
+			}
+			#btn-addstudents {
+				.add-students {
+					display: none;
+				}
+				.add-more-students {
+					display: inline;
+				}
+			}
+			.no-students {
+				display: none;
+			}
+			.medical-report-link {
+				display: inline-block;
+			}
+		}
+		&.has-selected {
+			#btn-deletestudents {
+				display: inline-block;
+			}
+		}
+
+		&.permissions-enabled.has-selected.invitetype-system {
+			.prepare-message.active {
+				display: block;
+			}
+		}
+		
+		.changes-not-saved-message {
+			display: none;
+		}
+
+		.message-history {
+		    table {
+		    	td {
+		    		padding: 3px 8px;
+		    	}
+		    }
+		    .c-students {
+		    	span:after {
+		    		content: ", "
+		    	}
+		    	span:last-of-type:after {
+		    		content: ""
+		    	}
+		    }
+		    .reminder-alert {
+		    	display: none;
+		    }
+		}
+
+		&.has-message-history {
+			.message-history {
+		    	margin-top: 23px;
+		    	padding-top: 20px;
+		    	border-top: 1px solid #ddd;
+			}
+		}
+	}
+
+	.student-list-wrap.loading, &.preloading {
+		.spinner {
+			display: block !important;
+			margin: 10px auto 25px ​auto;
+		}
+		.permissions {
+			display: none !important;
+		}
+		.student-list {
+			display: none !important;
+		}
+		.no-students {
+			display: none !important;
+		}
+		.actions {
+			display: none !important;
+		}
+		.prepare-message {
+			display: none !important;
+		}
+	}
+
+	&.activity-status-3 {
+		.student-list-wrap {
+			&.permissions-enabled {
+				.permissions {
+					.not-approved-yet {
+						display: none;
+					}
+					.permissions-form {
+						display: block;
+					}
+				}
+				&.has-selected.invitetype-system {
+					#btn-preparemessage:not(.opened) {
+						display: inline-block;
+					}
+				}
+				&.changes-not-saved {
+					.changes-not-saved-message {
+						display: block
+					}
+					.permissions-form {
+						display: none;
+					}
+					.prepare-message {
+						display: none;
+					}
+					#btn-preparemessage {
+						display: none !important;
+					}
+				}
+				.table .c-permissions {
+				    display: table-cell;
+				}
+			}
+		}
+	}
+
+	/* Add students modal*/
+	.modal-ADDSTUDENTS {
+		.modal-header {
+			display: none;
+		}
+		.addby-options {
+			background: #F6F8Fa;
+		    padding: 20px;
+		    margin: -16px;
+		    margin-bottom: 17px;
+		}
+		.addby-individual, .addby-course, .addby-taglist {
+			display: none;
+			input, select {
+				max-width: 500px;
+			}
+		}
+		.student-selector.individual .addby-individual {
+			display: block;
+		}
+		.student-selector.course .addby-course {
+			display: block;
+		}
+		.student-selector.taglist .addby-taglist {
+			display: block;
+		}
+	}
+
+	/* Recipient selector */
+	.recipient-selector {
+		.recipient-selection {
+			display: none;
+			margin-bottom: 8px;
+	    	overflow: hidden;
+		}
+		.recipient-tag {
+		    background: #deeaff;
+		    padding: 8px 12px;
+		    font-weight: 800;
+		    display: inline-block;
+		    cursor: pointer;
+		    margin-bottom: 3px;
+		}
+		.recipient-input-wrap {
+		    position: relative;
+		    max-width: 550px;
+		}
+		.recipient-autocomplete {
+		    background-color: #fff;
+		    box-shadow: none;
+		}
+		.spinner {
+			display: none;
+		    position: absolute;
+		    top: 9px;
+		    right: 0;
+		    .circle {
+			    display: block;
+			    position: relative;
+			    width: 20px;
+			    height: 20px;
+			    border-radius: 50%;
+			    border: 1px solid transparent;
+			    border-top-color: #313131;
+			    border-left-color: #313131;
+			    text-indent: -9999px;
+			    margin: 0 auto;
+			}
+			.spin {
+			    -webkit-animation: mcspin 0.4s linear 0s infinite;
+			    -moz-animation: mcspin 0.4s linear 0s infinite;
+			    -o-animation: mcspin 0.4s linear 0s infinite;
+			    animation: mcspin 0.4s linear 0s infinite;
+			}
+			@-webkit-keyframes mcspin {
+			    from { -webkit-transform: rotate(0deg); }
+			    to { -webkit-transform: rotate(360deg); }
+			}
+			@-moz-keyframes mcspin {
+			    from { -moz-transform: rotate(0deg); }
+			    to { -moz-transform: rotate(360deg); }
+			}
+			@keyframes mcspin {
+			    from {transform:rotate(0deg);}
+			    to {transform:rotate(360deg);}
+			}
+		}
+		&.searching, &.adding-tag {
+			.spinner {
+			    display: block;
+			}
+		}
+		.recipient-results {
+		    display: none;
+		    max-width: 500px;
+		    padding: 3px 0;
+		    border: 1px solid #ccc;
+		    border-top: 0 none;
+		    background-color: #fff;
+		    &.active {
+			    display: block;
+			}
+		}
+		.recipient-result {
+		    display: block;
+		    padding: 3px 11px;
+		    cursor: pointer;
+		    &:hover {
+			    background: #f2f2f2;
+			}
+			.highlighted-text {
+				font-weight: 600;
+			}
+		}
+		&.has-tags {
+			.recipient-selection {
+				display: block;
+			}
+			&.allow-single {
+				.recipient-input-wrap {
+				    display: none;
+				}
+				.recipient-results {
+			    	display: none;
+			    }
+			}
+		}
+	}
+
+	.browser-window {
+		box-shadow:
+		  0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+		  0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+		  0 12.5px 10px rgba(0, 0, 0, 0.06),
+		  0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+		  0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+		  0 60px 80px rgba(0, 0, 0, 0.12);
+		text-align: left;
+		width: 800px;
+		display: block;
+		border-radius: 5px;
+		background-color: #fff;
+		.top-bar {
+			height: 30px;
+			border-radius: 5px 5px 0 0;
+			border-top: thin solid #eaeae9;
+			border-bottom: thin solid #dfdfde;
+			background: linear-gradient(#e7e7e6, #e2e2e1);
+		}
+		.circle {
+			height: 8px;
+			width: 8px;
+			display: inline-block;
+			border-radius: 50%;
+			background-color: white;
+		}
+		.circles { 
+		    font-size: 15px;
+		    margin: 1px 11px; 
+		}
+		.window-title {
+		    font-size: 10px;
+		    color: #555;
+		    font-family: monospace;
+		}
+		.content {
+			margin: 0;
+			width: 100%;
+			display: inline-block;
+			border-radius: 0 0 5px 5px;
+			background-color: #fafafa;
+			padding: 20px;
+			textarea {
+			    width: 100%;
+			    height: 80px;
+			    border: 1px solid #ccc;
+			    padding: 5px 9px;
+			}
+			a {
+				pointer-events: none;
+			}
+		}
+	}
+
+}

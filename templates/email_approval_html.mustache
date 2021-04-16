@@ -1,0 +1,65 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   local_excursions
+    @copyright 2021 Michael Vangelovski
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_excursions/email_approval_html
+
+    Template for approval email html.
+
+}}
+<h3>The following activity needs your approval:</h3>
+
+<!-- Details -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <table border="0" cellspacing="0" cellpadding="20">
+                <tr>
+                    <td style="border-radius: 3px;" bgcolor="#f0f4f6">
+                        <div style="font-size: 15px;font-family: Helvetica, Arial, sans-serif;text-decoration: none;border-radius: 3px;display: block;">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                {{>local_excursions/email_activity_details_html}}
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr> 
+        <td height="20"></td> 
+    </tr>
+</table>
+
+<!-- Action button -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="center" style="border-radius: 3px;" bgcolor="#005892">
+                        <a href="{{manageurl}}" target="_blank" style="font-size: 16px; font-weight: bold; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 12px 18px; border: 1px solid #005892; display: inline-block;">Click here to action &rarr;</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+

@@ -1,0 +1,41 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   local_excursions
+    @copyright 2021 Michael Vangelovski
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_excursions/activityform_buttons
+
+    View for the evidence selector component.
+}}
+<div class="custom-footer-buttons">
+    {{#activity.statushelper.cansavedraft}}
+        <input type="submit" class="btn btn-secondary" name="savedraft" id="btn-savedraft" value="{{#str}}activityform:savedraft, local_excursions{{/str}}">
+        <input type="submit" class="btn btn-primary" name="sendforreview" id="btn-sendforreview" value="{{#str}}activityform:sendforreview, local_excursions{{/str}}">
+        <input type="submit" class="btn btn-secondary" name="cancelchanges" id="btn-cancel" value="{{#str}}activityform:cancel, local_excursions{{/str}}">
+        {{#activity.iscreator}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.iscreator}}
+    {{/activity.statushelper.cansavedraft}}
+    {{^activity.statushelper.cansavedraft}}
+        <div class="alert alert-danger" role="alert">
+            {{#str}}activityform:savemayinvalidate, local_excursions{{/str}}
+        </div>
+        <input type="submit" class="btn btn-primary" name="sendforreview" id="btn-sendforreview" value="{{#str}}activityform:savechanges, local_excursions{{/str}}">
+        <input type="submit" class="btn btn-secondary" name="cancelchanges" id="btn-cancel" value="{{#str}}activityform:cancel, local_excursions{{/str}}">
+        {{#activity.iscreator}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.iscreator}}
+    {{/activity.statushelper.cansavedraft}}
+</div>

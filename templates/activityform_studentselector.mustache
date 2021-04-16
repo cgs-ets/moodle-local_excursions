@@ -1,0 +1,75 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   local_excursions
+    @copyright 2021 Michael Vangelovski
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template local_excursions/activityform_studentselector
+
+    View for the student selector component.
+}}
+<div class="student-selector individual">
+    <div class="addby-options">
+        <div><h5>Add students by</h5></div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="addstudentby" id="addstudentbyindiv" value="individual" checked>
+            <label class="form-check-label" for="addstudentbyindiv">
+                Individuals
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="addstudentby" id="addstudentbycourse" value="course">
+            <label class="form-check-label" for="addstudentbycourse">
+                Course
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="addstudentby" id="addstudentbytaglist" value="taglist">
+            <label class="form-check-label" for="addstudentbytaglist">
+                Taglist
+            </label>
+        </div>
+    </div>
+    <div class="addby-individual">
+        {{>local_excursions/student_selector}}
+    </div>
+    <div class="addby-course">
+        <select name="course" class="form-control">
+            {{#courses}}
+                <option value="{{{val}}}">{{txt}}</option>
+            {{/courses}}
+        </select>
+    </div>
+    <div class="addby-taglist">
+        <h6><strong>User taglists</strong></h6>
+        <select name="usertaglists" class="form-control">
+            <option value=""></option>
+            {{#taglists.user}}
+                <option value="{{taglistsseq}}">{{description}}</option>
+            {{/taglists.user}}
+        </select>
+        <br>
+        <h6><strong>Public taglists</strong></h6>
+        <select name="publictaglists" class="form-control">
+            <option value=""></option>
+            {{#taglists.public}}
+                <option value="{{taglistsseq}}">{{description}}</option>
+            {{/taglists.public}}
+        </select>
+    </div>
+</div>

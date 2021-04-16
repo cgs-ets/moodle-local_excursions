@@ -1,0 +1,1508 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Provides the {@link local_excursions\persistents\activity} class.
+ *
+ * @package   local_excursions
+ * @copyright 2021 Michael Vangelovski
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace local_excursions\persistents;
+
+defined('MOODLE_INTERNAL') || die();
+
+use local_excursions\external\activity_exporter;
+use \local_excursions\forms\form_activity;
+use \local_excursions\locallib;
+use \core\persistent;
+use \core_user;
+use \context_user;
+use \context_course;
+
+/**
+ * Persistent model representing a single activity.
+ */
+class activity extends persistent {
+
+    /** Table to store this persistent model instances. */
+    const TABLE = 'excursions';
+    const TABLE_EXCURSIONS_LOGS = 'excursions_logs';
+    const TABLE_EXCURSIONS_STUDENTS  = 'excursions_students';
+    const TABLE_EXCURSIONS_STUDENTS_TEMP  = 'excursions_students_temp';
+    const TABLE_EXCURSIONS_APPROVALS  = 'excursions_approvals';
+    const TABLE_EXCURSIONS_COMMENTS = 'excursions_comments';
+    const TABLE_EXCURSIONS_PERMISSIONS_SEND = 'excursions_permissions_send';
+    const TABLE_EXCURSIONS_PERMISSIONS = 'excursions_permissions';
+    const TABLE_EXCURSIONS_STAFF = 'excursions_staff';
+
+
+    /**
+     * Return the definition of the properties of this model.
+     *
+     * @return array
+     */
+    protected static function define_properties() {
+        return [
+            "username" => [
+                'type' => PARAM_RAW,
+            ],
+            "activityname" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "campus" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "location" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "timestart" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "timeend" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "studentlistjson" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "notes" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "transport" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "cost" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "status" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "permissions" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "permissionstype" => [
+                'type' => PARAM_RAW,
+                'default' => 0,
+            ],
+            "permissionslimit" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "permissionsdueby" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "deleted" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "riskassessment" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "attachments" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "staffincharge" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "staffinchargejson" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "accompanyingstaffjson" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "otherparticipants" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "absencesprocessed" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+        ];
+    }
+
+    /*
+    * Function used to process and save data on form submission.
+    */
+    public static function save_from_data($data) {
+        global $DB, $USER;
+ 
+        // Some validation.
+        // Since activities are auto-created, the activity id should always be available.
+        if (empty($data->id)) {
+            return;
+        }
+
+        $context = \context_system::instance();
+
+        // If riskassessment and attachments are not set, it is because non-creators cannot edit these so they do not come through.
+        if (isset($data->riskassessment)) {
+            // Store risk assessment to a permanent file area.
+            file_save_draft_area_files(
+                $data->riskassessment, 
+                $context->id, 
+                'local_excursions', 
+                'ra', 
+                $data->id, 
+                form_activity::ra_options()
+            );
+        }
+        $data->riskassessment = '';
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($context->id, 'local_excursions', 'ra', $data->id, "filename", false);
+        foreach ($files as $file) {
+            $data->riskassessment .= $file->get_contenthash();
+        }
+
+        if (isset($data->attachments)) {
+            // Save attachments.
+            file_save_draft_area_files(
+                $data->attachments, 
+                $context->id, 
+                'local_excursions', 
+                'attachments', 
+                $data->id, 
+                form_activity::attachment_options()
+            );
+        }
+        $data->attachments = '';
+        $files = $fs->get_area_files($context->id, 'local_excursions', 'attachments', $data->id, "filename", false);
+        foreach ($files as $file) {
+            $data->attachments .= $file->get_contenthash();
+        }
+        $data->attachments = sha1($data->attachments);
+
+        // Set the staff in charge.
+        $data->staffincharge = $USER->username;
+        $staffincharge = json_decode($data->staffinchargejson);
+        if ($staffincharge) {
+            $staffincharge = array_pop($staffincharge);
+            $data->staffincharge = $staffincharge->idfield;
+        }
+
+        // Update the activity.
+        $originalactivity = new static($data->id);
+        // Permissions is autosaved independentaly of the form, so it will not be in the formdata.
+        $data->permissions = $originalactivity->get('permissions');
+        // Save the activity.        
+        $activity = new static($data->id, $data);
+        $activity->save();
+
+        // Add a log entry.
+        $log = new \stdClass();
+        $log->activityid = $data->id;
+        $log->username = $USER->username;
+        $log->logtime = $activity->get('timemodified');
+        $log->datajson = json_encode($data);
+        $DB->insert_record(static::TABLE_EXCURSIONS_LOGS, $log);
+
+        // Overwrite the accompanying staff list.
+        $DB->delete_records(static::TABLE_EXCURSIONS_STAFF, array('activityid' => $data->id));
+        $accompanyingstaff = json_decode($data->accompanyingstaffjson);
+        if ($accompanyingstaff) {
+            foreach ($accompanyingstaff as $as) {
+                $staff = new \stdClass();
+                $staff->activityid = $data->id;
+                $staff->username = $as->idfield;
+                $DB->insert_record(static::TABLE_EXCURSIONS_STAFF, $staff);
+            }
+        }
+        
+        // Overwrite the student list.
+        $DB->delete_records(static::TABLE_EXCURSIONS_STUDENTS, array('activityid' => $data->id));
+        $students = json_decode($data->studentlistjson);
+        if ($students) {
+            foreach ($students as $username) {
+                $student = new \stdClass();
+                $student->activityid = $data->id;
+                $student->username = $username;
+                $DB->insert_record(static::TABLE_EXCURSIONS_STUDENTS, $student);
+            }
+        }
+
+        // Generate permissions based on student list.
+        static::generate_permissions($data->id);
+        
+
+
+        // If sending for review or saving after already in review, determine the approvers based on student list campuses.
+        if ($data->status == locallib::ACTIVITY_STATUS_INREVIEW ||
+            $data->status == locallib::ACTIVITY_STATUS_APPROVED) {
+            static::generate_approvals($originalactivity, $activity);
+        }
+
+        return $data->id;
+    }
+
+    private static function generate_permissions($activityid) {
+        global $DB, $USER;
+
+        $activity = new static($activityid);
+        if (empty($activity)) {
+            return;
+        }
+
+        // Generate permissions for saved students.
+        $students = static::get_excursion_students($activityid);
+        foreach ($students as $student) {
+            // Find the student's mentors.
+            $user = \core_user::get_user_by_username($student->username);
+            if (empty($user)) {
+                continue;
+            }
+            $mentors = locallib::get_users_mentors($user->id);
+            foreach ($mentors as $mentor) {
+                // Only insert this if it doesn't exist.
+                $exists = $DB->record_exists(activity::TABLE_EXCURSIONS_PERMISSIONS, array(
+                    'activityid' => $activityid,
+                    'studentusername' => $student->username,
+                    'parentusername' => $mentor,
+                ));
+
+                if (!$exists) {
+                    // Create a permissions record for each mentor.
+                    $permission = new \stdClass();
+                    $permission->activityid = $activityid;
+                    $permission->studentusername = $student->username;
+                    $permission->parentusername = $mentor;
+                    $permission->queueforsending = 0;
+                    $permission->queuesendid = 0;
+                    $permission->response = 0;
+                    $permission->timecreated = time();
+                    $DB->insert_record(activity::TABLE_EXCURSIONS_PERMISSIONS, $permission);
+                }
+            }
+        }
+    }
+
+
+    private static function generate_approvals($originalactivity, $newactivity) {
+        global $DB, $USER;
+
+        // Check if changed fields cause an approval state to be invalidated.
+        $fieldschanged = static::get_changed_fields($originalactivity, $newactivity);
+        $fieldschangedkeys = array_keys($fieldschanged);
+        foreach (locallib::WORKFLOW as $type => $conf) {
+            if (array_intersect($fieldschangedkeys, $conf['invalidated_on_edit'])) {
+                $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                           SET invalidated = 1
+                         WHERE activityid = ?
+                           AND type = ?
+                           AND status > 0";
+                $DB->execute($sql, array(
+                    $newactivity->get('id'),
+                    $type,
+                ));
+            }
+        }
+
+        // Determine whether this is primary or senior.
+        $issenior = true;
+        if($newactivity->get('campus') == 'primary') {
+            $issenior = false;
+        }
+
+        // Approval stub.
+        $approvals = array();
+        $approval = new \stdClass();
+        $approval->activityid = $newactivity->get('id');
+        $approval->username = ''; // The person that eventually approves it.
+        $approval->timemodified = time();
+
+        if ($issenior) {
+            // Senior School - 2nd approver.
+            $approval->type = 'senior_admin';
+            $approval->sequence = 2;
+            $approval->description = locallib::WORKFLOW['senior_admin']['name'];
+            $approvals[] = clone $approval;
+
+            // Senior School - 3st approver.
+            $approval->type = 'senior_hoss';
+            $approval->sequence = 3;
+            $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
+            $approvals[] = clone $approval;
+
+        } else {
+            // Primary School - 1st approver.
+            $approval->type = 'primary_admin';
+            $approval->sequence = 1;
+            $approval->description = locallib::WORKFLOW['primary_admin']['name'];
+            $approvals[] = clone $approval;
+
+            // Primary School - 2nd approver.
+            $approval->type = 'primary_hops';
+            $approval->sequence = 2;
+            $approval->description = locallib::WORKFLOW['primary_hops']['name'];
+            $approvals[] = clone $approval;
+        }
+
+        // Invalidate approvals that should not be there.
+        $approvaltypes = array_column($approvals, 'type');
+        list($insql, $inparams) = $DB->get_in_or_equal($approvaltypes);
+        $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                   SET invalidated = 1
+                 WHERE activityid = ?
+                   AND invalidated = 0
+                   AND type NOT $insql";
+        $params = array($newactivity->get('id'));
+        $params = array_merge($params, $inparams);
+        $DB->execute($sql, $params);
+
+        // Insert the approval if it doesn't already exist.
+        foreach ($approvals as $approval) {
+            $exists = $DB->record_exists(static::TABLE_EXCURSIONS_APPROVALS, array(
+                'activityid' => $newactivity->get('id'), 
+                'type' => $approval->type, 
+                'invalidated' => 0
+            ));
+            if (!$exists) {
+                $DB->insert_record(static::TABLE_EXCURSIONS_APPROVALS, $approval);
+            }
+        }
+
+        //Update activity status based on current state of approvals.
+        static::check_status($newactivity->get('id'), $fieldschanged);
+
+    }
+
+    private static function get_changed_fields($originalactivity, $newactivity) {
+        $changed = array();
+
+        // Instaniate an empty copy of the form.
+        $form = new form_activity('', array('edit' => $originalactivity->get('id')), 'post');
+
+        foreach (static::properties_definition() as $key => $definition) {
+            if ($originalactivity->get($key) != $newactivity->get($key)) {
+                $changed[$key] = array(
+                    'field' => $key,
+                    'label' => $form->get_element_label($key),
+                    'originalval' => $originalactivity->get($key),
+                    'newval' => $newactivity->get($key),
+                );
+            }
+        }
+
+        //unset unnecessary fields
+        unset($changed['usermodified']);
+        unset($changed['timemodified']);
+
+        return $changed;
+    }
+
+    public static function get_for_user($username) {
+        global $DB;
+        
+        $sql = "SELECT *
+                  FROM {" . static::TABLE . "}
+                 WHERE deleted = 0
+                   AND username = ?
+              ORDER BY timestart DESC";
+        $params = array($username);
+
+        $records = $DB->get_records_sql($sql, $params);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+
+        return $activities;
+    }
+
+    public static function get_for_auditor($username) {
+        global $DB;
+
+        $user = \core_user::get_user_by_username($username);
+        
+        if ( ! has_capability('local/excursions:audit', \context_system::instance(), null, false)) {
+            return array();
+        }
+
+        $sql = "SELECT *
+                  FROM {" . static::TABLE . "}
+                 WHERE deleted = 0
+                   AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
+                   AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
+              ORDER BY timestart DESC";
+        $records = $DB->get_records_sql($sql, array());
+        
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+
+        return $activities;
+    }
+
+    public static function get_by_ids($ids) {
+        global $DB;
+
+        $activities = array();
+
+        if ($ids) {
+            $activityids = array_unique($ids);
+            list($insql, $inparams) = $DB->get_in_or_equal($activityids);
+            $sql = "SELECT *
+                      FROM {" . static::TABLE . "}
+                     WHERE deleted = 0
+                       AND id $insql
+                  ORDER BY timestart DESC";
+            $records = $DB->get_records_sql($sql, $inparams);
+            $activities = array();
+            foreach ($records as $record) {
+                $activities[] = new static($record->id, $record);
+            }
+        }
+
+        return $activities;
+    }
+
+    public static function get_for_approver($username) {
+        global $DB;
+
+        $activities = array();
+
+        $approvertypes = locallib::get_approver_types($username);
+        if ($approvertypes) {
+            // The user has approver types. Check if any activities need this approval.
+            list($insql, $inparams) = $DB->get_in_or_equal($approvertypes);
+            $sql = "SELECT id, activityid, type
+                      FROM {" . static::TABLE_EXCURSIONS_APPROVALS. "} 
+                     WHERE type $insql
+                       AND invalidated = 0";
+            $approvals = $DB->get_records_sql($sql, $inparams);
+            $approvals = static::filter_approvals_with_prerequisites($approvals);
+            $activities = static::get_by_ids(array_column($approvals, 'activityid'));
+        }
+
+        return $activities;
+    }
+
+    public static function get_for_accompanying($username) {
+        global $DB;
+
+        $activities = array();
+
+        $sql = "SELECT id, activityid
+                  FROM {" . static::TABLE_EXCURSIONS_STAFF. "} 
+                 WHERE username = ?";
+        $staff = $DB->get_records_sql($sql, array($username));
+        $accompanyingids = array_column($staff, 'activityid');
+
+        $sql = "SELECT id
+                  FROM {" . static::TABLE. "} 
+                 WHERE staffincharge = ?";
+        $staff = $DB->get_records_sql($sql, array($username));
+        $staffinchargeids = array_column($staff, 'id');
+
+        $activities = static::get_by_ids(array_merge($accompanyingids, $staffinchargeids));
+
+        return $activities;
+    }
+
+    public static function get_for_absences($start, $end) {
+        global $DB;
+
+        $sql = "SELECT *
+                  FROM {" . static::TABLE . "}
+                 WHERE timestart >= {$start}
+                   AND timestart < {$end}
+                   AND absencesprocessed != 1
+                   AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
+        $records = $DB->get_records_sql($sql, null);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+        
+        return $activities;
+    }
+
+    public static function filter_approvals_with_prerequisites($approvals) {
+        foreach ($approvals as $i => $approval) {
+            // Exlude if waiting for a prerequisite.
+            $prerequisites = static::get_prerequisites($approval->activityid, $approval->type);
+            if ($prerequisites) {
+                unset($approvals[$i]);
+            }
+        }
+        return $approvals;
+    }
+
+    public static function get_approvals($activityid) {
+        global $DB;
+        
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                 WHERE activityid = ?
+                   AND invalidated = 0
+              ORDER BY sequence ASC";
+        $params = array($activityid);
+
+        $records = $DB->get_records_sql($sql, $params);
+        $approvals = array();
+        foreach ($records as $record) {
+            $record->statushelper = locallib::approval_helper($record->status);
+            $approvals[] = $record;
+        }
+
+        return $approvals;
+    }
+
+    public static function get_unactioned_approvals($activityid) {
+        global $DB;
+        
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                 WHERE activityid = ?
+                   AND invalidated = 0
+                   AND status != 1
+              ORDER BY sequence ASC";
+        $params = array($activityid);
+
+        $records = $DB->get_records_sql($sql, $params);
+        $approvals = array();
+        foreach ($records as $record) {
+            $record->statushelper = locallib::approval_helper($record->status);
+            $approvals[] = $record;
+        }
+
+        return array_values($approvals);
+    }
+
+
+    public static function is_approver_of_activity($activityid) {
+        global $USER, $DB;
+
+        $approvertypes = locallib::get_approver_types();
+        if ($approvertypes) {
+            // The user is potentially an approver. Check if approver for this activity.
+            list($insql, $inparams) = $DB->get_in_or_equal($approvertypes);
+            $sql = "SELECT * 
+                      FROM {" . static::TABLE_EXCURSIONS_APPROVALS. "} 
+                     WHERE type $insql
+                       AND activityid = ?";
+            $inparams = array_merge($inparams, array($activityid));
+            $approvals = $DB->get_records_sql($sql, $inparams);
+            if ($approvals) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+
+    /*
+    * Save a draft of the activity, used by the auto-save service. At present, the only
+    * field auto-saved is the activity name.
+    */
+    public static function save_draft($formjson) {
+        // Some validation.
+        $formdata = json_decode($formjson);
+        if (empty($formdata->id)) {
+            return;
+        }
+
+        // Save the activity name.
+        $activity = new static($formdata->id);
+        if ($formdata->activityname) {
+            $activity->set('activityname', $formdata->activityname);
+            $activity->save();
+        }
+
+        return $activity->get('id');
+    }
+    
+
+    public static function regenerate_student_list($data) {
+        global $PAGE, $DB, $OUTPUT;
+
+        $activity = new static($data->activityid);
+
+        // Update the student list for the activity.
+        if (empty($activity)) {
+            return '';
+        }
+
+        $activityexporter = new activity_exporter($activity);
+        $output = $PAGE->get_renderer('core');
+        $activity = $activityexporter->export($output);
+
+        // Get current student list.
+        $existinglist = array_column(static::get_excursion_students_temp($data->activityid), 'username');
+
+        // Only add students that are not already in the list.
+        $newstudents = $data->users;
+        if ($existinglist) {
+            $newstudents = array();
+            foreach ($data->users as $username) {
+                if (!in_array($username, $existinglist)) {
+                    $newstudents[] = $username;
+                }
+            }
+        }
+
+        // Remove the users that are no longer to be in the list.
+        $deletefromlist = array_diff($existinglist, $data->users);
+        foreach ($deletefromlist as $username) {
+            $DB->delete_records(static::TABLE_EXCURSIONS_STUDENTS_TEMP, array(
+                'activityid' => $data->activityid,
+                'username' => $username,
+            ));
+        }
+
+        // Insert the new usernames.
+        foreach ($newstudents as $username) {
+            $record = new \stdClass();
+            $record->activityid = $data->activityid;
+            $record->username = $username;
+            $id = $DB->insert_record(static::TABLE_EXCURSIONS_STUDENTS_TEMP, $record);
+        }
+
+        $students = array();
+        // Get the students permissions.
+        foreach ($data->users as $username) {
+            $student = locallib::get_user_display_info($username);
+            $permissions = array_values(static::get_student_permissions($data->activityid, $username));
+            $student->permissions = array();
+            foreach ($permissions as $permission) {
+                $parent = locallib::get_user_display_info($permission->parentusername);
+                $parent->response = $permission->response;
+                $parent->noresponse = ($permission->response == 0);
+                $parent->responseisyes = ($permission->response == 1);
+                $parent->responseisno = ($permission->response == 2);
+                $student->permissions[] = $parent;
+            }
+            $students[] = $student;
+        }
+
+        // Generate and return the new students in html rows.
+        $data = array(
+            'activity' => $activity,
+            'students' => $students,
+        );
+        return $OUTPUT->render_from_template('local_excursions/activityform_studentlist_rows', $data);
+    }
+
+    /**
+    * Gets all of the activity students.
+    *
+    * @param int $postid.
+    * @return array.
+    */
+    public static function get_excursion_students($activityid) {
+        global $DB;
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_STUDENTS . "}
+                 WHERE activityid = ?";
+        $params = array($activityid);
+        $students = $DB->get_records_sql($sql, $params);
+        return $students;
+    }
+
+    /**
+    * Gets all of the activity students.
+    *
+    * @param int $postid.
+    * @return array.
+    */
+    public static function get_excursion_students_temp($activityid) {
+        global $DB;
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_STUDENTS_TEMP . "}
+                 WHERE activityid = ?";
+        $params = array($activityid);
+        $students = $DB->get_records_sql($sql, $params);
+        return $students;
+    }
+
+
+    /*
+    * Add a comment to an activity.
+    */
+    public static function post_comment($activityid, $comment) {
+        global $USER, $DB;
+
+        if (!static::record_exists($activityid)) {
+            return 0;
+        }
+
+        // Save the comment.
+        $record = new \stdClass();
+        $record->username = $USER->username;
+        $record->activityid = $activityid;
+        $record->comment = $comment;
+        $record->timecreated = time();
+        $record->id = $DB->insert_record(static::TABLE_EXCURSIONS_COMMENTS, $record);
+
+        static::send_comment_emails($record);
+
+        return $record->id;
+    }
+
+    /*
+    * Delete a comment
+    */
+    public static function delete_comment($commentid) {
+        global $USER, $DB;
+
+        $DB->delete_records(static::TABLE_EXCURSIONS_COMMENTS, array(
+            'id' => $commentid,
+            'username' => $USER->username,
+        ));
+
+        return 1;
+    }
+
+    /*
+    * Add a comment to an activity.
+    */
+    public static function load_comments($activityid) {
+        global $USER, $DB, $PAGE, $OUTPUT;
+
+        if (!static::record_exists($activityid)) {
+            return 0;
+        }
+
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_COMMENTS . "}
+                 WHERE activityid = ?
+              ORDER BY timecreated DESC";
+        $params = array($activityid);
+        $records = $DB->get_records_sql($sql, $params);
+        $comments = array();
+        foreach ($records as $record) {
+            $comment = new \stdClass();
+            $comment->id = $record->id;
+            $comment->activityid = $record->activityid;
+            $comment->username = $record->username;
+            $comment->comment = $record->comment;
+            $comment->timecreated = $record->timecreated;
+            $comment->readabletime = date('g:ia, j M', $record->timecreated);
+            $user = \core_user::get_user_by_username($record->username);
+            $userphoto = new \user_picture($user);
+            $userphoto->size = 2; // Size f2.
+            $comment->userphoto = $userphoto->get_url($PAGE)->out(false);
+            $comment->userfullname = fullname($user);
+            $comment->isauthor = ($comment->username == $USER->username);
+            $comments[] = $comment;
+        }
+
+        return $OUTPUT->render_from_template('local_excursions/activityform_approvals_comments', array('comments' => $comments));
+    }
+
+    /*
+    * Save approval
+    */
+    public static function save_approval($activityid, $approvalid, $checked) {
+        global $DB, $USER;
+
+        // Check if user is allowed to do this.
+        $isapprover = static::is_approver_of_activity($activityid);
+        if ($isapprover) {
+            $userapprovertypes = locallib::get_approver_types($USER->username);
+        }
+
+        // Update the approval status.
+        list($insql, $inparams) = $DB->get_in_or_equal($userapprovertypes);
+        $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                   SET status = ?, username = ?, timemodified = ?
+                 WHERE id = ?
+                   AND activityid = ?
+                   AND invalidated = 0
+                   AND type $insql";
+        $params = array($checked, $USER->username, time(), $approvalid, $activityid);
+        $params = array_merge($params, $inparams);
+        $DB->execute($sql, $params);
+
+        // Check for approval finalisation and return new status.
+        $newstatusinfo = static::check_status($activityid, null, true);
+
+        return json_encode($newstatusinfo);
+    }
+
+    /*
+    * Enable permissions
+    */
+    public static function enable_permissions($activityid, $checked) {
+        $activity = new static($activityid);
+        $activity->set('permissions', $checked);
+        $activity->save();
+    }
+
+    /*
+    * Send permissions
+    */
+    public static function send_permissions($activityid, $limit, $dueby, $users, $extratext) {
+        global $USER, $DB;
+
+        // Convert due by json array to timestamp.
+        $dueby = json_decode($dueby);
+        $duebystring = "{$dueby[2]}-{$dueby[1]}-{$dueby[0]} {$dueby[3]}:{$dueby[4]}"; // Format yyyy-m-d h:m.
+        $dueby = strtotime($duebystring);
+
+        if (empty($limit)) {
+            $limit = 0;
+        }
+
+        // Save due by and limit.
+        $activity = new static($activityid);
+        $activity->set('permissionstype', 'system');
+        if ($limit) {
+            $activity->set('permissionslimit', $limit);
+        }
+        if ($dueby) {
+            $activity->set('permissionsdueby', $dueby);
+        }
+        $activity->save();
+
+        // Queue an email.
+        $rec = new \stdClass();
+        $rec->activityid = $activityid;
+        $rec->username = $USER->username;
+        $rec->studentsjson = $users;
+        $rec->extratext = $extratext;
+        $rec->timecreated = time();
+        $DB->insert_record(static::TABLE_EXCURSIONS_PERMISSIONS_SEND, $rec);
+    }
+
+    /*
+    * Save approval
+    */
+    public static function check_status($activityid, $fieldschanged = null, $progressed = false) {
+        global $DB, $PAGE, $OUTPUT;
+
+        // Check for remaining approvals and set activity status based on findings.
+        $remainingapprovals = static::get_unactioned_approvals($activityid);
+        $activity = new static($activityid);
+        $oldstatus = locallib::status_helper($activity->get('status'));
+        $status = locallib::ACTIVITY_STATUS_INREVIEW;
+        if (empty($remainingapprovals)) {
+            // No unapproved.
+            $status = locallib::ACTIVITY_STATUS_APPROVED;
+        }
+        $activity->set('status', $status);
+        $activity->save();
+        $newstatus = locallib::status_helper($status);
+
+        // Send emails depending on status change.
+        // Approver needs to be notified when:
+        // - Draft to in review
+        // - In review to in review
+        // - Approved back to in review
+        // - Basically whenever the new status is in review.
+        if ($newstatus->inreview) {
+            static::notify_next_approver($activityid);
+        }
+
+        // Creator needs to be notified whenever there is a status change.
+        // Going from draft to in-review, approved back to in-review.
+        if ($oldstatus->status != $newstatus->status && !$newstatus->isapproved) {
+            static::send_activity_status_email($activityid, $oldstatus, $newstatus);
+        }
+
+        // Send workflow progressed email.
+        if ($oldstatus->inreview && $newstatus->inreview && $progressed) {
+            static::send_workflow_email($activityid);
+        }
+
+        // Send approved status email.
+        if ($oldstatus->inreview && $newstatus->isapproved) {
+            static::send_approved_emails($activityid);
+        }
+
+        // If changes after already approved, send email to relevant staff.
+        if ($fieldschanged) {
+            if ($oldstatus->isapproved && $newstatus->isapproved) {
+                static::send_datachanged_emails($activityid, $fieldschanged);
+            }
+        }
+
+        // Render the html for the overall activity status.
+        $html = $OUTPUT->render_from_template('local_excursions/activityform_approvals_status', array('statushelper' => $newstatus));
+
+        return (object) array(
+            'status' => $status, 
+            'html' => $html,
+        );
+
+    }
+
+    public static function get_prerequisites($activityid, $type) {
+        global $DB;
+
+        $prerequisites = locallib::WORKFLOW[$type]['prerequisites'];
+        if ($prerequisites) {
+            // Check for any yet to be approved.
+            list($insql, $inparams) = $DB->get_in_or_equal($prerequisites);
+            $sql = "SELECT *
+                      FROM {" . activity::TABLE_EXCURSIONS_APPROVALS . "}
+                     WHERE activityid = ?
+                       AND invalidated = 0
+                       AND type $insql
+                       AND status != 1";
+            $params = array_merge(array($activityid), $inparams);
+            $records = $DB->get_records_sql($sql, $params);
+            return $records;
+        }
+        return null;
+
+    }
+
+    protected static function send_activity_status_email($activityid, $oldstatus, $newstatus) {
+        global $USER, $PAGE;
+
+        $activity = new static($activityid);
+        $activityexporter = new activity_exporter($activity);
+        $output = $PAGE->get_renderer('core');
+        $activity = $activityexporter->export($output);
+
+        $toUser = \core_user::get_user_by_username($activity->username);
+        $fromUser = \core_user::get_noreply_user();
+        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+
+        $data = array(
+            'activity' => $activity,
+            'oldstatus' => $oldstatus,
+            'newstatus' => $newstatus,
+        );
+
+        $subject = "Activity status update: " . $activity->activityname;
+        $messageText = $output->render_from_template('local_excursions/email_status_text', $data);
+        $messageHtml = $output->render_from_template('local_excursions/email_status_html', $data);
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true); 
+
+    }
+
+    protected static function send_workflow_email($activityid) {
+        global $USER, $PAGE;
+
+        $activity = new static($activityid);
+        $activityexporter = new activity_exporter($activity);
+        $output = $PAGE->get_renderer('core');
+        $activity = $activityexporter->export($output);
+
+        $toUser = \core_user::get_user_by_username($activity->username);
+        $fromUser = \core_user::get_noreply_user();
+        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+
+        $subject = "Activity workflow update: " . $activity->activityname;
+        $messageText = $output->render_from_template('local_excursions/email_workflow_text', $activity);
+        $messageHtml = $output->render_from_template('local_excursions/email_workflow_html', $activity);
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true); 
+
+    }
+
+    protected static function notify_next_approver($activityid) {
+        $activity = new static($activityid);
+        // Get the next approval step.
+        $approvals = static::get_unactioned_approvals($activityid);
+        $approvals = static::filter_approvals_with_prerequisites($approvals); 
+        foreach ($approvals as $nextapproval) {
+            $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
+            foreach($approvers as $approver) {
+                if ($approver['contacts']) {
+                    foreach ($approver['contacts'] as $email) {
+                        static::send_next_approval_email($activity, $approver['username'], $email);
+                    }
+                } else {
+                     static::send_next_approval_email($activity, $approver['username']);
+                }
+            }
+        }
+    }
+
+
+    protected static function send_next_approval_email($activity, $recipient, $email = null) {
+        global $USER, $PAGE;
+
+        $toUser = \core_user::get_user_by_username($recipient);
+        if ($email) {
+            // Override the email address.
+            $toUser->email = $email;
+        }
+        $fromUser = \core_user::get_noreply_user();
+        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+
+        $activityexporter = new activity_exporter($activity);
+        $output = $PAGE->get_renderer('core');
+        $activity = $activityexporter->export($output);
+
+        $subject = "Activity approval required: " . $activity->activityname;
+        $messageText = $output->render_from_template('local_excursions/email_approval_text', $activity);
+        $messageHtml = $output->render_from_template('local_excursions/email_approval_html', $activity);
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true);
+    }
+
+    /*
+    * Emails the comment to all parties involved.
+    */
+    protected static function send_comment_emails($comment) {
+        global $PAGE;
+
+        $activity = new static($comment->activityid);
+        $output = $PAGE->get_renderer('core');
+        $activityexporter = new activity_exporter($activity);
+        $activity = $activityexporter->export($output);
+
+        $recipients = array();
+
+        // Send the comment to the next approvers in line...
+        $approvals = static::get_unactioned_approvals($comment->activityid);
+        foreach ($approvals as $nextapproval) {
+            $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
+            foreach($approvers as $approver) {
+                if ($approver['contacts']) {
+                    foreach ($approver['contacts'] as $email) {
+                        static::send_comment_email($activity, $comment, $approver['username'], $email);
+                        $recipients[] = $approver['username'];
+                    }
+                } else {
+                    if ( ! in_array($approver['username'], $recipients)) {
+                        static::send_comment_email($activity, $comment, $approver['username']);
+                        $recipients[] = $approver['username'];
+                    }
+                }
+            }
+        }
+
+        // Send comment to approvers that have actioned an approval for this activity.
+        $approvals = static::get_approvals($comment->activityid);
+        foreach ($approvals as $approval) {
+            if ($approval->username) {
+                if ( ! in_array($approval->username, $recipients)) {
+                    static::send_comment_email($activity, $comment, $approval->username);
+                    $recipients[] = $approval->username;
+                }
+            }
+        }
+
+        // Send comment to activity creator.
+        if ( ! in_array($activity->username, $recipients)) {
+            static::send_comment_email($activity, $comment, $activity->username);
+            $recipients[] = $activity->username;
+        }
+
+        // Send comment to the comment poster if they are not one of the above.
+        if ( ! in_array($USER->username, $recipients)) {
+            static::send_comment_email($activity, $comment, $USER->username);
+        }
+
+    }
+
+    protected static function send_comment_email($activity, $comment, $recipient, $email = null) {
+        global $USER, $PAGE;
+
+        $toUser = \core_user::get_user_by_username($recipient);
+        if ($email) {
+            // Override the email address.
+            $toUser->email = $email;
+        }
+
+        $data = array(
+            'user' => $USER,
+            'activity' => $activity,
+            'comment' => $comment,
+        );
+
+        $subject = "Re: " . $activity->activityname;
+        $output = $PAGE->get_renderer('core');
+        $messageText = $output->render_from_template('local_excursions/email_comment_text', $data);
+        $messageHtml = $output->render_from_template('local_excursions/email_comment_html', $data);
+        $result = email_to_user($toUser, $USER, $subject, $messageText, $messageHtml, '', '', true);
+    }
+
+    protected static function send_approved_emails($activityid) {
+        global $PAGE;
+
+        $activity = new static($activityid);
+        $output = $PAGE->get_renderer('core');
+        $activityexporter = new activity_exporter($activity);
+        $activity = $activityexporter->export($output);
+
+        $recipients = array();
+
+        // Send to all approvers.
+        $approvals = static::get_approvals($comment->activityid);
+        foreach ($approvals as $nextapproval) {
+            $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
+            foreach($approvers as $approver) {
+                if ($approver['contacts']) {
+                    foreach ($approver['contacts'] as $email) {
+                        static::send_approved_email($activity, $approver['username'], $email);
+                        $recipients[] = $approver['username'];
+                    }
+                } else {
+                    if ( ! in_array($approver['username'], $recipients)) {
+                        static::send_approved_email($activity, $approver['username']);
+                        $recipients[] = $approver['username'];
+                    }
+                }
+            }
+        }
+
+        // Send to accompanying staff.
+        $accompanyingstaff = static::get_accompanying_staff($activityid);
+        foreach ($accompanyingstaff as $staff) {
+            if ( ! in_array($staff->username, $recipients)) {
+                static::send_approved_email($activity, $staff->username);
+                $recipients[] = $staff->username;
+            }
+        }
+
+        // Send to activity creator.
+        if ( ! in_array($activity->username, $recipients)) {
+            static::send_approved_email($activity, $activity->username);
+            $recipients[] = $activity->username;
+        }
+
+        // Send to staff in charge.
+        if ( ! in_array($activity->staffincharge, $recipients)) {
+            static::send_approved_email($activity, $activity->staffincharge);
+            $recipients[] = $activity->staffincharge;
+        }
+    }
+
+    protected static function send_approved_email($activity, $recipient, $email = '') {
+        global $USER, $PAGE;
+
+        $toUser = \core_user::get_user_by_username($recipient);
+        if ($email) {
+            // Override the email address.
+            $toUser->email = $email;
+        }
+
+        $fromUser = \core_user::get_noreply_user();
+        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+
+        $data = array(
+            'activity' => $activity,
+        );
+
+        $subject = "Activity approved: " . $activity->activityname;
+        $output = $PAGE->get_renderer('core');
+        $messageText = $output->render_from_template('local_excursions/email_approved_text', $data);
+        $messageHtml = $output->render_from_template('local_excursions/email_approved_html', $data);
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true); 
+    }
+
+    protected static function send_datachanged_emails($activityid, $fieldschanged) {
+        global $PAGE;
+
+        $activity = new static($activityid);
+        $output = $PAGE->get_renderer('core');
+        $activityexporter = new activity_exporter($activity);
+        $activity = $activityexporter->export($output);
+        $activity->fieldschanged = array_values($fieldschanged); // Inject fields changed for emails.
+
+        $recipients = array();
+
+        // Send to all approvers.
+        $approvals = static::get_approvals($activityid);
+        foreach ($approvals as $nextapproval) {
+            $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
+            foreach($approvers as $approver) {
+                if ($approver['contacts']) {
+                    foreach ($approver['contacts'] as $email) {
+                        static::send_datachanged_email($activity, $approver['username'], $email);
+                        $recipients[] = $approver['username'];
+                    }
+                } else {
+                    if ( ! in_array($approver['username'], $recipients)) {
+                        static::send_datachanged_email($activity, $approver['username']);
+                        $recipients[] = $approver['username'];
+                    }
+                }
+            }
+        }
+
+        // Send to accompanying staff.
+        $accompanyingstaff = static::get_accompanying_staff($activityid);
+        foreach ($accompanyingstaff as $staff) {
+            if ( ! in_array($staff->username, $recipients)) {
+                static::send_datachanged_email($activity, $staff->username);
+                $recipients[] = $staff->username;
+            }
+        }
+
+        // Send to activity creator.
+        if ( ! in_array($activity->username, $recipients)) {
+            static::send_datachanged_email($activity, $activity->username);
+            $recipients[] = $activity->username;
+        }
+
+        // Send to staff in charge.
+        if ( ! in_array($activity->staffincharge, $recipients)) {
+            static::send_datachanged_email($activity, $activity->staffincharge);
+            $recipients[] = $activity->staffincharge;
+        }
+    }
+
+    protected static function send_datachanged_email($activity, $recipient, $email = '') {
+        global $USER, $PAGE;
+
+        $toUser = \core_user::get_user_by_username($recipient);
+        if ($email) {
+            // Override the email address.
+            $toUser->email = $email;
+        }
+
+        $fromUser = \core_user::get_noreply_user();
+        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+
+        $subject = "Activity information changed: " . $activity->activityname;
+        $output = $PAGE->get_renderer('core');
+        $messageText = $output->render_from_template('local_excursions/email_datachanged_text', $activity);
+        $messageHtml = $output->render_from_template('local_excursions/email_datachanged_html', $activity);
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true); 
+    }
+
+    public static function get_messagehistory($activityid) {
+        global $DB;
+
+        $activity = new static($activityid);
+        if (empty($activity)) {
+            return [];
+        }
+
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS_SEND . "}
+                 WHERE activityid = ?
+              ORDER BY timecreated DESC";
+        $params = array($activityid);
+        $messagehistory = $DB->get_records_sql($sql, $params);
+
+        return $messagehistory;
+    }
+
+    public static function get_messagehistory_html($activityid) {
+        global $PAGE;
+
+        $activity = new static($activityid);
+        $activityexporter = new activity_exporter($activity);
+        $output = $PAGE->get_renderer('core');
+        $activity = $activityexporter->export($output);
+        return $output->render_from_template('local_excursions/activityform_studentlist_messagehistory', $activity);
+    }
+
+    public static function get_all_permissions($activityid) {
+        global $USER, $DB;
+
+        $sql = "SELECT DISTINCT p.*
+                  FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} p
+            INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
+                 WHERE p.activityid = ?
+              ORDER BY p.timecreated DESC";
+        $params = array($activityid);
+        $permissions = $DB->get_records_sql($sql, $params);
+
+        return $permissions;
+    }
+
+    /*
+    * A "no" response means the student is not attending, even if another parent response "yes"
+    */
+    public static function get_all_attending($activityid) {
+        global $USER, $DB;
+
+        $attending = array();
+
+        $activity = new static($activityid);
+        if ($activity->get('permissions')) {
+            $sql = "SELECT DISTINCT p.studentusername
+                      FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} p
+                INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
+                     WHERE p.activityid = ?
+                       AND p.response = 1
+                       AND NOT EXISTS ( 
+                           SELECT studentusername
+                             FROM mdl_excursions_permissions
+                            WHERE activityid = ?
+                              AND response = 2
+                       )";
+            $params = array($activityid, $activityid);
+            $attending = $DB->get_records_sql($sql, $params);
+            $attending = array_values(array_column($attending, 'studentusername'));
+        } else {
+            $attending = static::get_excursion_students($activityid);
+            $attending = array_values(array_column($attending, 'username'));
+        }
+
+        return $attending;
+    }
+
+    public static function get_parent_permissions($activityid, $parentusername) {
+        global $DB;
+
+        $sql = "SELECT DISTINCT p.*
+                  FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} p
+            INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
+                 WHERE p.activityid = ?
+                   AND p.parentusername = ?
+              ORDER BY p.timecreated DESC";
+        $params = array($activityid, $parentusername);
+        $permissions = $DB->get_records_sql($sql, $params);
+
+        return $permissions;
+    }
+
+    public static function get_student_permissions($activityid, $studentusername) {
+        global $DB;
+
+        $sql = "SELECT DISTINCT p.*
+                  FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} p
+            INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
+                 WHERE p.activityid = ?
+                   AND p.studentusername = ?
+              ORDER BY p.timecreated DESC";
+        $params = array($activityid, $studentusername);
+        $permissions = $DB->get_records_sql($sql, $params);
+
+        return $permissions;
+    }
+
+    public static function get_students_by_response($activityid, $response) {
+        global $DB;
+
+        $sql = "SELECT DISTINCT p.studentusername
+                  FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} p
+            INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
+                 WHERE p.activityid = ?
+                   AND p.response = ?";
+        $params = array($activityid, $response);
+        $permissions = $DB->get_records_sql($sql, $params);
+
+        return $permissions;
+    }
+
+    /*
+    * Save permission
+    */
+    public static function submit_permission($permissionid, $response) {
+        global $DB, $USER;
+
+        // Check if past date or limit.
+        $activityid = $DB->get_field(static::TABLE_EXCURSIONS_PERMISSIONS, 'activityid', array('id' => $permissionid));
+        $activity = new static($activityid);
+        $permissionshelper = locallib::permissions_helper(
+            $activity->get('id'),
+            $activity->get('permissionstype'), 
+            $activity->get('permissionsdueby'), 
+            $activity->get('permissionslimit')
+        );
+
+        if ($permissionshelper->ispastdueby || $permissionshelper->ispastlimit) {
+            return;
+        }
+
+        // Update the permission response.
+        $sql = "UPDATE {" . static::TABLE_EXCURSIONS_PERMISSIONS . "}
+                   SET response = ?, timeresponded = ?
+                 WHERE id = ?
+                   AND parentusername = ?";
+        $params = array($response, time(), $permissionid, $USER->username);
+        $DB->execute($sql, $params);
+
+        // If it is a yes, sent an email to the student to tell them their parent indicated that they will be attending.
+        if ($response == '1') {
+            static::send_attending_email($permissionid);
+        }
+
+        return $response;
+    }
+
+    public static function send_attending_email($permissionid) {
+        global $DB, $PAGE;
+
+        // Get the permission.
+        $permission = $DB->get_record(static::TABLE_EXCURSIONS_PERMISSIONS, array('id' => $permissionid));
+
+        // Get the email users.
+        $toUser = \core_user::get_user_by_username($permission->studentusername);
+        $fromUser = \core_user::get_noreply_user();
+        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+
+        // Get the activity for the permission.
+        $activity = new activity($permission->activityid);
+        $activityexporter = new activity_exporter($activity);
+        $output = $PAGE->get_renderer('core');
+        $activity = $activityexporter->export($output);
+
+        // Add additional data for template.
+        $parentuser = \core_user::get_user_by_username($permission->parentusername);
+        $activity->parentname = fullname($parentuser);
+        $activity->studentname = fullname($toUser);
+
+
+        $messageText = $output->render_from_template('local_excursions/email_attending_text', $activity);
+        $messageHtml = $output->render_from_template('local_excursions/email_attending_html', $activity);
+        $subject = "Activity: " . $activity->activityname;
+
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true);        
+
+    }
+
+    public static function get_accompanying_staff($activityid) {
+        global $DB;
+        
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_STAFF . "}
+                 WHERE activityid = ?";
+        $params = array($activityid);
+        $records = $DB->get_records_sql($sql, $params);
+
+        $staff = array();
+        foreach ($records as $record) {
+            $staff[] = (object) $record;
+        }
+
+        return $staff;
+    }
+
+    public static function soft_delete($id) {
+        global $DB, $USER;
+
+        // Get the block instance id of the post.
+        $activity = new static($id);
+        if (empty($activity)) {
+            return;
+        }
+
+        // Check if user is the creator.
+        if ($USER->username == $activity->get('username')) {
+            $activity->set('deleted', 1);
+            $activity->update();
+        }
+    }
+
+}

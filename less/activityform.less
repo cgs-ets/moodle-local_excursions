@@ -1,0 +1,338 @@
+#page-local-excursions-activity {
+	#page-content {
+		// Hide the module settings cog on activity setup page.
+		.action-menu {
+		    display: none !important;
+		}
+		// Hide the unnecessary collapse all.
+		.collapse-all {
+			display: none;
+		}
+	}
+	#region-main {
+		position: relative;
+	}
+	form[data-form="excursions-activity"] {
+		position: relative;
+		// Column layout
+		.col-md-3 {
+		    max-width: 170px;
+		    margin-right: 0;
+		    padding-right: 0;
+		}
+
+		fieldset#id_actions {
+			.ftoggler {
+			    display: none;
+			}
+		}
+
+		.custom-footer-buttons {
+			padding: 25px 0 30px;
+		    text-align: left;
+		}
+
+		// Hide intial header.
+		#id_general {
+			legend {
+				display: none;
+			}
+		}
+
+		// Hide the expand/collapse form toggles
+		legend a.fheader {
+			background: none !important;
+			margin: 0;
+			padding: 0;
+			pointer-events: none;
+		}
+
+		fieldset {
+			margin-left: 0 !important;
+			margin-bottom: 20px;
+    		padding-bottom: 30px;
+		}
+
+		fieldset#id_paperwork {
+			.row.form-group {
+			    background: #f0f4f8;
+			    padding: 20px 0;
+			    margin: 2px 0px;
+			}
+		}
+
+		.medical-report-link {
+		    //padding: 10px 25px;
+		    i {
+		    	margin-right: 4px;
+		    }
+		}
+		
+	    .medical-report-description {
+	    	margin-top: 5px;
+	    }
+
+	    // basic field css
+	    input[type="text"], textarea {
+		    width: 100%;
+		    max-width: 550px;
+		}
+
+		#fitem_id_campusdesc {
+			font-size: 80%;
+			margin-top: -17px;
+		}
+		
+	}
+
+	.status {
+    	font-size: 30px;
+	    margin: 0;
+	    text-align: center;
+	    text-transform: capitalize;
+	    padding: .75rem 1.25rem;
+	    position: relative;
+	    border-bottom: 1px solid #dee2e6;
+	    i {
+	    	display: block;
+	    }
+	    &[data-status="2"] {
+		    color: #856404;
+		    background-color: #fff3cd;
+		}
+		&[data-status="3"] {
+			color: #155724;
+		    background-color: #d4edda;
+		}
+    }
+
+	.approvals {
+		display: none;
+		font-size: 85%;
+	    position: relative;
+	    width: 25%;
+	    top: -21px;
+	    height: 100%;
+	    border-left: 1px solid #ccc;
+	    background-color: #EEF2F7;
+	    overflow: hidden;
+	    float: right;
+	    right: -20px;
+	    min-height: 1500px;
+	    border-bottom: 1px solid #ccc;
+	    .workflow {
+    		box-shadow: 0 1px 6px 0px #555;
+		    h5 {
+		    	margin: 0;
+			    padding: 10px;
+			    //font-size: 16px;
+			    background: #fff;
+		    }
+		    table {
+		    	margin: 0;
+		    }
+		    tr {
+		    	transition: opacity 0.3s;
+		    	&.submitting {
+				    pointer-events: none;
+				    opacity: 0.4;
+				}
+				&[data-status="0"] {
+					color: #856404;
+				    background-color: #fff3cd;
+				    border-color: #ffeeba;
+				}
+				&[data-status="1"] {
+					color: #155724;
+				    background-color: #d4edda;
+				    border-color: #c3e6cb;
+				}
+				&[data-status="2"] {
+					color: #721c24;
+				    background-color: #f8d7da;
+				    border-color: #f5c6cb;
+				}
+		    }
+			td {
+				vertical-align: middle;
+			}
+			.c-photo {
+			    width: 46px;
+			    text-align: center;
+			    padding: 7px 0 7px 10px;
+			    img {
+			    	width: 35px;
+			    	height: 35px;
+			    }
+			}
+			.c-status {
+				width: 65px;
+				text-align: center;
+			}
+	    }
+	    .reply-form {
+	    	padding: 0;
+		    position: relative;
+		    margin: 25px 10px 20px 10px;
+		    transition: opacity 0.3s;
+		    &.submitting {
+			    pointer-events: none;
+			    opacity: 0.7;
+			}
+	    	textarea {
+	    		font-size: 85%;
+			    padding: 10px;
+	    	}
+	    	.btn {
+	    		margin: 5px 0;
+	    		border-radius: 50%;
+			    width: 35px;
+			    height: 35px;
+			    padding: 4px;
+			    position: absolute;
+			    right: -6px;
+    			bottom: -9px;
+	    	}
+	    }
+		.comments {
+			margin: 0;
+    		border-top: 1px solid #ddd;
+    		transition: opacity 0.3s;
+		    &.loading {
+			    opacity: 0.7;
+			}
+			.box {
+				padding: 15px 10px 10px 57px;
+			    border-bottom: 1px solid #ddd;
+			    position: relative;
+			    min-height: 65px;
+    			img {
+    				margin-right: 4px;
+    				position: absolute;
+    				left: 10px;
+    			}
+			}
+			.comment-time {
+			    position: absolute;
+			    top: 3px;
+			    right: 4px;
+			    text-align: right;
+			    font-size: 83%;
+			}
+			.delete-comment {
+			    position: absolute;
+			    bottom: 6px;
+			    right: 7px;
+			}
+		}
+	}
+
+	.approved-functions {
+		display: none;
+	}
+
+	&.activity-status-2, &.activity-status-3 {
+		.approvals {
+			display: block;
+		}
+		form[data-form="excursions-activity"] {
+			position: relative;
+		    float: left;
+		    width: 75%;
+		}
+	}
+	form > .status {
+	    display: none;
+	}
+	&.activity-status-3 {
+		.approvals .workflow h5 {
+			background: #e2e4e6;
+		}
+		form > .status {
+			display: block;
+			text-align: left;
+		    margin-top: -21px;
+		    margin-bottom: 21px;
+		    margin-left: -20px;
+		    margin-right: -20px;
+		    i {
+		    	display: inline-block;
+		    }
+		}
+		.approvals .status {
+			display: none;
+		}
+		.approved-functions {
+			display: block;
+		}
+	}
+	.modal-PREVIEWEMAIL {
+		.modal-body {
+			background: #fcefdc;
+		}
+	}
+
+	#fitem_id_staffinchargejson {
+    	display: none;
+    	&>div{
+		    display: none;
+		}
+		&.has-danger {
+		    display: block;
+		    height: 22px;
+		    overflow: hidden;
+		    &:before {
+			    content: "You must complete the staff in charge.";
+			    color: red;
+			    width: 100%;
+			    height: 22px;
+			    margin-left: 15px;
+			}
+		}
+    }
+    #staffincharge {
+    	&.has-tags {
+		    .recipient-input-wrap {
+		    	display: none;
+		    }
+    	}
+    }
+
+    #fitem_id_accompanyingstaffjson {
+    	display: none;
+    }
+
+
+
+	// Editable for creator, approvers, and staff in charge.
+	&:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) {
+		#id_general > .fcontainer,
+		#id_staff > .fcontainer,
+		.permissions, 
+		.student-list,
+		#fitem_id_riskassessment,
+		#fitem_id_attachments,
+		.actions 
+		{
+			input, select, textarea, a, .form-check > label {
+				background-color: #e9ecef !important;
+			  	-webkit-user-select: none;
+			  	-moz-user-select: none;
+			  	-ms-user-select: none;
+			  	user-select: none !important;
+			  	pointer-events:none !important;
+			}
+		}
+
+		.student-list, .actions {
+			input, select, textarea, a, .c-checkbox {
+				display: none;
+			}
+		}
+		.alert {
+			display: none !important;
+		}
+	}
+	
+}
+
