@@ -5,8 +5,8 @@ Activity planning system for CGS.
 Author
 --------
 2021 Michael Vangelovski<br/>
-<https://michaelvangelovski.com><br/>
 <https://github.com/michaelvangelovski><br/>
+<http://michaelvangelovski.com><br/>
 
 ### Workflow configuration
 The workflow is automatically determined based on the campus roles (custom profile field) of the participating students. There are two workflow paths: Primary School (Admin Approval, HoPS Approval) and Senior School (Admin Approval, HoSS Approval). Configuration these workflows is possible via a config.php file inside the local_excursions folder. This is an environment-specific file that must be created manually (it does not come with the git repo). A sample config file (config.sample.php) is provided for reference. The possible configurations for each step of the workflow step are as follows:
