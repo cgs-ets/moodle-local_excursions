@@ -759,14 +759,17 @@
 }
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-individual,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-course,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-group,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-taglist {
   display: none;
 }
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-individual input,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-course input,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-group input,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-taglist input,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-individual select,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-course select,
+#page-local-excursions-activity .modal-ADDSTUDENTS .addby-group select,
 #page-local-excursions-activity .modal-ADDSTUDENTS .addby-taglist select {
   max-width: 500px;
 }
@@ -774,6 +777,9 @@
   display: block;
 }
 #page-local-excursions-activity .modal-ADDSTUDENTS .student-selector.course .addby-course {
+  display: block;
+}
+#page-local-excursions-activity .modal-ADDSTUDENTS .student-selector.group .addby-group {
   display: block;
 }
 #page-local-excursions-activity .modal-ADDSTUDENTS .student-selector.taglist .addby-taglist {

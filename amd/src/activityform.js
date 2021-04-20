@@ -301,6 +301,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                         // Set the modal content.
                         Templates.render(self.templates.ADDSTUDENTS, {
                                 "courses" : data.courses,
+                                "groups" : data.groups,
                                 "taglists" : data.taglists,
                             })
                             .done(function(html) {
@@ -363,6 +364,36 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                 methodname: 'local_excursions_formcontrol',
                 args: { 
                     action: 'get_student_usernames_from_courseid',
+                    data: select.val(),
+                },
+                done: function(json) {
+                    var usernames = JSON.parse(json);
+                    if (usernames.length) {
+                        var oldstudentlist = JSON.stringify(self.studentlist.filter(self.onlyUnique));
+                        for(var i = 0; i < usernames.length; i++) {
+                            self.studentlist.push(usernames[i].toString());
+                        }
+                        var newstudentlist = JSON.stringify(self.studentlist.filter(self.onlyUnique));
+                        if (oldstudentlist != newstudentlist) {
+                            self.studentlistwrap.addClass('changes-not-saved');
+                        }
+                    }
+                    self.regenerateStudentList();
+                },
+                fail: function(reason) {
+                    Log.debug(reason);
+                }
+            }]);
+            return;
+        }
+
+        if (addby == 'group') {
+            var select = self.rootel.find('select[name="group"]'); 
+            // Get the usernames from the selected course.                   
+            Ajax.call([{
+                methodname: 'local_excursions_formcontrol',
+                args: { 
+                    action: 'get_student_usernames_from_groupid',
                     data: select.val(),
                 },
                 done: function(json) {

@@ -79,6 +79,12 @@ trait formcontrol {
             return json_encode($usernames);
         }
 
+        if ($action == 'get_student_usernames_from_groupid') {
+            $groupid = json_decode($data);
+            $usernames = locallib::get_student_usernames_from_groupid($groupid);
+            return json_encode($usernames);
+        }
+
         if ($action == 'get_comments') {
             $activityid = json_decode($data);
             return activity::load_comments($activityid);

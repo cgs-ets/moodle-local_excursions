@@ -39,6 +39,12 @@
             </label>
         </div>
         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="addstudentby" id="addstudentbygroup" value="group">
+            <label class="form-check-label" for="addstudentbygroup">
+                Group
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="addstudentby" id="addstudentbytaglist" value="taglist">
             <label class="form-check-label" for="addstudentbytaglist">
                 Taglist
@@ -53,6 +59,13 @@
             {{#courses}}
                 <option value="{{{val}}}">{{txt}}</option>
             {{/courses}}
+        </select>
+    </div>
+    <div class="addby-group">
+        <select name="group" class="form-control">
+            {{#groups}}
+                <option value="{{{val}}}">{{txt}}</option>
+            {{/groups}}
         </select>
     </div>
     <div class="addby-taglist">

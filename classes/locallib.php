@@ -250,6 +250,29 @@ class locallib extends local_excursions_config {
         return array_column($students, 'username');
     }
 
+    public static function get_student_usernames_from_groupid($groupid) {
+        global $DB;
+        $sql = "SELECT u.username
+                  FROM {user} u, {user_enrolments} ue, {enrol} e, {groups} g, {groups_members} gm, {course} c, {role_assignments} ra, {context} cn, {role} r
+                 WHERE g.id = ?
+                   AND gm.groupid = g.id
+                   AND c.id = g.courseid
+                   AND e.courseid = c.id
+                   AND ue.enrolid = e.id
+                   AND cn.instanceid = c.id
+                   AND cn.contextlevel = 50
+                   AND u.id = ue.userid
+                   AND ra.contextid =  cn.id
+                   AND ra.userid = ue.userid
+                   AND r.id = ra.roleid
+                   AND r.shortname = 'student'
+                   AND u.id = gm.userid";
+        $params = array($groupid);
+        $students = $DB->get_records_sql($sql, $params);
+
+        return array_column($students, 'username');
+    }
+
     public static function highlight_word($content, $word) {
         // return $content if there is no highlight color or strings given, nothing to do.
         if (strlen($content) < 1 || strlen($word) < 1) {
@@ -317,6 +340,27 @@ class locallib extends local_excursions_config {
 
         return $out;
     }
+
+
+    public static function get_users_groups($user) {
+        global $DB;
+
+        $out = array();
+
+        $courses = locallib::get_users_courses($user);
+        foreach ($courses as $course) {
+            // Get the groups in this course.
+            $groups = $DB->get_records('groups', array('courseid' => $course['val']));
+            foreach ($groups as $group) {
+                $out[] = array(
+                    'val' => $group->id,
+                    'txt' => $group->name,
+                );
+            }
+        }
+        return $out;
+    }
+
 
     public static function get_users_mentors($userid) {
         global $DB;
@@ -509,6 +553,7 @@ class locallib extends local_excursions_config {
 
         $data = array(
             'courses' => locallib::get_users_courses($USER),
+            'groups' => locallib::get_users_groups($USER),
             'taglists' => array(
                 'user' => locallib::get_user_taglists(),
                 'public' => locallib::get_public_taglists(),
