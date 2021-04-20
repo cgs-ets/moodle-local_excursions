@@ -303,7 +303,7 @@ class form_activity extends \moodleform {
             )));
         }
 
-        $mform->addElement('html', $OUTPUT->render_from_template('local_excursions/usefullinks', array('activity' => $activity)));
+        $mform->addElement('html', $OUTPUT->render_from_template('local_excursions/activityform_usefullinks', array('activity' => $activity)));
 
         // Hidden fields.
         $mform->addElement('hidden', 'edit');
