@@ -59,6 +59,9 @@ class activity_exporter extends persistent_exporter {
             'permissionsurl' => [
                 'type' => PARAM_RAW,
             ],
+            'summaryurl' => [
+                'type' => PARAM_RAW,
+            ],
             'startreadabletime' => [
                 'type' => PARAM_RAW,
             ],
@@ -110,6 +113,9 @@ class activity_exporter extends persistent_exporter {
             'ispast' => [
                 'type' => PARAM_BOOL,
             ],
+            'numstudents' => [
+                'type' => PARAM_INT,
+            ],
         ];
     }
 
@@ -128,6 +134,10 @@ class activity_exporter extends persistent_exporter {
 
         $permissionsurl = new \moodle_url('/local/excursions/permissions.php', array(
             'activityid' => $this->data->id,
+        ));
+
+        $summaryurl = new \moodle_url('/local/excursions/summary.php', array(
+            'id' => $this->data->id,
         ));
 
         $startreadabletime = '';
@@ -267,9 +277,12 @@ class activity_exporter extends persistent_exporter {
 
         $formattedattachments = $this->export_attachments($output);
 
+        $numstudents = count(activity::get_excursion_students($this->data->id));
+
     	return [
             'manageurl' => $manageurl->out(false),
             'permissionsurl' => $permissionsurl->out(false),
+            'summaryurl' => $summaryurl->out(false),
             'startreadabletime' => $startreadabletime,
             'endreadabletime' => $endreadabletime,
             'statushelper' => $statushelper,
@@ -287,6 +300,7 @@ class activity_exporter extends persistent_exporter {
             'formattedattachments' => $formattedattachments,
             'calicons' => $calicons,
             'ispast' => $ispast,
+            'numstudents' => $numstudents,
 	    ];
     }
 

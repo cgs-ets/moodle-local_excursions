@@ -1,0 +1,38 @@
+#activity-summary {
+    max-width: 900px;
+    width: 900px;
+    margin: 8px auto;
+	table {
+		width: 100%;
+		border-collapse: collapse;
+	    font-size: 15px;
+	    font-family: sans-serif;
+	    color: #000;
+	    th, td {
+		    padding: 12px 15px;
+			border: 1px solid #000;
+		}
+		th {
+			background-color: #f2f4f6;
+		    text-align: left;
+		    min-width: 150px;
+		}
+	}
+	.print {visibility:hidden;}
+	@media screen {
+		.print {
+			visibility: visible;
+		    padding: 14px 20px;
+		    display: inline-block;
+		    overflow: hidden;
+		    background-color: #005b94;
+		    color: #fff;
+		    margin: 10px 0;
+		    font-size: 15px;
+		    text-decoration: none;
+		    font-weight: 600;
+		    font-family: sans-serif;
+		    float: right;
+		}
+	}
+}

@@ -218,7 +218,7 @@
   font-size: 80%;
   margin-top: -17px;
 }
-#page-local-excursions-activity .helpguide {
+#page-local-excursions-activity .usefullinks {
   position: absolute;
   top: 0;
   right: 0;
@@ -398,7 +398,7 @@
 #page-local-excursions-activity.activity-status-3 .approved-functions {
   display: block;
 }
-#page-local-excursions-activity.activity-status-3 .helpguide {
+#page-local-excursions-activity.activity-status-3 .usefullinks {
   display: none;
 }
 #page-local-excursions-activity .modal-PREVIEWEMAIL .modal-body {
@@ -1078,4 +1078,45 @@
   -ms-user-select: none;
   user-select: none !important;
   pointer-events: none !important;
+}
+#activity-summary {
+  max-width: 900px;
+  width: 900px;
+  margin: 8px auto;
+}
+#activity-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  font-family: sans-serif;
+  color: #000;
+}
+#activity-summary table th,
+#activity-summary table td {
+  padding: 12px 15px;
+  border: 1px solid #000;
+}
+#activity-summary table th {
+  background-color: #f2f4f6;
+  text-align: left;
+  min-width: 150px;
+}
+#activity-summary .print {
+  visibility: hidden;
+}
+@media screen {
+  #activity-summary .print {
+    visibility: visible;
+    padding: 14px 20px;
+    display: inline-block;
+    overflow: hidden;
+    background-color: #005b94;
+    color: #fff;
+    margin: 10px 0;
+    font-size: 15px;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: sans-serif;
+    float: right;
+  }
 }
