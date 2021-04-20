@@ -354,7 +354,7 @@ class locallib extends local_excursions_config {
             foreach ($groups as $group) {
                 $out[] = array(
                     'val' => $group->id,
-                    'txt' => $group->name,
+                    'txt' => $course['txt'] . ' > ' . $group->name,
                 );
             }
         }
