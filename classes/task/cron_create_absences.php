@@ -55,7 +55,6 @@ class cron_create_absences extends \core\task\scheduled_task {
     public function execute() {
         // Find approved activities taking place tomorrow.
         $tomorrowstart = strtotime('tomorrow');
-        $tomorrowstart = strtotime('2021-05-03 00:00');
         $readabletomorrowstart = date('Y-m-d H:i:s', $tomorrowstart);
         $tomorrowend = strtotime('+1 day', $tomorrowstart);
         $readabletomorrowend = date('Y-m-d H:i:s', $tomorrowend);
