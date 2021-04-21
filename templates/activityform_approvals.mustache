@@ -28,22 +28,9 @@
     <div class="workflow">
         <h5>Approvals</h5>
         <table class="table">
-            {{!
-                <thead>
-                    <tr>
-                        <th class="header c-seq" scope="col">Seq</th>
-                        <th class="header c-type" scope="col">Description</th>
-                        <th class="header c-photo" scope="col"></th>
-                        <th class="header c-status" scope="col">Status</th>
-                    </tr>
-                </thead>
-            }}
             <tbody>
                 {{#approvals}}
                     <tr class="approval {{#canapprove}}is-approver{{/canapprove}}" data-status="{{status}}" data-type="{{type}}">
-                        <td class="cell c-seq">
-                            {{sequence}}
-                        </td>
                         <td class="cell c-type">
                             {{description}}
                         </td>
