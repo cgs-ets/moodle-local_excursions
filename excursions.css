@@ -983,7 +983,7 @@
 #page-local-excursions-index .c-timestart,
 #page-local-excursions-index .c-timeend {
   padding-left: 0;
-  vertical-align: bottom;
+  vertical-align: top;
 }
 #page-local-excursions-index .cal-date {
   width: 50px;
