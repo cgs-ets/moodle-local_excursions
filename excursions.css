@@ -950,6 +950,9 @@
 #page-local-excursions-index .generaltable tbody tr.activity .c-students img {
   margin: 0px 5px 5px 0px;
 }
+#page-local-excursions-index .generaltable tbody tr.activity .c-details {
+  max-width: 400px;
+}
 #page-local-excursions-index .generaltable tbody tr.activity.past,
 #page-local-excursions-index .generaltable tbody tr.activity.past:nth-of-type(odd) {
   background: rgba(0, 0, 0, 0.3);
