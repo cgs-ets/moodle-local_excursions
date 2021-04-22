@@ -38,8 +38,8 @@
             <th class="th" scope="col">Your students</th>
         {{/isparent}}
         <th class="th lastcol" scope="col">
-            {{#isparent}}Permissions{{/isparent}}
-            {{#isstaff}}{{^isparent}}Actions{{/isparent}}{{/isstaff}}
+            {{#isparent}}{{^isstaff}}Permissions{{/isstaff}}{{/isparent}}
+            {{#isstaff}}Actions{{/isstaff}}
         </th>
     </tr>
 </thead>

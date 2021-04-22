@@ -31,6 +31,8 @@
         </div>
     {{/isstaff}}
 
+    {{#noexcursions}}{{#str}} view:noactivities, local_excursions {{/str}}{{/noexcursions}}
+
     {{#useractivities.0}}
     <div class="list-activities user-activities">
         <h5>Your activities</h5>
@@ -43,7 +45,6 @@
                 {{/useractivities}}
             </tbody>
         </table>
-        {{^useractivities.0}}{{#str}} view:noactivities, local_excursions {{/str}}{{/useractivities.0}}
     </div>
     {{/useractivities.0}}
 

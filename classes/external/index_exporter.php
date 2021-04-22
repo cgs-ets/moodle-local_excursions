@@ -87,6 +87,11 @@ class index_exporter extends exporter {
                 'multiple' => false,
                 'optional' => false,
             ],
+            'noexcursions' => [
+                'type' => PARAM_BOOL,
+                'multiple' => false,
+                'optional' => false,
+            ],
         ];
     }
 
@@ -157,6 +162,18 @@ class index_exporter extends exporter {
 		    'create' => 1,
 		));
 
+        $noexcursions = false;
+        if ( empty($useractivities) && 
+        empty($approveractivities) && 
+        empty($accompanyingactivities) && 
+        empty($auditoractivities) && 
+        empty($parentactivities) && 
+        empty($studentactivities) ) {
+            $noexcursions = true;
+        }
+
+
+
         return array(
             'useractivities' => $useractivities,
             'approveractivities' => $approveractivities,
@@ -167,6 +184,7 @@ class index_exporter extends exporter {
             'activitycreateurl' => $activitycreateurl->out(false),
             'isstaff' => $this->related['isstaff'],
             'isparent' => count($parentactivities),
+            'noexcursions' => $noexcursions,
         );
     }
 
