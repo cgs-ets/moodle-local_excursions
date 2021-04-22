@@ -567,9 +567,11 @@ class locallib extends local_excursions_config {
 
     /**
      * ------------------------------------------------------
-     * MV Note: This is a slight modification of core code. Original code:
+     * MV Note: This is a modification of core code. Original code:
      * https://github.com/moodle/moodle/blob/d65ed58e7345bbf0f07f73a49ff39fc9cab0d689/lib/moodlelib.php#L5891
-     * Modified to send to allow for BCC address which core code does not allow.
+     * Modifications:
+     *  - allow for BCC address which core code does not allow.
+     *  - allow multiple attachments
      * ------------------------------------------------------
      *
      * Send an email to a specified user
@@ -589,7 +591,7 @@ class locallib extends local_excursions_config {
      * @param int $wordwrapwidth custom word wrap width, default 79
      * @return bool Returns true if mail was sent OK and false if there was an error.
      */
-    public static function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachment = '', $attachname = '',
+    public static function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachments = [],
                            $usetrueaddress = true, $replyto = '', $replytoname = '', $wordwrapwidth = 79) {
 
         global $CFG, $PAGE, $SITE;
@@ -855,51 +857,10 @@ class locallib extends local_excursions_config {
             $mail->Body =  "\n$messagetext\n";
         }
 
-        if ($attachment && $attachname) {
-            if (preg_match( "~\\.\\.~" , $attachment )) {
-                // Security check for ".." in dir path.
-                $supportuser = core_user::get_support_user();
-                $temprecipients[] = array($supportuser->email, fullname($supportuser, true));
-                $mail->addStringAttachment('Error in attachment.  User attempted to attach a filename with a unsafe name.', 'error.txt', '8bit', 'text/plain');
-            } else {
-                require_once($CFG->libdir.'/filelib.php');
-                $mimetype = mimeinfo('type', $attachname);
-
-                // Before doing the comparison, make sure that the paths are correct (Windows uses slashes in the other direction).
-                // The absolute (real) path is also fetched to ensure that comparisons to allowed paths are compared equally.
-                $attachpath = str_replace('\\', '/', realpath($attachment));
-
-                // Build an array of all filepaths from which attachments can be added (normalised slashes, absolute/real path).
-                $allowedpaths = array_map(function(string $path): string {
-                    return str_replace('\\', '/', realpath($path));
-                }, [
-                    $CFG->cachedir,
-                    $CFG->dataroot,
-                    $CFG->dirroot,
-                    $CFG->localcachedir,
-                    $CFG->tempdir,
-                    $CFG->localrequestdir,
-                ]);
-
-                // Set addpath to true.
-                $addpath = true;
-
-                // Check if attachment includes one of the allowed paths.
-                foreach (array_filter($allowedpaths) as $allowedpath) {
-                    // Set addpath to false if the attachment includes one of the allowed paths.
-                    if (strpos($attachpath, $allowedpath) === 0) {
-                        $addpath = false;
-                        break;
-                    }
-                }
-
-                // If the attachment is a full path to a file in the multiple allowed paths, use it as is,
-                // otherwise assume it is a relative path from the dataroot (for backwards compatibility reasons).
-                if ($addpath == true) {
-                    $attachment = $CFG->dataroot . '/' . $attachment;
-                }
-
-                $mail->addAttachment($attachment, $attachname, 'base64', $mimetype);
+        if ($attachments) {
+            foreach ($attachments as $filename => $attachment) {
+                $mimetype = mimeinfo('type', $filename);
+                $mail->addAttachment($attachment, $filename, 'base64', $mimetype);
             }
         }
 

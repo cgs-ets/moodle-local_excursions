@@ -1061,7 +1061,35 @@ class activity extends persistent {
         $subject = "Activity approval required: " . $activity->activityname;
         $messageText = $output->render_from_template('local_excursions/email_approval_text', $activity);
         $messageHtml = $output->render_from_template('local_excursions/email_approval_html', $activity);
-        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, '', '', true);
+
+
+        // Locate the ra and additional files in the Moodle file storage
+        $attachments = array();
+        $context = \context_system::instance();
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($context->id, 'local_excursions', 'ra', $activity->id, "filename", false);
+        foreach ($files as $file) {
+            // Copy attachment file to a temporary directory and get the file path.
+            $filename = clean_filename($file->get_filename());
+            $attachments[$filename] = $file->copy_content_to_temp();
+        }
+        $files = $fs->get_area_files($context->id, 'local_excursions', 'attachments', $activity->id, "filename", false);
+        foreach ($files as $file) {
+            $filename = clean_filename($file->get_filename());
+            $attachments[$filename] = $file->copy_content_to_temp();
+        }
+
+        $result = locallib::email_to_user($toUser, $fromUser, $subject, $messageText, $messageHtml, $attachments, true);
+
+        // Remove an attachment file if any.
+        if (!empty($attachments)) {
+            foreach ($attachments as $attachment) {
+                if (file_exists($attachment)) {
+                    unlink($attachment);
+                }
+            }
+        }
+
     }
 
     /*
