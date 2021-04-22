@@ -25,12 +25,11 @@
 }}
 <tr class="activity {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}
     {{#ispast}}past{{/ispast}}">
-    <td class="cell c-id">{{id}}</td>
     <td class="cell c-timestart">{{{calicons.start}}}</td>
     <td class="cell c-timeend">{{{calicons.end}}}</td>
     <td class="cell c-name">{{activityname}}</td>
     <td class="cell c-location">{{location}}</td>
-    {{^isstaff}}<td class="cell c-details">{{notes}}</td>{{/isstaff}}
+    {{^isstaff}}<td class="cell c-details">{{{htmlnotes}}}</td>{{/isstaff}}
     <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
     {{#isstaff}}
         <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">

@@ -119,6 +119,9 @@ class activity_exporter extends persistent_exporter {
             'numstudents' => [
                 'type' => PARAM_INT,
             ],
+            'htmlnotes' => [
+                'type' => PARAM_RAW,
+            ],
         ];
     }
 
@@ -277,6 +280,8 @@ class activity_exporter extends persistent_exporter {
 
         $numstudents = count(activity::get_excursion_students($this->data->id));
 
+        $htmlnotes = nl2br($this->data->notes);
+
     	return [
             'manageurl' => $manageurl->out(false),
             'permissionsurl' => $permissionsurl->out(false),
@@ -300,6 +305,7 @@ class activity_exporter extends persistent_exporter {
             'calicons' => $calicons,
             'ispast' => $ispast,
             'numstudents' => $numstudents,
+            'htmlnotes' => $htmlnotes,
 	    ];
     }
 
