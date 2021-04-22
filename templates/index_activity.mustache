@@ -30,6 +30,7 @@
     <td class="cell c-timeend">{{{calicons.end}}}</td>
     <td class="cell c-name">{{activityname}}</td>
     <td class="cell c-location">{{location}}</td>
+    {{^isstaff}}<td class="cell c-details">{{notes}}</td>{{/isstaff}}
     <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
     {{#isstaff}}
         <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">

@@ -30,6 +30,7 @@
         <th class="th th-timeend" scope="col">End</th>
         <th class="th" scope="col">Activity name</th>
         <th class="th" scope="col">Location</th>
+        {{^isstaff}}<th class="th" scope="col">Details</th>{{/isstaff}}
         <th class="th" scope="col">Staff in charge</th>
         {{#isstaff}}
             <th class="th" scope="col">Status</th>
