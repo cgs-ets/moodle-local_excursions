@@ -52,16 +52,30 @@ class locallib extends local_excursions_config {
     const APPROVAL_STATUS_APPROVED = 1;
     const APPROVAL_STATUS_REJECTED = 2;
 
-    public static function permissions_helper($activityid, $type, $dueby, $limit) {
+    public static function permissions_helper($activityid) {
+        global $DB;
+
+        $activity = new activity($activityid);
+        $type = $activity->get('permissionstype');
+        $dueby = $activity->get('permissionsdueby');
+        $limit = $activity->get('permissionslimit');
+
         $permissionshelper = new stdClass();
         $permissionshelper->ismanual = ($type != 'system');
         $permissionshelper->issystem = ($type == 'system');
         $permissionshelper->ispastdueby = (time() >= $dueby);
+        
         // Get number of approved permissions.
         $permissionshelper->ispastlimit = false;
         if ($limit > 0) {
             $countyes = count(activity::get_students_by_response($activityid, 1));
             $permissionshelper->ispastlimit = ($countyes >= $limit);
+        }
+
+        // Check if activity is started.
+        $permissionshelper->activitystarted = false;
+        if (time() >= $activity->get('timestart')) {
+            $permissionshelper->activitystarted = true;
         }
 
         return $permissionshelper;
@@ -99,6 +113,19 @@ class locallib extends local_excursions_config {
         throw new \required_capability_exception(\context_system::instance(), 'local/excursions:manage', 'nopermissions', '');
         exit;
     }
+
+    public static function is_cgs_staff() {
+        global $USER;
+        
+        profile_load_custom_fields($USER);
+        $campusroles = strtolower($USER->profile['CampusRoles']);
+        if (strpos($campusroles, 'staff') !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     public static function get_approver_types($username = null) {
         global $USER;

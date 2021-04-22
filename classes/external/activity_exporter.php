@@ -95,6 +95,9 @@ class activity_exporter extends persistent_exporter {
             'userpermissions' => [
                 'type' => PARAM_RAW,
             ],
+            'userhasstudents' => [
+                'type' => PARAM_INT,
+            ],
             'staffinchargeinfo' => [
                 'type' => PARAM_RAW,
             ],
@@ -213,12 +216,7 @@ class activity_exporter extends persistent_exporter {
             }
         }
 
-        $permissionshelper = locallib::permissions_helper(
-            $this->data->id,
-            $this->data->permissionstype, 
-            $this->data->permissionsdueby, 
-            $this->data->permissionslimit
-        );
+        $permissionshelper = locallib::permissions_helper($this->data->id);
 
         $messagehistory = array_values(activity::get_messagehistory($this->data->id));
         foreach ($messagehistory as &$emailaction) {
@@ -294,6 +292,7 @@ class activity_exporter extends persistent_exporter {
             'permissionshelper' => $permissionshelper,
             'messagehistory' => $messagehistory,
             'userpermissions' => $userpermissions,
+            'userhasstudents' => count($userpermissions),
             'staffinchargeinfo' => $staffinchargeinfo,
             'usercanedit' => $usercanedit,
             'formattedra' => $formattedra,

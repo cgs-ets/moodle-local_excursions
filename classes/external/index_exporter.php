@@ -62,8 +62,28 @@ class index_exporter extends exporter {
                 'multiple' => true,
                 'optional' => false,
             ],
+            'parentactivities' => [
+                'type' => activity_exporter::read_properties_definition(),
+                'multiple' => true,
+                'optional' => false,
+            ],
+            'studentactivities' => [
+                'type' => activity_exporter::read_properties_definition(),
+                'multiple' => true,
+                'optional' => false,
+            ],
             'activitycreateurl' => [
                 'type' => PARAM_RAW,
+                'multiple' => false,
+                'optional' => false,
+            ],
+            'isstaff' => [
+                'type' => PARAM_BOOL,
+                'multiple' => false,
+                'optional' => false,
+            ],
+            'isparent' => [
+                'type' => PARAM_BOOL,
                 'multiple' => false,
                 'optional' => false,
             ],
@@ -83,6 +103,9 @@ class index_exporter extends exporter {
             'approveractivities' => 'local_excursions\persistents\activity[]',
             'accompanyingactivities' => 'local_excursions\persistents\activity[]',
             'auditoractivities' => 'local_excursions\persistents\activity[]',
+            'parentactivities' => 'local_excursions\persistents\activity[]',
+            'studentactivities' => 'local_excursions\persistents\activity[]',
+            'isstaff' => 'bool',
         ];
     }
 
@@ -118,6 +141,18 @@ class index_exporter extends exporter {
             $auditoractivities[] = $activityexporter->export($output);
         }
 
+        $parentactivities = array();
+        foreach ($this->related['parentactivities'] as $activity) {
+            $activityexporter = new activity_exporter($activity);
+            $parentactivities[] = $activityexporter->export($output);
+        }
+
+        $studentactivities = array();
+        foreach ($this->related['studentactivities'] as $activity) {
+            $activityexporter = new activity_exporter($activity);
+            $studentactivities[] = $activityexporter->export($output);
+        }
+
 		$activitycreateurl = new \moodle_url('/local/excursions/activity.php', array(
 		    'create' => 1,
 		));
@@ -127,7 +162,11 @@ class index_exporter extends exporter {
             'approveractivities' => $approveractivities,
             'accompanyingactivities' => $accompanyingactivities,
             'auditoractivities' => $auditoractivities,
+            'parentactivities' => $parentactivities,
+            'studentactivities' => $studentactivities,
             'activitycreateurl' => $activitycreateurl->out(false),
+            'isstaff' => $this->related['isstaff'],
+            'isparent' => count($parentactivities),
         );
     }
 

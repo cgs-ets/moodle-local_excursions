@@ -29,40 +29,60 @@
     <td class="cell c-timestart">{{{calicons.start}}}</td>
     <td class="cell c-timeend">{{{calicons.end}}}</td>
     <td class="cell c-name">{{activityname}}</td>
-    <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
     <td class="cell c-location">{{location}}</td>
-    <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">
-        {{#statushelper.isautosave}}
-            <span class="badge badge-secondary">
-                {{#str}}status:draft, local_excursions{{/str}}
-            </span>
-        {{/statushelper.isautosave}}
-        {{#statushelper.isdraft}}
-            <span class="badge badge-secondary">
-                {{#str}}status:draft, local_excursions{{/str}}
-            </span>
-        {{/statushelper.isdraft}}
-        {{#statushelper.inreview}}
-            <span class="badge badge-warning">
-                {{#str}}status:inreview, local_excursions{{/str}}
-            </span>
-            {{#isreadytoapprove}}
-                <span class="badge badge-danger">
-                    {{#str}}status:waitingforyou, local_excursions{{/str}}
+    <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
+    {{#isstaff}}
+        <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">
+            {{#statushelper.isautosave}}
+                <span class="badge badge-secondary">
+                    {{#str}}status:draft, local_excursions{{/str}}
                 </span>
-            {{/isreadytoapprove}}
-        {{/statushelper.inreview}}
-        {{#statushelper.isapproved}}
-            <span class="badge badge-success">
-                {{#str}}status:approved, local_excursions{{/str}}
-            </span>
-        {{/statushelper.isapproved}}
-        {{#statushelper.iscancelled}}
-            <span class="badge badge-danger">
-                {{#str}}status:cancelled, local_excursions{{/str}}
-            </span>
-        {{/statushelper.iscancelled}}
-        {{#ispast}}<span class="badge badge-secondary">{{#str}}pastevent, local_excursions{{/str}}</span>{{/ispast}}
+            {{/statushelper.isautosave}}
+            {{#statushelper.isdraft}}
+                <span class="badge badge-secondary">
+                    {{#str}}status:draft, local_excursions{{/str}}
+                </span>
+            {{/statushelper.isdraft}}
+            {{#statushelper.inreview}}
+                <span class="badge badge-warning">
+                    {{#str}}status:inreview, local_excursions{{/str}}
+                </span>
+                {{#isreadytoapprove}}
+                    <span class="badge badge-danger">
+                        {{#str}}status:waitingforyou, local_excursions{{/str}}
+                    </span>
+                {{/isreadytoapprove}}
+            {{/statushelper.inreview}}
+            {{#statushelper.isapproved}}
+                <span class="badge badge-success">
+                    {{#str}}status:approved, local_excursions{{/str}}
+                </span>
+            {{/statushelper.isapproved}}
+            {{#statushelper.iscancelled}}
+                <span class="badge badge-danger">
+                    {{#str}}status:cancelled, local_excursions{{/str}}
+                </span>
+            {{/statushelper.iscancelled}}
+            {{#ispast}}<span class="badge badge-secondary">{{#str}}pastevent, local_excursions{{/str}}</span>{{/ispast}}
+        </td>
+    {{/isstaff}}
+    {{#isparent}}
+        <td class="cell c-students">
+            {{#userpermissions}}
+                <img class="round userphoto" title="{{fullname}}" src="{{{userphoto}}}">
+            {{/userpermissions}}
+        </td>
+    {{/isparent}}
+    <td class="cell c-actions lastcol">
+        {{#isstaff}}
+            <a class="btn btn-primary" href="{{manageurl}}">Manage</a>
+        {{/isstaff}}
+        {{#permissions}}{{^ispast}}{{#userhasstudents}}
+            <a class="btn btn-warning" href="{{permissionsurl}}">Permissions</a>
+        {{/userhasstudents}}{{/ispast}}{{/permissions}}
+        {{#isparent}}{{^isstaff}}{{^permissions}}
+            N/A
+        {{/permissions}}{{/isstaff}}{{/isparent}}
     </td>
-    <td class="cell c-actions lastcol"><a href="{{manageurl}}">Manage</a></td>
+
 </tr>

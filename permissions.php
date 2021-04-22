@@ -43,7 +43,7 @@ $PAGE->set_context($context);
 $PAGE->set_url($pageurl);
 $PAGE->set_title(get_string('activitypermissions', 'local_excursions'));
 $PAGE->set_heading(get_string('activitypermissions', 'local_excursions'));
-
+$PAGE->navbar->add(get_string('activities', 'local_excursions'), new moodle_url('/local/excursions/index.php'));
 
 // Add css.
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));

@@ -45,6 +45,12 @@
         </div>
     {{/permissionshelper.ispastdueby}}
 
+    {{#permissionshelper.activitystarted}}
+        <div class="alert alert-danger" role="alert">
+            {{#str}}pastdueby, local_excursions{{/str}}
+        </div>
+    {{/permissionshelper.activitystarted}}
+
     {{#permissionshelper.ispastlimit}}
         <div class="alert alert-danger" role="alert">
             {{#str}}pastlimit, local_excursions{{/str}}
@@ -52,7 +58,10 @@
     {{/permissionshelper.ispastlimit}}
 
     <h5>Permissions</h5>
-    <div class="permissions {{#permissionshelper.ispastdueby}}past-due-date{{/permissionshelper.ispastdueby}} {{#permissionshelper.ispastlimit}}past-limit{{/permissionshelper.ispastlimit}}">
+    <div class="permissions 
+        {{#permissionshelper.ispastdueby}}past-due-date{{/permissionshelper.ispastdueby}}
+        {{#permissionshelper.activitystarted}}past-due-date{{/permissionshelper.activitystarted}} 
+        {{#permissionshelper.ispastlimit}}past-limit{{/permissionshelper.ispastlimit}}">
         <table class="table generaltable">
             <thead>
                 <th>Student</th>

@@ -25,10 +25,13 @@
 }}
 
 <div class="local_excursions">
-    <div class="header">
-        <a id="btn-activitycreate" class="btn btn-primary" href="{{activitycreateurl}}">{{# str }}activityform:create, local_excursions{{/ str }}</a>
-    </div>
+    {{#isstaff}}
+        <div class="header">
+            <a id="btn-activitycreate" class="btn btn-primary" href="{{activitycreateurl}}">{{# str }}activityform:create, local_excursions{{/ str }}</a>
+        </div>
+    {{/isstaff}}
 
+    {{#useractivities.0}}
     <div class="list-activities user-activities">
         <h5>Your activities</h5>
         <small>Activities that you created.</small>
@@ -42,6 +45,7 @@
         </table>
         {{^useractivities.0}}{{#str}} view:noactivities, local_excursions {{/str}}{{/useractivities.0}}
     </div>
+    {{/useractivities.0}}
 
     {{#accompanyingactivities.0}}
     <br>
@@ -91,6 +95,38 @@
         </table>
     </div>
     {{/auditoractivities.0}}
+
+    {{#parentactivities.0}}
+    <br>
+    <div class="list-activities auditor-activities">
+        <h5>Activities involving your child/ren</h5>
+        <br>
+        <table class="table generaltable">
+            {{>local_excursions/index_activities_head}}
+            <tbody>
+                {{#parentactivities}}
+                    {{>local_excursions/index_activity}}
+                {{/parentactivities}}
+            </tbody>
+        </table>
+    </div>
+    {{/parentactivities.0}}
+
+    {{#studentactivities.0}}
+    <br>
+    <div class="list-activities auditor-activities">
+        <h5>Activites that you are participating in</h5>
+        <br>
+        <table class="table generaltable">
+            {{>local_excursions/index_activities_head}}
+            <tbody>
+                {{#studentactivities}}
+                    {{>local_excursions/index_activity}}
+                {{/studentactivities}}
+            </tbody>
+        </table>
+    </div>
+    {{/studentactivities.0}}
 
 
 </div>

@@ -463,7 +463,45 @@ class activity extends persistent {
         return $activities;
     }
 
-    public static function get_by_ids($ids) {
+    public static function get_for_parent($username) {
+        global $DB;
+
+        $activities = array();
+
+        $sql = "SELECT id, activityid
+                  FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} 
+                 WHERE parentusername = ?";
+        $ids = $DB->get_records_sql($sql, array($username));
+
+        $activities = static::get_by_ids(array_column($ids, 'activityid'), 3); // Approved only.
+
+        return $activities;
+    }
+
+    public static function get_for_student($username) {
+        global $DB;
+
+        $activities = array();
+
+        $sql = "SELECT id, activityid
+                  FROM {" . static::TABLE_EXCURSIONS_STUDENTS . "} 
+                 WHERE username = ?";
+        $ids = $DB->get_records_sql($sql, array($username));
+
+        $activities = static::get_by_ids(array_column($ids, 'activityid'), 3); // Approved only.
+        foreach ($activities as $i => $activity) {
+            if ($activity->get('permissions')) {
+                $attending = static::get_all_attending($activity->get('id'));
+                if (!in_array($username, $attending)) {
+                    unset($activities[$i]);
+                }
+            }
+        }
+
+        return array_filter($activities);
+    }
+
+    public static function get_by_ids($ids, $status = null) {
         global $DB;
 
         $activities = array();
@@ -473,9 +511,15 @@ class activity extends persistent {
             list($insql, $inparams) = $DB->get_in_or_equal($activityids);
             $sql = "SELECT *
                       FROM {" . static::TABLE . "}
-                     WHERE deleted = 0
-                       AND id $insql
-                  ORDER BY timestart DESC";
+                     WHERE id $insql
+                       AND deleted = 0";
+
+            if ($status) {
+                $sql .= " AND status = {$status} ";
+            }
+
+            $sql .= " ORDER BY timestart DESC ";
+
             $records = $DB->get_records_sql($sql, $inparams);
             $activities = array();
             foreach ($records as $record) {
@@ -1439,17 +1483,13 @@ class activity extends persistent {
     public static function submit_permission($permissionid, $response) {
         global $DB, $USER;
 
-        // Check if past date or limit.
         $activityid = $DB->get_field(static::TABLE_EXCURSIONS_PERMISSIONS, 'activityid', array('id' => $permissionid));
         $activity = new static($activityid);
-        $permissionshelper = locallib::permissions_helper(
-            $activity->get('id'),
-            $activity->get('permissionstype'), 
-            $activity->get('permissionsdueby'), 
-            $activity->get('permissionslimit')
-        );
+        
+        // Check if past permissions dueby or limit.
+        $permissionshelper = locallib::permissions_helper($activity->get('id'));
 
-        if ($permissionshelper->ispastdueby || $permissionshelper->ispastlimit) {
+        if ($permissionshelper->activitystarted || $permissionshelper->ispastdueby || $permissionshelper->ispastlimit) {
             return;
         }
 

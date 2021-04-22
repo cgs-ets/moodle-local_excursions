@@ -28,10 +28,18 @@
         <th class="th th-id" scope="col">ID</th>
         <th class="th th-timestart" scope="col">Start</th>
         <th class="th th-timeend" scope="col">End</th>
-        <th class="th" scope="col">Name</th>
-        <th class="th" scope="col">Staff in charge</th>
+        <th class="th" scope="col">Activity name</th>
         <th class="th" scope="col">Location</th>
-        <th class="th" scope="col">Status</th>
-        <th class="th lastcol" scope="col"></th>
+        <th class="th" scope="col">Staff in charge</th>
+        {{#isstaff}}
+            <th class="th" scope="col">Status</th>
+        {{/isstaff}}
+        {{#isparent}}
+            <th class="th" scope="col">Your students</th>
+        {{/isparent}}
+        <th class="th lastcol" scope="col">
+            {{#isparent}}Permissions{{/isparent}}
+            {{#isstaff}}{{^isparent}}Actions{{/isparent}}{{/isstaff}}
+        </th>
     </tr>
 </thead>

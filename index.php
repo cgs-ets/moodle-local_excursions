@@ -36,7 +36,7 @@ $PAGE->set_title(get_string('pluginname', 'local_excursions'));
 $PAGE->set_heading(get_string('pluginname', 'local_excursions'));
 
 require_login();
-locallib::require_cgs_staff();
+$isstaff = locallib::is_cgs_staff();
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
 
@@ -46,12 +46,17 @@ $useractivities = activity::get_for_user($USER->username);
 $approveractivities = activity::get_for_approver($USER->username);
 $accompanyingactivities = activity::get_for_accompanying($USER->username);
 $auditoractivities = activity::get_for_auditor($USER->username);
+$parentactivities = activity::get_for_parent($USER->username);
+$studentactivities = activity::get_for_student($USER->username);
 
 $relateds = array(
 	'useractivities' => $useractivities,
 	'approveractivities' => $approveractivities,
 	'accompanyingactivities' => $accompanyingactivities,
 	'auditoractivities' => $auditoractivities,
+	'parentactivities' => $parentactivities,
+	'studentactivities' => $studentactivities,
+	'isstaff' => $isstaff,
 );
 $indexexporter = new index_exporter(null, $relateds);
 $data = $indexexporter->export($OUTPUT);
