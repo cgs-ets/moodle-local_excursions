@@ -37,10 +37,13 @@
     <div class="changes-not-saved-message"><div class="alert alert-danger">{{#str}}savechangesrequired, local_excursions{{/str}}</div></div>
 
     <div class="student-list">
-        <a id="btn-checkall" class="btn" href="#"><i class="fa fa-check-square" aria-hidden="true"></i>
- {{#str}}activityform:checkall, local_excursions{{/str}}</a>
-        <a id="btn-uncheckall" class="btn" href="#"><i class="fa fa-square-o" aria-hidden="true"></i>
- {{#str}}activityform:uncheckall, local_excursions{{/str}}</a>
+        <div class="stulist-top-options">
+            <strong><span class="count-students">{{numstudents}}</span> students &nbsp;&nbsp;</strong>
+            <a id="btn-checkall" class="btn" href="#"><i class="fa fa-check-square" aria-hidden="true"></i>
+     {{#str}}activityform:checkall, local_excursions{{/str}}</a>
+            <a id="btn-uncheckall" class="btn" href="#"><i class="fa fa-square-o" aria-hidden="true"></i>
+     {{#str}}activityform:uncheckall, local_excursions{{/str}}</a>
+        </div>
         <table class="table">    
             <thead>
                 <tr>

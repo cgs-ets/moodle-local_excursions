@@ -501,6 +501,13 @@
   font-weight: 600;
   margin-bottom: 7px;
 }
+#page-local-excursions-activity .student-list-wrap .stulist-top-options > * {
+  line-height: 30px;
+  vertical-align: middle;
+}
+#page-local-excursions-activity .student-list-wrap .stulist-top-options a {
+  color: #005b94;
+}
 #page-local-excursions-activity .student-list-wrap .table {
   width: auto;
   background-color: #fff;

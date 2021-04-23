@@ -493,6 +493,9 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                 }
                 self.studentlistwrap.removeClass('loading');
 
+                // Update student count
+                var count = self.studentlistwrap.find('tr.student').length;
+                self.studentlistwrap.find('.count-students').html(count);
                 
                 // If an activity does not have an email message history, and system-generated permissions is enabled, check all students and show preview.
                 var isapproved = self.rootel.hasClass('activity-status-3');
