@@ -266,7 +266,7 @@ class form_activity extends \moodleform {
             /*----------------------
              *   RA
              *----------------------*/
-            if ($activity->isstaffincharge || $activity->iscreator) {
+            if ($activity->isstaffincharge || $activity->iscreator || $activity->isapprover) {
                 $mform->addElement('filemanager', 'riskassessment', get_string("activityform:riskassessment", "local_excursions"), null, self::ra_options());
             } else {
                 // list the files.
@@ -277,7 +277,7 @@ class form_activity extends \moodleform {
             /*----------------------
              *   Additional attachments
              *----------------------*/
-            if ($activity->isstaffincharge || $activity->iscreator) {
+            if ($activity->isstaffincharge || $activity->iscreator || $activity->isapprover) {
                 $mform->addElement('filemanager', 'attachments', get_string('activityform:attachments', 'local_excursions'), null,
                     self::attachment_options());
             } else {
