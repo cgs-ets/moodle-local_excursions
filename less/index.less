@@ -59,6 +59,13 @@
     	padding-left: 0;
     	vertical-align: top;
 	}
+	.c-timecreated { 
+		font-size: 11px;
+	}
+	.c-timecreated, .th-timecreated {
+		display: none;
+    	width: 100px;
+	}
 	.cal-date {
 		width: 50px;
     	margin: 0 auto;
@@ -113,6 +120,11 @@
 			.cal-time {
 				border-radius: 3px;
 			}
+		}
+	}
+	.approver-activities {
+		.c-timecreated, .th-timecreated {
+			display: table-cell;
 		}
 	}
 }

@@ -992,6 +992,14 @@
   padding-left: 0;
   vertical-align: top;
 }
+#page-local-excursions-index .c-timecreated {
+  font-size: 11px;
+}
+#page-local-excursions-index .c-timecreated,
+#page-local-excursions-index .th-timecreated {
+  display: none;
+  width: 100px;
+}
 #page-local-excursions-index .cal-date {
   width: 50px;
   margin: 0 auto;
@@ -1048,6 +1056,10 @@
 }
 #page-local-excursions-index .cal-date.same-day .cal-time {
   border-radius: 3px;
+}
+#page-local-excursions-index .approver-activities .c-timecreated,
+#page-local-excursions-index .approver-activities .th-timecreated {
+  display: table-cell;
 }
 #page-local-excursions-permissions .activity-details {
   margin-bottom: 25px;

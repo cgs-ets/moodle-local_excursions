@@ -68,6 +68,9 @@ class activity_exporter extends persistent_exporter {
             'endreadabletime' => [
                 'type' => PARAM_RAW,
             ],
+            'createdreadabletime' => [
+                'type' => PARAM_RAW,
+            ],
             'statushelper' => [
                 'type' => PARAM_RAW,
             ],
@@ -176,6 +179,11 @@ class activity_exporter extends persistent_exporter {
         $endreadabletime = '';
         if ($this->data->timeend > 0) {
             $endreadabletime = date('j M Y, g:ia', $this->data->timeend);
+        }
+
+        $createdreadabletime = '';
+        if ($this->data->timecreated > 0) {
+            $createdreadabletime = date('j M Y, g:ia', $this->data->timecreated);
         }
 
         $statushelper = locallib::status_helper($this->data->status);
@@ -288,6 +296,7 @@ class activity_exporter extends persistent_exporter {
             'manageurl' => $manageurl->out(false),
             'permissionsurl' => $permissionsurl->out(false),
             'summaryurl' => $summaryurl->out(false),
+            'createdreadabletime' => $createdreadabletime,
             'startreadabletime' => $startreadabletime,
             'endreadabletime' => $endreadabletime,
             'statushelper' => $statushelper,

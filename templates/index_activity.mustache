@@ -25,6 +25,7 @@
 }}
 <tr class="activity {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}
     {{#ispast}}past{{/ispast}}">
+    <td class="cell c-timecreated">{{createdreadabletime}}</td>
     <td class="cell c-timestart">{{{calicons.start}}}</td>
     <td class="cell c-timeend">{{{calicons.end}}}</td>
     <td class="cell c-name">{{activityname}}</td>
