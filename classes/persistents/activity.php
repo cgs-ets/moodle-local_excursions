@@ -342,13 +342,13 @@ class activity extends persistent {
         if ($issenior) {
             // Senior School - 2nd approver.
             $approval->type = 'senior_admin';
-            $approval->sequence = 2;
+            $approval->sequence = 1;
             $approval->description = locallib::WORKFLOW['senior_admin']['name'];
             $approvals[] = clone $approval;
 
             // Senior School - 3st approver.
             $approval->type = 'senior_hoss';
-            $approval->sequence = 3;
+            $approval->sequence = 2;
             $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
             $approvals[] = clone $approval;
 

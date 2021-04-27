@@ -47,11 +47,11 @@
                 <span class="badge badge-warning">
                     {{#str}}status:inreview, local_excursions{{/str}}
                 </span>
-                {{#isreadytoapprove}}
+                {{#iswaitingforyou}}
                     <span class="badge badge-danger">
                         {{#str}}status:waitingforyou, local_excursions{{/str}}
                     </span>
-                {{/isreadytoapprove}}
+                {{/iswaitingforyou}}
             {{/statushelper.inreview}}
             {{#statushelper.isapproved}}
                 <span class="badge badge-success">

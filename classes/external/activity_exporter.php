@@ -80,7 +80,7 @@ class activity_exporter extends persistent_exporter {
             'isstaffincharge' => [
                 'type' => PARAM_BOOL,
             ],
-            'isreadytoapprove' => [
+            'iswaitingforyou' => [
                 'type' => PARAM_BOOL,
             ],
             'approvals' => [
@@ -188,7 +188,7 @@ class activity_exporter extends persistent_exporter {
         }
 
         // Get approvals.
-        $isreadytoapprove = false;
+        $iswaitingforyou = false;
         $approvals = activity::get_approvals($this->data->id);
         $i = 0;
         foreach ($approvals as $approval) {
@@ -212,7 +212,9 @@ class activity_exporter extends persistent_exporter {
                     $prerequisites = activity::get_prerequisites($this->data->id, $approval->type);
                     if (empty($prerequisites)) {
                         $approval->canapprove = true;
-                        $isreadytoapprove = true;
+                        if ($approval->status == 0) { //
+                            $iswaitingforyou = true;
+                        }
                     }
                     
                 }
@@ -292,7 +294,7 @@ class activity_exporter extends persistent_exporter {
             'iscreator' => $iscreator,
             'isapprover' => $isapprover,
             'isstaffincharge' => $isstaffincharge,
-            'isreadytoapprove' => $isreadytoapprove,
+            'iswaitingforyou' => $iswaitingforyou,
             'approvals' => $approvals,
             'permissionshelper' => $permissionshelper,
             'messagehistory' => $messagehistory,
