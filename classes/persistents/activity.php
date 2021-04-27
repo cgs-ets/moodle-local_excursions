@@ -501,7 +501,7 @@ class activity extends persistent {
         return array_filter($activities);
     }
 
-    public static function get_by_ids($ids, $status = null) {
+    public static function get_by_ids($ids, $status = null, $orderby = null) {
         global $DB;
 
         $activities = array();
@@ -518,7 +518,10 @@ class activity extends persistent {
                 $sql .= " AND status = {$status} ";
             }
 
-            $sql .= " ORDER BY timestart DESC ";
+            if (empty($orderby)) {
+                $orderby = 'timestart DESC';
+            }
+            $sql .= " ORDER BY " . $orderby;
 
             $records = $DB->get_records_sql($sql, $inparams);
             $activities = array();
@@ -545,7 +548,7 @@ class activity extends persistent {
                        AND invalidated = 0";
             $approvals = $DB->get_records_sql($sql, $inparams);
             $approvals = static::filter_approvals_with_prerequisites($approvals);
-            $activities = static::get_by_ids(array_column($approvals, 'activityid'));
+            $activities = static::get_by_ids(array_column($approvals, 'activityid'), null, 'timecreated DESC'); // order by timecreated
         }
 
         return $activities;
