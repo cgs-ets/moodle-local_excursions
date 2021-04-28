@@ -1152,7 +1152,7 @@ class activity extends persistent {
 
         $recipients = array();
 
-        // Send the comment to the next approvers in line...
+        // Send the comment to the next approver in line.
         $approvals = static::get_unactioned_approvals($comment->activityid);
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
@@ -1169,6 +1169,8 @@ class activity extends persistent {
                     }
                 }
             }
+            // Break after sending to next approver in line. Comment is not sent to approvers down stream.
+            break;
         }
 
         // Send comment to approvers that have actioned an approval for this activity.
