@@ -752,12 +752,14 @@ class activity extends persistent {
             }
             $students[] = $student;
         }
+        usort($students, function($a, $b) {return strcmp($a->fullname, $b->fullname);});
 
         // Generate and return the new students in html rows.
         $data = array(
             'activity' => $activity,
             'students' => $students,
         );
+
         return $OUTPUT->render_from_template('local_excursions/activityform_studentlist_rows', $data);
     }
 
