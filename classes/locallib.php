@@ -63,7 +63,10 @@ class locallib extends local_excursions_config {
         $permissionshelper = new stdClass();
         $permissionshelper->ismanual = ($type != 'system');
         $permissionshelper->issystem = ($type == 'system');
-        $permissionshelper->ispastdueby = (time() >= $dueby);
+        $permissionshelper->ispastdueby = false;
+        if ($dueby) {
+            $permissionshelper->ispastdueby = (time() >= $dueby);
+        }
         
         // Get number of approved permissions.
         $permissionshelper->ispastlimit = false;
