@@ -1232,7 +1232,7 @@ class activity extends persistent {
         $recipients = array();
 
         // Send to all approvers.
-        $approvals = static::get_approvals($comment->activityid);
+        $approvals = static::get_approvals($activityid);
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
             foreach($approvers as $approver) {
