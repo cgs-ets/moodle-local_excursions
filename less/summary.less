@@ -20,8 +20,14 @@
 		    min-width: 150px;
 		}
 	}
+	.screenonly {
+		visibility:hidden;
+	}
 	.print {visibility:hidden;}
 	@media screen {
+		.screenonly {
+			visibility:visible;
+		}
 		.print {
 			visibility: visible;
 		    padding: 14px 20px;
@@ -34,7 +40,7 @@
 		    text-decoration: none;
 		    font-weight: 600;
 		    font-family: sans-serif;
-		    float: right;
+		    float: left;
 		}
 	}
 }

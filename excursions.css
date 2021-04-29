@@ -1158,10 +1158,16 @@
   text-align: left;
   min-width: 150px;
 }
+#activity-summary .screenonly {
+  visibility: hidden;
+}
 #activity-summary .print {
   visibility: hidden;
 }
 @media screen {
+  #activity-summary .screenonly {
+    visibility: visible;
+  }
   #activity-summary .print {
     visibility: visible;
     padding: 14px 20px;
@@ -1174,6 +1180,6 @@
     text-decoration: none;
     font-weight: 600;
     font-family: sans-serif;
-    float: right;
+    float: left;
   }
 }
