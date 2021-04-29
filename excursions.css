@@ -1139,13 +1139,14 @@
   max-width: 900px;
   width: 900px;
   margin: 8px auto;
+  font-size: 15px;
+  font-family: sans-serif;
+  color: #000;
+  line-height: 1.4;
 }
 #activity-summary table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 15px;
-  font-family: sans-serif;
-  color: #000;
 }
 #activity-summary table th,
 #activity-summary table td {

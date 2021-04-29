@@ -24,46 +24,14 @@
     Printable slip with activity details.
 }}
 <div id="activity-summary">
-    <table>
-        {{! <tr><th colspan="2">Activity Summary Slip</th></tr> }}
-        <tr>
-            <th width="150">Activity Name:</th>
-            <td>{{activityname}}</td>
-        </tr>
-        <tr>
-            <th>Location:</th>
-            <td>{{location}}</td>
-        </tr>
-        <tr>
-            <th>Start:</th>
-            <td>{{startreadabletime}}</td>
-        </tr>
-        <tr>
-            <th>End:</th>
-            <td class="value">{{endreadabletime}}</td>
-        </tr>
-        <tr>
-            <th>Details:</th>
-            <td class="value">{{{htmlnotes}}}</td>
-        </tr>
-        <tr>
-            <th>Transport:</th>
-            <td class="value">{{transport}}</td>
-        </tr>
-        {{#cost}}
-            <tr>
-                <th>Cost:</th>
-                <td class="value">{{cost}}</td>
-            </tr>
-        {{/cost}}
-        <tr>
-            <th>Staff in charge:</th>
-            <td class="value">{{staffinchargeinfo.fullname}}</td>
-        </tr>
-        <tr>
-            <th>Number of students:</th>
-            <td class="value">{{numstudents}}</td>
-        </tr>
-    </table>
-    <a href="#" class="print" onclick="window.print();return false;">Click here to print</a>
+    <b>Activity Name:</b> {{activityname}}<br>
+    <b>Location:</b> {{location}}<br>
+    <b>Start:</b> {{startreadabletime}}<br>
+    <b>End:</b> {{endreadabletime}}<br>
+    <b>Details:</b> {{{htmlnotes}}}<br>
+    <b>Transport:</b> {{transport}}<br>
+    {{#cost}}<b>Cost:</b> {{cost}}<br>{{/cost}}
+    <b>Staff in charge:</b> {{staffinchargeinfo.fullname}}<br>
+    <b>Number of students:</b> {{numstudents}}<br>
+    <p><a href="{{manageurl}}" target="_blank">CGS Staff only: Click Here to view the activity on CGS Connect</a></p>
 </div>
