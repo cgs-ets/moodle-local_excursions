@@ -24,6 +24,36 @@
 			img {
 				margin: 0px 5px 5px 0px;
 			}
+			.user-permission {
+			    position: relative;
+			    display: inline-block;
+			    .fa {
+				    position: absolute;
+				    top: 0;
+				    left: 0;
+				    height: 35px;
+				    width: 35px;
+				    text-align: center;
+				    padding-top: 10px;
+				    background-color: rgba(255,255,255,0.4);
+				    border-radius: 50%;
+				    transition: all 0.3s;
+				}
+				.fa-check {
+				    color: green;
+				    border: 1px solid green;
+				}
+				.fa-times {
+				    color: red;
+				    border: 1px solid red;
+				}
+				&:hover{
+					.fa {
+						opacity: 0;
+			    	}
+			    }
+			}
+			
 		}
 		.c-details {
 		    max-width: 400px;

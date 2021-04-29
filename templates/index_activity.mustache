@@ -70,7 +70,11 @@
     {{#isparent}}
         <td class="cell c-students">
             {{#userpermissions}}
-                <img class="round userphoto" title="{{fullname}}" src="{{{userphoto}}}">
+                <a target="_blank" href="{{permissionsurl}}" title="{{fullname}} {{#isyes}}- permission set to 'Yes'{{/isyes}}{{#isno}}- permission set to 'No'{{/isno}}" class="user-permission">
+                    <img class="round userphoto" title="{{fullname}}" src="{{{userphoto}}}">
+                    {{#isyes}}<i class="fa fa-check" aria-hidden="true"></i>{{/isyes}}
+                    {{#isno}}<i class="fa fa-times" aria-hidden="true"></i>{{/isno}}
+                </a>
             {{/userpermissions}}
         </td>
     {{/isparent}}

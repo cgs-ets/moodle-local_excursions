@@ -957,6 +957,33 @@
 #page-local-excursions-index .generaltable tbody tr.activity .c-students img {
   margin: 0px 5px 5px 0px;
 }
+#page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission {
+  position: relative;
+  display: inline-block;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission .fa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 35px;
+  width: 35px;
+  text-align: center;
+  padding-top: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission .fa-check {
+  color: green;
+  border: 1px solid green;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission .fa-times {
+  color: red;
+  border: 1px solid red;
+}
+#page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission:hover .fa {
+  opacity: 0;
+}
 #page-local-excursions-index .generaltable tbody tr.activity .c-details {
   max-width: 400px;
 }
