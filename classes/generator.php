@@ -105,7 +105,7 @@ class generator {
             fclose($fp);
 
             // Send the file with force download, and don't die so that we can perform cleanup.
-            send_file($path, $filename, null, 0, false, true, 'text/csv', true); 
+            send_file($path, $filename, 10, 0, false, true, 'text/csv', true); //Lifetime is 10 to prevent caching.
 
             // Delete the zip from the exports folder.
             unlink( $path );
