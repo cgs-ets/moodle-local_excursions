@@ -501,6 +501,7 @@ class activity extends persistent {
         return array_filter($activities);
     }
 
+    
     public static function get_for_primary($username) {
         global $DB;
 
@@ -519,7 +520,7 @@ class activity extends persistent {
             'Early Learning Centre:Staff',
         );
         foreach ($primarycampuses as $primarycampus) {
-            if (strpos($campusroles, $primarycampus) !== false) {
+            if (strpos($campusroles, strtolower($primarycampus)) !== false) {
                 $userisps = true;
                 break;
             }
@@ -558,7 +559,7 @@ class activity extends persistent {
             'Whole School:Admin Staff',
         );
         foreach ($seniorcampuses as $seniorcampus) {
-            if (strpos($campusroles, $seniorcampus) !== false) {
+            if (strpos($campusroles, strtolower($seniorcampus)) !== false) {
                 $userisss = true;
                 break;
             }

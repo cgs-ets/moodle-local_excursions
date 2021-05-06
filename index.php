@@ -58,8 +58,8 @@ $relateds = array(
 	'auditoractivities' => $auditoractivities,
 	'parentactivities' => $parentactivities,
 	'studentactivities' => $studentactivities,
-	'primaryschoolactivities' => $primaryschoolactivities,
-	'seniorschoolactivities' => $seniorschoolactivities,
+	'primaryactivities' => $primaryschoolactivities,
+	'senioractivities' => $seniorschoolactivities,
 	'isstaff' => $isstaff,
 );
 $indexexporter = new index_exporter(null, $relateds);
