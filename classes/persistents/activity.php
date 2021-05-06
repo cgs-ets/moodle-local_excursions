@@ -571,7 +571,7 @@ class activity extends persistent {
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
                        AND status = 3
-                       AND campus = 'primary'
+                       AND campus = 'senior'
                   ORDER BY timestart DESC";
             $records = $DB->get_records_sql($sql);
             $activities = array();
