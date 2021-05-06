@@ -501,6 +501,87 @@ class activity extends persistent {
         return array_filter($activities);
     }
 
+    public static function get_for_primary($username) {
+        global $DB;
+
+        $activities = array();
+
+        // Check if the user is a primary school staff member.
+        $user = core_user::get_user_by_username($username);
+        profile_load_custom_fields($user);
+        $campusroles = strtolower($user->profile['CampusRoles']);
+        $userisps = false;
+        $primarycampuses = array(
+            'Primary School:Admin Staff',
+            'Primary Red Hill:Staff',
+            'Whole School:Admin Staff',
+            'Northside:Staff',
+            'Early Learning Centre:Staff',
+        );
+        foreach ($primarycampuses as $primarycampus) {
+            if (strpos($campusroles, $primarycampus) !== false) {
+                $userisps = true;
+                break;
+            }
+        }
+
+        if ($userisps) {
+            // Get activities where campus is 'primary'.
+            $sql = "SELECT *
+                      FROM {" . static::TABLE . "}
+                     WHERE deleted = 0
+                       AND status = 3
+                       AND campus = 'primary'
+                  ORDER BY timestart DESC";
+            $records = $DB->get_records_sql($sql);
+            $activities = array();
+            foreach ($records as $record) {
+                $activities[] = new static($record->id, $record);
+            }
+        }
+
+        return $activities;
+    }
+
+    public static function get_for_senior($username) {
+        global $DB;
+
+        $activities = array();
+
+        // Check if the user is a primary school staff member.
+        $user = core_user::get_user_by_username($username);
+        profile_load_custom_fields($user);
+        $campusroles = strtolower($user->profile['CampusRoles']);
+        $userisss = false;
+        $seniorcampuses = array(
+            'Senior School:Staff',
+            'Whole School:Admin Staff',
+        );
+        foreach ($seniorcampuses as $seniorcampus) {
+            if (strpos($campusroles, $seniorcampus) !== false) {
+                $userisss = true;
+                break;
+            }
+        }
+
+        if ($userisss) {
+            // Get activities where campus is 'senior'.
+            $sql = "SELECT *
+                      FROM {" . static::TABLE . "}
+                     WHERE deleted = 0
+                       AND status = 3
+                       AND campus = 'primary'
+                  ORDER BY timestart DESC";
+            $records = $DB->get_records_sql($sql);
+            $activities = array();
+            foreach ($records as $record) {
+                $activities[] = new static($record->id, $record);
+            }
+        }
+
+        return $activities;
+    }
+
     public static function get_by_ids($ids, $status = null, $orderby = null) {
         global $DB;
 

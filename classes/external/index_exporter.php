@@ -72,6 +72,16 @@ class index_exporter extends exporter {
                 'multiple' => true,
                 'optional' => false,
             ],
+            'primaryactivities' => [
+                'type' => activity_exporter::read_properties_definition(),
+                'multiple' => true,
+                'optional' => false,
+            ],
+            'senioractivities' => [
+                'type' => activity_exporter::read_properties_definition(),
+                'multiple' => true,
+                'optional' => false,
+            ],
             'activitycreateurl' => [
                 'type' => PARAM_RAW,
                 'multiple' => false,
@@ -110,6 +120,8 @@ class index_exporter extends exporter {
             'auditoractivities' => 'local_excursions\persistents\activity[]',
             'parentactivities' => 'local_excursions\persistents\activity[]',
             'studentactivities' => 'local_excursions\persistents\activity[]',
+            'primaryactivities' => 'local_excursions\persistents\activity[]',
+            'senioractivities' => 'local_excursions\persistents\activity[]',
             'isstaff' => 'bool',
         ];
     }
@@ -158,21 +170,33 @@ class index_exporter extends exporter {
             $studentactivities[] = $activityexporter->export($output);
         }
 
+        $primaryactivities = array();
+        foreach ($this->related['primaryactivities'] as $activity) {
+            $activityexporter = new activity_exporter($activity);
+            $primaryactivities[] = $activityexporter->export($output);
+        }
+
+        $senioractivities = array();
+        foreach ($this->related['senioractivities'] as $activity) {
+            $activityexporter = new activity_exporter($activity);
+            $senioractivities[] = $activityexporter->export($output);
+        }
+
 		$activitycreateurl = new \moodle_url('/local/excursions/activity.php', array(
 		    'create' => 1,
 		));
 
         $noexcursions = false;
         if ( empty($useractivities) && 
-        empty($approveractivities) && 
-        empty($accompanyingactivities) && 
-        empty($auditoractivities) && 
-        empty($parentactivities) && 
-        empty($studentactivities) ) {
+             empty($approveractivities) && 
+             empty($accompanyingactivities) && 
+             empty($auditoractivities) && 
+             empty($parentactivities) && 
+             empty($studentactivities) && 
+             empty($primaryactivities) && 
+             empty($senioractivities) ) {
             $noexcursions = true;
         }
-
-
 
         return array(
             'useractivities' => $useractivities,
@@ -181,6 +205,8 @@ class index_exporter extends exporter {
             'auditoractivities' => $auditoractivities,
             'parentactivities' => $parentactivities,
             'studentactivities' => $studentactivities,
+            'primaryactivities' => $primaryactivities,
+            'senioractivities' => $senioractivities,
             'activitycreateurl' => $activitycreateurl->out(false),
             'isstaff' => $this->related['isstaff'],
             'isparent' => count($parentactivities),

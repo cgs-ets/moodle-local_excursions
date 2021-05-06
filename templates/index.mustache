@@ -129,5 +129,37 @@
     </div>
     {{/studentactivities.0}}
 
+    {{#primaryactivities.0}}
+    <br>
+    <div class="list-activities primary-activities">
+        <h5>Activites in the Primary School</h5>
+        <br>
+        <table class="table generaltable">
+            {{>local_excursions/index_activities_head}}
+            <tbody>
+                {{#primaryactivities}}
+                    {{>local_excursions/index_activity}}
+                {{/primaryactivities}}
+            </tbody>
+        </table>
+    </div>
+    {{/primaryactivities.0}}
+
+    {{#senioractivities.0}}
+    <br>
+    <div class="list-activities senior-activities">
+        <h5>Activites in the Senior School</h5>
+        <br>
+        <table class="table generaltable">
+            {{>local_excursions/index_activities_head}}
+            <tbody>
+                {{#senioractivities}}
+                    {{>local_excursions/index_activity}}
+                {{/senioractivities}}
+            </tbody>
+        </table>
+    </div>
+    {{/senioractivities.0}}
+
 
 </div>

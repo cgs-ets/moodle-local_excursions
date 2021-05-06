@@ -48,6 +48,8 @@ $accompanyingactivities = activity::get_for_accompanying($USER->username);
 $auditoractivities = activity::get_for_auditor($USER->username);
 $parentactivities = activity::get_for_parent($USER->username);
 $studentactivities = activity::get_for_student($USER->username);
+$primaryschoolactivities = activity::get_for_primary($USER->username);
+$seniorschoolactivities = activity::get_for_senior($USER->username);
 
 $relateds = array(
 	'useractivities' => $useractivities,
@@ -56,6 +58,8 @@ $relateds = array(
 	'auditoractivities' => $auditoractivities,
 	'parentactivities' => $parentactivities,
 	'studentactivities' => $studentactivities,
+	'primaryschoolactivities' => $primaryschoolactivities,
+	'seniorschoolactivities' => $seniorschoolactivities,
 	'isstaff' => $isstaff,
 );
 $indexexporter = new index_exporter(null, $relateds);
