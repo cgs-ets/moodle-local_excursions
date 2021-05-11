@@ -834,7 +834,7 @@ class activity extends persistent {
             }
             $students[] = $student;
         }
-        usort($students, function($a, $b) {return strcmp($a->fullname, $b->fullname);});
+        usort($students, function($a, $b) {return strcmp($a->fullnamereverse, $b->fullnamereverse);});
 
         // Generate and return the new students in html rows.
         $data = array(

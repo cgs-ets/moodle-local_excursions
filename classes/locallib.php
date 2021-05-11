@@ -255,6 +255,7 @@ class locallib extends local_excursions_config {
         $info = new stdClass();
         $info->username = $username;
         $info->fullname = fullname($user);
+        $info->fullnamereverse = $user->lastname . ', ' . $user->firstname;
         $info->profilephoto = $userphoto->get_url($PAGE)->out(false);
 
         return $info;
