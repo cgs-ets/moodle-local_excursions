@@ -822,6 +822,7 @@ class activity extends persistent {
         // Get the students permissions.
         foreach ($data->users as $username) {
             $student = locallib::get_user_display_info($username);
+            $student->uptodate = locallib::get_studentdatacheck($username);
             $permissions = array_values(static::get_student_permissions($data->activityid, $username));
             $student->permissions = array();
             foreach ($permissions as $permission) {

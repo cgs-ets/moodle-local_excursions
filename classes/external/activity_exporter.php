@@ -260,6 +260,7 @@ class activity_exporter extends persistent_exporter {
             $permission->userphoto = $userphoto->get_url($PAGE)->out(false);
             $permission->isyes = ($permission->response == 1);
             $permission->isno = ($permission->response == 2);
+            $permission->uptodate = locallib::get_studentdatacheck($permission->studentusername);
         }
 
         $staffinchargeinfo = new \stdClass();

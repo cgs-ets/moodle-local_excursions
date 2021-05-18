@@ -73,8 +73,14 @@
                         <td>
                             <img class="round" title="{{fullname}}" src="{{{userphoto}}}">
                             {{fullname}}
+                            {{^uptodate}}
+                                <div class="text-notuptodate"> 
+                                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>
+                                    {{#str}}studentnotuptodate, local_excursions{{/str}}
+                                </div>
+                            {{/uptodate}}
                         </td>
-                        <td>
+                        <td class="c-options">
                             <label class="permission-yes">
                                 <input name="permission" type="radio" {{#isyes}}checked="checked"{{/isyes}} value="1"/>
                                 Yes

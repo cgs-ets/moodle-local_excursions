@@ -1105,6 +1105,15 @@
 #page-local-excursions-permissions .permissions .permission {
   transition: opacity 0.3s;
 }
+#page-local-excursions-permissions .permissions .permission .text-notuptodate {
+  max-width: 380px;
+  line-height: 17px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+#page-local-excursions-permissions .permissions .permission .c-options {
+  text-align: center;
+}
 #page-local-excursions-permissions .permissions .permission .c-responsemessage {
   display: none;
 }

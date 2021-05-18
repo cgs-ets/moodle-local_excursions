@@ -592,7 +592,38 @@ class locallib extends local_excursions_config {
         );
 
         return json_encode($data);
+    }
 
+    /*
+    * @param string $username  Username to check whether student data check has been completed.
+    */
+    public static function get_studentdatacheck($username) {
+
+        $studentdatacheck = true; // Assume data check done until proven otherwise to prevent false alarms.
+
+        try {
+            $config = get_config('local_excursions');
+            $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
+            $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
+
+            $sql = $config->studentdatachecksql . ' :username';
+            $params = array(
+                'username' => $username
+            );
+
+            $result = $externalDB->get_record_sql($sql, $params);
+            if ($result) {
+                $result = (array) $result;
+                $result = reset($result);
+                if ($result == 0) {
+                    $studentdatacheck = false;
+                }
+            }
+        } catch (Exception $ex) {
+            // Error.
+        }
+
+        return $studentdatacheck;
     }
 
 
