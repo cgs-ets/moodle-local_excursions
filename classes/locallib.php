@@ -598,11 +598,14 @@ class locallib extends local_excursions_config {
     * @param string $username  Username to check whether student data check has been completed.
     */
     public static function get_studentdatacheck($username) {
-
         $studentdatacheck = true; // Assume data check done until proven otherwise to prevent false alarms.
 
+        $config = get_config('local_excursions');
+        if (empty($config->studentdatachecksql)) {
+            return $studentdatacheck;
+        }
+
         try {
-            $config = get_config('local_excursions');
             $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
             $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
 
