@@ -29,7 +29,7 @@
             <input class="userselect" type="checkbox" value="{{username}}">
         </td>
         <td class="cell c-name">
-            <img src="{{profilephoto}}" class="round" role="presentation" aria-hidden="true"> <span class="name">{{fullnamereverse}}</span>{{^uptodate}} <i data-toggle="tooltip" title="Student information is not updated. Student may not be able to attend." class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>{{/uptodate}}
+            <img src="{{profilephoto}}" class="round" role="presentation" aria-hidden="true"> <span class="name">{{fullnamereverse}}</span>{{^uptodate}} <i data-toggle="tooltip" title="{{#str}}studentinlistnotuptodate, local_excursions{{/str}}" class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>{{/uptodate}}
         </td>
         {{#permissions.0}}          
             <td class="cell c-permissions">
@@ -37,8 +37,7 @@
             </td>
         {{/permissions.0}}
         {{^permissions.0}}  
-            <td class="cell c-permissions no-permissions">
-            </td>
+            <td class="cell c-permissions no-permissions"></td>
         {{/permissions.0}}  
     </tr> 
 {{/students}}
