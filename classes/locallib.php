@@ -611,7 +611,7 @@ class locallib extends local_excursions_config {
 
             $sql = $config->studentdatachecksql . ' :username';
             $params = array(
-                'username' => 1994
+                'username' => $username
             );
 
             $result = $externalDB->get_record_sql($sql, $params);
