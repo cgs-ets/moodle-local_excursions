@@ -29,7 +29,13 @@
             <input class="userselect" type="checkbox" value="{{username}}">
         </td>
         <td class="cell c-name">
-            <img src="{{profilephoto}}" class="round" role="presentation" aria-hidden="true"> <span class="name">{{fullnamereverse}}</span>{{^uptodate}} <i data-toggle="tooltip" title="{{#str}}studentinlistnotuptodate, local_excursions{{/str}}" class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>{{/uptodate}}
+            <img src="{{profilephoto}}" class="round" role="presentation" aria-hidden="true"> <span class="name">{{fullnamereverse}}</span>
+            {{^uptodate}} 
+                <i data-toggle="tooltip" title="{{#str}}studentinlistnotuptodate, local_excursions{{/str}}" class="fa fa-info-circle text-info" aria-hidden="true"></i>
+            {{/uptodate}}
+            {{^sisconsent}} 
+                <i data-toggle="tooltip" title="{{#str}}nosisconsent, local_excursions{{/str}}" class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>
+            {{/sisconsent}}
         </td>
         {{#permissions.0}}          
             <td class="cell c-permissions">

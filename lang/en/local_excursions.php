@@ -42,6 +42,8 @@ $string['taglistuserssql'] = 'Taglist users SQL';
 $string['checkabsencesql'] = 'Check absence SQL';
 $string['createabsencesql'] = 'Create absence SQL';
 $string['studentdatachecksql'] = 'Student Data Check SQL';
+$string['excursionconsentsql'] = 'Excursions consent SQL';
+
 $string['excursions:audit'] = 'Audit local_excursions activities';
 
 $string['activitiesetup'] = 'Activity setup';
@@ -117,6 +119,7 @@ $string['messagequeued'] = 'Permissions have been queued for sending. Permission
 
 $string['activitypermissions'] = 'Activity Permissions';
 $string['savechangesrequired'] = 'The student list has changed. <strong>Save changes</strong> is required to refresh permissions.';
-$string['extrapermissionsinfo'] = 'If your child has recently had a medical condition or a change to medications that the School may not yet be aware of, please update your child\'s information via the <u><b><a href="https://infiniti.canberragrammar.org.au/Infiniti/Produce/launch.aspx?id=f95c8a98-8410-4a3e-ab46-0c907ddb9390&amp;portal=1" target="_blank" rel="noopener">Student Data Form</a></b></u>';
-$string['studentnotuptodate'] = '<small>Your student may not be able to attend until updated information has been provided through the <b><u><a href="https://infiniti.canberragrammar.org.au/Infiniti/Produce/launch.aspx?id=f95c8a98-8410-4a3e-ab46-0c907ddb9390&amp;portal=1" target="_blank" rel="noopener">Student Data Form</a></u></b>. We ask for this to be updated at least once each year.</small>';
-$string['studentinlistnotuptodate'] = 'Student information is not up to date. Student may not be able to attend.';
+$string['extrapermissionsinfo'] = 'If your child has recently had a medical condition or a change to medications that the School may not yet be aware of, please update your child\'s information via the <u><b><a href="https://infiniti.canberragrammar.org.au/Infiniti/Produce/launch.aspx?id=f95c8a98-8410-4a3e-ab46-0c907ddb9390&portal=1" target="_blank" rel="noopener">Student Data Form</a></b></u>';
+$string['studentnotuptodate'] = '<small>Your student may not be able to attend until updated information has been provided through the <b><u><a href="https://infiniti.canberragrammar.org.au/Infiniti/Produce/launch.aspx?id=f95c8a98-8410-4a3e-ab46-0c907ddb9390&portal=1" target="_blank" rel="noopener">Student Data Form</a></u></b>. We ask for this to be updated at least once each year.</small>';
+$string['studentinlistnotuptodate'] = 'Student information is not up to date. Parents should be encouraged to complete the student data form. If permissions are enabled parents will be advised by the system.';
+$string['nosisconsent'] = 'Parents do not consent to excursion participation.';

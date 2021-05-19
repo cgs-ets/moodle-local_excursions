@@ -611,7 +611,7 @@ class locallib extends local_excursions_config {
 
             $sql = $config->studentdatachecksql . ' :username';
             $params = array(
-                'username' => $username
+                'username' => 1994
             );
 
             $result = $externalDB->get_record_sql($sql, $params);
@@ -627,6 +627,41 @@ class locallib extends local_excursions_config {
         }
 
         return $studentdatacheck;
+    }
+
+    /*
+    * @param string $username  Username to check whether general consent is given in routine data collection.
+    */
+    public static function get_excursionconsent($username) {
+        $sisconsent = true; // Assume true until proven otherwise to prevent false alarms.
+
+        $config = get_config('local_excursions');
+        if (empty($config->excursionconsentsql)) {
+            return $sisconsent;
+        }
+
+        try {
+            $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
+            $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
+
+            $sql = $config->excursionconsentsql . ' :username';
+            $params = array(
+                'username' => $username
+            );
+
+            $result = $externalDB->get_record_sql($sql, $params);
+            if ($result) {
+                $result = (array) $result;
+                $result = reset($result);
+                if ($result == 0) {
+                    $sisconsent = false;
+                }
+            }
+        } catch (Exception $ex) {
+            // Error.
+        }
+
+        return $sisconsent;
     }
 
 
