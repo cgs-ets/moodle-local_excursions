@@ -478,7 +478,10 @@
 #page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions a,
 #page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .student-list .c-checkbox,
 #page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .actions .c-checkbox {
-  display: none;
+  display: none !important;
+}
+#page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .prepare-message {
+  display: none !important;
 }
 #page-local-excursions-activity:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) .alert {
   display: none !important;
