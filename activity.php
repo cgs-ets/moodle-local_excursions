@@ -125,9 +125,9 @@ $data->edit = $edit;
 $data->activityname = $activity->activityname;
 $data->campus = $activity->campus;
 if (empty($data->campus)) {
-    $data->campus = 'senior';
-    if (strpos($USER->profile['CampusRoles'], 'Primary School:Staff') !== false) {
-        $data->campus = 'primary';
+    $data->campus = 'primary';
+    if (strpos($USER->profile['CampusRoles'], 'Senior School:Staff') !== false) {
+        $data->campus = 'senior';
     }
 }
 $data->location = $activity->location;
