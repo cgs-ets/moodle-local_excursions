@@ -107,6 +107,9 @@ class activity_exporter extends persistent_exporter {
             'usercanedit' => [
                 'type' => PARAM_BOOL,
             ],
+            'usercansendmail' => [
+                'type' => PARAM_BOOL,
+            ],
             'formattedra' => [
                 'type' => PARAM_RAW,
             ],
@@ -303,6 +306,11 @@ class activity_exporter extends persistent_exporter {
             $usercanedit = true;
         }
 
+        $usercansendmail = false;
+        if ($iscreator || $isstaffincharge) {
+            $usercansendmail = true;
+        }
+
         $formattedra = $this->export_riskassessment($output);
 
         $formattedattachments = $this->export_attachments($output);
@@ -330,6 +338,7 @@ class activity_exporter extends persistent_exporter {
             'userhasstudents' => count($userpermissions),
             'staffinchargeinfo' => $staffinchargeinfo,
             'usercanedit' => $usercanedit,
+            'usercansendmail' => $usercansendmail,
             'formattedra' => $formattedra,
             'formattedattachments' => $formattedattachments,
             'calicons' => $calicons,
