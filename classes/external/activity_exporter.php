@@ -129,6 +129,19 @@ class activity_exporter extends persistent_exporter {
     }
 
     /**
+    * Returns a list of objects that are related.
+    *
+    * Data needed to generate "other" properties.
+    *
+    * @return array
+    */
+    protected static function define_related() {
+        return [
+            'usercontext' => 'stdClass?',
+        ];
+    }
+
+    /**
      * Get the additional values to inject while exporting.
      *
      * @param renderer_base $output The renderer.
@@ -136,6 +149,11 @@ class activity_exporter extends persistent_exporter {
      */
     protected function get_other_values(renderer_base $output) {
         global $PAGE, $USER, $DB;
+
+        $usercontext = $USER;
+        if (isset($this->related['usercontext'])) {
+            $usercontext = $this->related['usercontext'];
+        }
 
         $manageurl = new \moodle_url('/local/excursions/activity.php', array(
             'edit' => $this->data->id,
@@ -188,11 +206,11 @@ class activity_exporter extends persistent_exporter {
 
         $statushelper = locallib::status_helper($this->data->status);
 
-        $iscreator = ($this->data->username == $USER->username);
+        $iscreator = ($this->data->username == $usercontext->username);
 
         $isapprover = activity::is_approver_of_activity($this->data->id);
         if ($isapprover) {
-            $userapprovertypes = locallib::get_approver_types($USER->username);
+            $userapprovertypes = locallib::get_approver_types($usercontext->username);
         }
 
         // Get approvals.
@@ -251,7 +269,7 @@ class activity_exporter extends persistent_exporter {
             $emailaction->sender = fullname(\core_user::get_user_by_username($emailaction->username));
         }
 
-        $userpermissions = array_values(activity::get_parent_permissions($this->data->id, $USER->username));
+        $userpermissions = array_values(activity::get_parent_permissions($this->data->id, $usercontext->username));
         foreach ($userpermissions as &$permission) {
             $student = \core_user::get_user_by_username($permission->studentusername);
             $permission->fullname = fullname($student);
@@ -276,7 +294,7 @@ class activity_exporter extends persistent_exporter {
             $staffinchargeinfo->userphoto = $sicphoto->get_url($PAGE)->out(false);
         }
         $isstaffincharge = false;
-        if ($sic->username == $USER->username) {
+        if ($sic->username == $usercontext->username) {
             $isstaffincharge = true;
         }
 

@@ -1310,8 +1310,6 @@ class activity extends persistent {
 
         $activity = new static($activityid);
         $output = $PAGE->get_renderer('core');
-        $activityexporter = new activity_exporter($activity);
-        $activity = $activityexporter->export($output);
 
         $recipients = array();
 
@@ -1320,14 +1318,19 @@ class activity extends persistent {
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
             foreach($approvers as $approver) {
+                $usercontext = \core_user::get_user_by_username($approver['username']);
+                $relateds = array('usercontext' => $usercontext);
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
                 if ($approver['contacts']) {
                     foreach ($approver['contacts'] as $email) {
-                        static::send_approved_email($activity, $approver['username'], $email);
+                        // Export each time as user context is needed to determine creator etc.
+                        static::send_approved_email($exported, $approver['username'], $email);
                         $recipients[] = $approver['username'];
                     }
                 } else {
                     if ( ! in_array($approver['username'], $recipients)) {
-                        static::send_approved_email($activity, $approver['username']);
+                        static::send_approved_email($exported, $approver['username']);
                         $recipients[] = $approver['username'];
                     }
                 }
@@ -1338,21 +1341,33 @@ class activity extends persistent {
         $accompanyingstaff = static::get_accompanying_staff($activityid);
         foreach ($accompanyingstaff as $staff) {
             if ( ! in_array($staff->username, $recipients)) {
-                static::send_approved_email($activity, $staff->username);
+                $usercontext = \core_user::get_user_by_username($staff->username);
+                $relateds = array('usercontext' => $usercontext);
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                static::send_approved_email($exported, $staff->username);
                 $recipients[] = $staff->username;
             }
         }
 
         // Send to activity creator.
-        if ( ! in_array($activity->username, $recipients)) {
-            static::send_approved_email($activity, $activity->username);
-            $recipients[] = $activity->username;
+        if ( ! in_array($activity->get('username'), $recipients)) {
+            $usercontext = \core_user::get_user_by_username($activity->get('username'));
+            $relateds = array('usercontext' => $usercontext);
+            $activityexporter = new activity_exporter($activity, $relateds);
+            $exported = $activityexporter->export($output);
+            static::send_approved_email($exported, $exported->username);
+            $recipients[] = $exported->username;
         }
 
         // Send to staff in charge.
-        if ( ! in_array($activity->staffincharge, $recipients)) {
-            static::send_approved_email($activity, $activity->staffincharge);
-            $recipients[] = $activity->staffincharge;
+        if ( ! in_array($activity->get('staffincharge'), $recipients)) {
+            $usercontext = \core_user::get_user_by_username($activity->get('staffincharge'));
+            $relateds = array('usercontext' => $usercontext);
+            $activityexporter = new activity_exporter($activity, $relateds);
+            $exported = $activityexporter->export($output);
+            static::send_approved_email($exported, $exported->staffincharge);
+            $recipients[] = $exported->staffincharge;
         }
     }
 

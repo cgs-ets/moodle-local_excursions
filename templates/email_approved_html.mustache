@@ -30,7 +30,15 @@
     </strong>
 </h2>
 
-<p>You received this notification because you are the creator, staff in charge, or an accompanying staff member of this activity. If your activity requires parent permissions click the link below to prepare and send an email to parents. Parents will not be notified until you complete this action.</p>
+<p>You received this notification because you are the creator, staff in charge, or an accompanying staff member of this activity.</p>
+
+{{#activity.permissions}}
+    {{#activity.iscreator}}
+        {{#activity.isstaffincharge}}
+            <p><b>Your activity requires parent permissions. Click the button below to prepare and send an email to parents. Parents will not be notified until you complete this action.</b></p>
+        {{/activity.isstaffincharge}}
+    {{/activity.iscreator}}
+{{/activity.permissions}}
 
 <!-- Details -->
 {{#activity}}
