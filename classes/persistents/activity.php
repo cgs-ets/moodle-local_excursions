@@ -1522,7 +1522,7 @@ class activity extends persistent {
                 INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
                      WHERE p.activityid = ?
                        AND p.response = 1
-                       AND NOT EXISTS ( 
+                       AND p.studentusername NOT IN ( 
                            SELECT studentusername
                              FROM mdl_excursions_permissions
                             WHERE activityid = ?
