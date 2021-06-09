@@ -1029,7 +1029,7 @@ class locallib extends local_excursions_config {
         } else {
             // Trigger event for failing to send email.
             $event = \core\event\email_failed::create(array(
-                'context' => context_system::instance(),
+                'context' => \context_system::instance(),
                 'userid' => $from->id,
                 'relateduserid' => $user->id,
                 'other' => array(
