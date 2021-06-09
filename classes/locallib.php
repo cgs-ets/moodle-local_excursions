@@ -494,6 +494,9 @@ class locallib extends local_excursions_config {
         try {
 
             $config = get_config('local_excursions');
+            if (empty($config->usertaglistssql)) {
+                return [];
+            }
             $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
             $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
 
@@ -517,6 +520,9 @@ class locallib extends local_excursions_config {
         try {
 
             $config = get_config('local_excursions');
+            if (empty($config->publictaglistssql)) {
+                return [];
+            }
             $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
             $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
 
