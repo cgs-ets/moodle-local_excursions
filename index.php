@@ -29,7 +29,13 @@ use local_excursions\persistents\activity;
 use local_excursions\external\index_exporter;
 use local_excursions\locallib;
 
+require_login();
+$isstaff = locallib::is_cgs_staff();
+
 $sortby = optional_param('sortby', '', PARAM_RAW);
+$indexurl = new moodle_url('/local/excursions/index.php', array(
+	'sortby' => $sortby,
+));
 
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -39,8 +45,16 @@ $PAGE->set_url('/local/excursions/index.php', array(
 $PAGE->set_title(get_string('pluginname', 'local_excursions'));
 $PAGE->set_heading(get_string('pluginname', 'local_excursions'));
 
-require_login();
-$isstaff = locallib::is_cgs_staff();
+// If sortby is not specified, check if preference is set.
+if (empty($sortby)) {
+    $sortby = get_user_preferences('local_excursions_sortby', '');
+    if ($sortby) {
+        $indexurl->param('sortby', $sortby);
+        $PAGE->set_url($indexurl);
+    }
+} else {
+    set_user_preference('local_excursions_sortby', $sortby);
+}
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
 $PAGE->requires->js_call_amd('local_excursions/index', 'init');
