@@ -801,7 +801,6 @@ class activity extends persistent {
     */
     public static function save_draft($formjson) {
         // Some validation.
-        $formdata = json_decode($formjson);
         if (empty($formdata->id)) {
             return;
         }

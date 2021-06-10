@@ -127,8 +127,8 @@ trait formcontrol {
         }
 
         if ($action == 'autosave') {
-            $formjson = json_decode($data);
-            return activity::save_draft($formjson);
+            $data = json_decode($data);
+            return activity::save_draft($data);
         }
 
         if ($action == 'get_student_selector_data') {
@@ -141,10 +141,6 @@ trait formcontrol {
             return json_encode($usernames);
         }
 
-        
-
-        // Save.
-        //return activity::save_draft($formjson);
         return 1;
 
     }
