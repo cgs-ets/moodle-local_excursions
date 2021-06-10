@@ -799,7 +799,7 @@ class activity extends persistent {
     * Save a draft of the activity, used by the auto-save service. At present, the only
     * field auto-saved is the activity name.
     */
-    public static function save_draft($formjson) {
+    public static function save_draft($formdata) {
         // Some validation.
         if (empty($formdata->id)) {
             return;
