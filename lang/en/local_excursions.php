@@ -102,6 +102,7 @@ $string['enablepermissions'] = 'This activity requires parent permission';
 $string['invitetypesystem'] = 'To send a system-generated email to parents, select the students below, and click the <b><i class="fa fa-envelope" aria-hidden="true"></i> Prepare message</b> button.';
 $string['invitetypemanual'] = 'To communiticate with parents manually or via an alternate system, direct parents to the following URL to register their permission.';
 $string['view:noactivities'] = 'No relevant activities found.';
+$string['status:autosave'] = 'Autosave draft';
 $string['status:draft'] = 'Draft';
 $string['status:inreview'] = 'In review';
 $string['status:waiting'] = 'Waiting';
