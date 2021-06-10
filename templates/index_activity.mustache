@@ -23,7 +23,7 @@
 
     View template.
 }}
-<tr class="activity {{#statushelper.isautosave}}is-autosave{{/statushelper.isautosave}}{{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}
+<tr data-id="{{id}}" class="activity {{#statushelper.isautosave}}is-autosave{{/statushelper.isautosave}}{{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}
     {{#ispast}}past{{/ispast}}">
     <td class="cell c-timecreated">{{createdreadabletime}}</td>
     <td class="cell c-timestart">{{{calicons.start}}}</td>
@@ -85,6 +85,9 @@
         {{#permissions}}{{^ispast}}{{#userhasstudents}}
             <a class="btn btn-warning" href="{{permissionsurl}}">Permissions</a>
         {{/userhasstudents}}{{/ispast}}{{/permissions}}
+        {{#usercanedit}}{{#statushelper.isdraftorautosave}}
+            <a class="delete-activity btn btn-danger" href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+        {{/statushelper.isdraftorautosave}}{{/usercanedit}}
         {{#isparent}}{{^isstaff}}{{^permissions}}
             N/A
         {{/permissions}}{{/isstaff}}{{/isparent}}

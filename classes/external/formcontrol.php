@@ -105,6 +105,11 @@ trait formcontrol {
             return activity::delete_comment($commentid);
         }
 
+        if ($action == 'delete_activity') {
+            $id = json_decode($data);
+            return activity::soft_delete($id);
+        }
+
         if ($action == 'enable_permissions') {
             $data = json_decode($data);
             return activity::enable_permissions($data->activityid, $data->checked);
@@ -127,8 +132,8 @@ trait formcontrol {
         }
 
         if ($action == 'autosave') {
-            $data = json_decode($data);
-            return activity::save_draft($data);
+            $activityid = json_decode($data);
+            return activity::save_draft($activityid);
         }
 
         if ($action == 'get_student_selector_data') {

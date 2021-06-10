@@ -89,6 +89,7 @@ class locallib extends local_excursions_config {
         $statushelper->status = $status;
         $statushelper->isautosave = ($status == static::ACTIVITY_STATUS_AUTOSAVE);
         $statushelper->isdraft = ($status == static::ACTIVITY_STATUS_DRAFT);
+        $statushelper->isdraftorautosave = ($status == static::ACTIVITY_STATUS_DRAFT || $status == static::ACTIVITY_STATUS_AUTOSAVE);
         $statushelper->inreview = ($status == static::ACTIVITY_STATUS_INREVIEW);
         $statushelper->isapproved = ($status == static::ACTIVITY_STATUS_APPROVED);
         $statushelper->iscancelled = ($status == static::ACTIVITY_STATUS_CANCELLED);

@@ -43,6 +43,7 @@ require_login();
 $isstaff = locallib::is_cgs_staff();
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
+$PAGE->requires->js_call_amd('local_excursions/index', 'init');
 
 $output = $OUTPUT->header();
 

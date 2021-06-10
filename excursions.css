@@ -997,6 +997,10 @@
 #page-local-excursions-index .generaltable tbody tr.activity.is-autosave {
   background: rgba(240, 173, 78, 0.3) !important;
 }
+#page-local-excursions-index .generaltable tbody tr.activity.deleting {
+  opacity: 0.4;
+  pointer-events: none;
+}
 #page-local-excursions-index .header {
   padding: 20px 0;
 }

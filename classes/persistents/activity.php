@@ -1715,8 +1715,13 @@ class activity extends persistent {
             return;
         }
 
-        // Check if user is the creator.
-        if ($USER->username == $activity->get('username')) {
+        // People that can delete.
+        $iscreator = ($activity->get('username') == $USER->username);
+        $isapprover = static::is_approver_of_activity($id);
+        $isstaffincharge = ($activity->get('staffincharge') == $USER->username);
+
+        // Update activity.
+        if ($iscreator || $isstaffincharge || $isstaffincharge) {
             $activity->set('deleted', 1);
             $activity->update();
         }
