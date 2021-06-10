@@ -61,6 +61,9 @@
 		&.past, &.past:nth-of-type(odd) {
 		    background: rgba(0,0,0,0.3);
 		}
+		&.is-autosave {
+			background: rgba(240,173,78,0.3) !important;
+		}
 	}
 	.header {
 		padding: 20px 0;
@@ -94,28 +97,21 @@
 	}
 	.c-timecreated, .th-timecreated {
 		display: none;
-    	width: 100px;
+    	width: 110px;
+	}
+	.sort {
+		display: none;
 	}
 	.cal-date {
 		width: 50px;
     	margin: 0 auto;
     	line-height: 1;
-		.cal-month {
-	        font-size: 12px;
-	        text-transform: uppercase;
-	        text-align: center;
-	        width: 50px;border: 2px solid #66A8D8;
-	        border-bottom: 0;
-	        border-radius: 3px 3px 0 0;
-	        font-family: monospace;
-	        padding: 2px 0;
-		}
 		.cal-day {
 			background: #66A8D8;
 		    color: #fff;
 		    display: inline-block;
 		    text-align: center;
-		    width: 50px;
+		    width: 65px;
 		    font-size: 17px;
 		    font-family: monospace;
 		    font-weight: 600;
@@ -123,22 +119,20 @@
 		}
 		.cal-year {
 			text-align: center;
-		    width: 50px;
+		    width: 65px;
 		    font-size: 10px;
 		    font-family: monospace;
-		    border: 2px solid #66A8D8;
 		    line-height: 11px;
 		    border-top: 0;
 		    border-bottom: 0;
-		    margin-top: -2px;
+		    margin-top: 4px;
 		}
 		.cal-time {
 		    font-size: 12px;
 		    font-family: monospace;
 		    text-align: center;
-		    width: 50px;
+		    width: 65px;
 		    background: #ccc;
-		    border-radius: 0 0 3px 3px;
 		    background: #717171;
 		    color: #fff;
 	        padding: 2px 0;
@@ -147,14 +141,14 @@
 			.cal-month, .cal-day, .cal-year {
 				display: none;
 			}
-			.cal-time {
-				border-radius: 3px;
-			}
 		}
 	}
 	.approver-activities {
 		.c-timecreated, .th-timecreated {
 			display: table-cell;
+		}
+		.sort {
+			display: inline;
 		}
 	}
 }

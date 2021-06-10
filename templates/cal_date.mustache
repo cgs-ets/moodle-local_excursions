@@ -24,11 +24,11 @@
     A timestamp rendered as a calendar icon.
 }}
 <div class="cal-date {{#issameday}}same-day{{/issameday}}">
-    <div class="cal-month">{{month}}</div> 
+
+    {{#month}}<div class="cal-day">{{month}} {{day}}</div>{{/month}}
+
+    {{#time}}<div class="cal-time">{{time}}</div>{{/time}}
 
     {{#year}}<div class="cal-year">{{year}}</div>{{/year}}
 
-    <div class="cal-day">{{day}}</div> 
-
-    <div class="cal-time">{{time}}</div>
 </div>

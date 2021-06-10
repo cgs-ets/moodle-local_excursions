@@ -994,6 +994,9 @@
 #page-local-excursions-index .generaltable tbody tr.activity.past:nth-of-type(odd) {
   background: rgba(0, 0, 0, 0.3);
 }
+#page-local-excursions-index .generaltable tbody tr.activity.is-autosave {
+  background: rgba(240, 173, 78, 0.3) !important;
+}
 #page-local-excursions-index .header {
   padding: 20px 0;
 }
@@ -1028,30 +1031,22 @@
 #page-local-excursions-index .c-timecreated,
 #page-local-excursions-index .th-timecreated {
   display: none;
-  width: 100px;
+  width: 110px;
+}
+#page-local-excursions-index .sort {
+  display: none;
 }
 #page-local-excursions-index .cal-date {
   width: 50px;
   margin: 0 auto;
   line-height: 1;
 }
-#page-local-excursions-index .cal-date .cal-month {
-  font-size: 12px;
-  text-transform: uppercase;
-  text-align: center;
-  width: 50px;
-  border: 2px solid #66A8D8;
-  border-bottom: 0;
-  border-radius: 3px 3px 0 0;
-  font-family: monospace;
-  padding: 2px 0;
-}
 #page-local-excursions-index .cal-date .cal-day {
   background: #66A8D8;
   color: #fff;
   display: inline-block;
   text-align: center;
-  width: 50px;
+  width: 65px;
   font-size: 17px;
   font-family: monospace;
   font-weight: 600;
@@ -1059,22 +1054,20 @@
 }
 #page-local-excursions-index .cal-date .cal-year {
   text-align: center;
-  width: 50px;
+  width: 65px;
   font-size: 10px;
   font-family: monospace;
-  border: 2px solid #66A8D8;
   line-height: 11px;
   border-top: 0;
   border-bottom: 0;
-  margin-top: -2px;
+  margin-top: 4px;
 }
 #page-local-excursions-index .cal-date .cal-time {
   font-size: 12px;
   font-family: monospace;
   text-align: center;
-  width: 50px;
+  width: 65px;
   background: #ccc;
-  border-radius: 0 0 3px 3px;
   background: #717171;
   color: #fff;
   padding: 2px 0;
@@ -1084,12 +1077,12 @@
 #page-local-excursions-index .cal-date.same-day .cal-year {
   display: none;
 }
-#page-local-excursions-index .cal-date.same-day .cal-time {
-  border-radius: 3px;
-}
 #page-local-excursions-index .approver-activities .c-timecreated,
 #page-local-excursions-index .approver-activities .th-timecreated {
   display: table-cell;
+}
+#page-local-excursions-index .approver-activities .sort {
+  display: inline;
 }
 #page-local-excursions-permissions .activity-details {
   margin-bottom: 25px;

@@ -148,6 +148,14 @@ class activity extends persistent {
                 'type' => PARAM_INT,
                 'default' => 0,
             ],
+            "isdraft" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
+            "ispastevent" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
         ];
     }
 
@@ -422,11 +430,19 @@ class activity extends persistent {
     public static function get_for_user($username) {
         global $DB;
         
-        $sql = "SELECT *
+        $sql = "SELECT * 
+                    ,case
+                        when status = 0 OR status = 1 then 1
+                        else 0
+                    end as isdraft
+                    ,case
+                        when timeend < " . time() . " then 1
+                        else 0
+                    end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
                    AND username = ?
-              ORDER BY timestart DESC";
+              ORDER BY isdraft DESC, ispastevent ASC, timestart ASC";
         $params = array($username);
 
         $records = $DB->get_records_sql($sql, $params);
@@ -448,11 +464,19 @@ class activity extends persistent {
         }
 
         $sql = "SELECT *
+                    ,case
+                        when status = 0 OR status = 1 then 1
+                        else 0
+                    end as isdraft
+                    ,case
+                        when timeend < " . time() . " then 1
+                        else 0
+                    end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
                    AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                    AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
-              ORDER BY timestart DESC";
+              ORDER BY isdraft DESC, ispastevent ASC, timestart ASC";
         $records = $DB->get_records_sql($sql, array());
         
         $activities = array();
@@ -529,11 +553,15 @@ class activity extends persistent {
         if ($userisps) {
             // Get activities where campus is 'primary'.
             $sql = "SELECT *
+                        ,case
+                            when timeend < " . time() . " then 1
+                            else 0
+                        end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
                        AND status = 3
                        AND campus = 'primary'
-                  ORDER BY timestart DESC";
+                  ORDER BY ispastevent ASC, timestart ASC";
             $records = $DB->get_records_sql($sql);
             $activities = array();
             foreach ($records as $record) {
@@ -568,11 +596,15 @@ class activity extends persistent {
         if ($userisss) {
             // Get activities where campus is 'senior'.
             $sql = "SELECT *
+                        ,case
+                            when timeend < " . time() . " then 1
+                            else 0
+                        end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
                        AND status = 3
                        AND campus = 'senior'
-                  ORDER BY timestart DESC";
+                  ORDER BY ispastevent ASC, timestart ASC";
             $records = $DB->get_records_sql($sql);
             $activities = array();
             foreach ($records as $record) {
@@ -592,6 +624,14 @@ class activity extends persistent {
             $activityids = array_unique($ids);
             list($insql, $inparams) = $DB->get_in_or_equal($activityids);
             $sql = "SELECT *
+                        ,case
+                            when status = 0 OR status = 1 then 1
+                            else 0
+                        end as isdraft
+                        ,case
+                            when timeend < " . time() . " then 1
+                            else 0
+                        end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE id $insql
                        AND deleted = 0";
@@ -601,7 +641,7 @@ class activity extends persistent {
             }
 
             if (empty($orderby)) {
-                $orderby = 'timestart DESC';
+                $orderby = 'isdraft DESC, ispastevent ASC, timestart ASC';
             }
             $sql .= " ORDER BY " . $orderby;
 
@@ -615,7 +655,7 @@ class activity extends persistent {
         return $activities;
     }
 
-    public static function get_for_approver($username) {
+    public static function get_for_approver($username, $sortby = '') {
         global $DB;
 
         $activities = array();
@@ -630,7 +670,11 @@ class activity extends persistent {
                        AND invalidated = 0";
             $approvals = $DB->get_records_sql($sql, $inparams);
             $approvals = static::filter_approvals_with_prerequisites($approvals);
-            $activities = static::get_by_ids(array_column($approvals, 'activityid'), null, 'timecreated DESC'); // order by timecreated
+            $orderby = '';
+            if ($sortby == 'created') {
+                $orderby = 'timecreated DESC';
+            }
+            $activities = static::get_by_ids(array_column($approvals, 'activityid'), null, $orderby); // order by timecreated
         }
 
         return $activities;

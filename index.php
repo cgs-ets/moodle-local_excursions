@@ -29,9 +29,13 @@ use local_excursions\persistents\activity;
 use local_excursions\external\index_exporter;
 use local_excursions\locallib;
 
+$sortby = optional_param('sortby', '', PARAM_RAW);
+
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_url('/local/excursions/index.php', array());
+$PAGE->set_url('/local/excursions/index.php', array(
+	'sortby' => $sortby,
+));
 $PAGE->set_title(get_string('pluginname', 'local_excursions'));
 $PAGE->set_heading(get_string('pluginname', 'local_excursions'));
 
@@ -43,7 +47,7 @@ $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursion
 $output = $OUTPUT->header();
 
 $useractivities = activity::get_for_user($USER->username);
-$approveractivities = activity::get_for_approver($USER->username);
+$approveractivities = activity::get_for_approver($USER->username, $sortby);
 $accompanyingactivities = activity::get_for_accompanying($USER->username);
 $auditoractivities = activity::get_for_auditor($USER->username);
 $parentactivities = activity::get_for_parent($USER->username);

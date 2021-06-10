@@ -176,24 +176,27 @@ class activity_exporter extends persistent_exporter {
         }
         $startthisyear = date('Y', $this->data->timestart) == date('Y', time());
         $endthisyear = date('Y', $this->data->timeend) == date('Y', time());
-        $calicons = array(
-            'start' => $output->render_from_template('local_excursions/cal_date', array(
-                'day' => date('j', $this->data->timestart),
-                'month' => date('M', $this->data->timestart),
-                'year' => $startthisyear ? '' : date('Y', $this->data->timestart),
-                'time' => date('g:ia', $this->data->timestart),
-            )),
-            'end' => $output->render_from_template('local_excursions/cal_date', array(
-                'day' => date('j', $this->data->timeend),
-                'month' => date('M', $this->data->timeend),
-                'year' => $endthisyear ? '' : date('Y', $this->data->timestart),
-                'time' => date('g:ia', $this->data->timeend),
-                'issameday' => (date('j M Y', $this->data->timestart) == date('j M Y', $this->data->timeend)),
-            )),
-        );
+        $calicons = array();
+        if ($this->data->timestart) {
+            $calicons = array(
+                'start' => $output->render_from_template('local_excursions/cal_date', array(
+                    'day' => date('j', $this->data->timestart),
+                    'month' => date('M', $this->data->timestart),
+                    'year' => $startthisyear ? '' : date('Y', $this->data->timestart),
+                    'time' => date('g:ia', $this->data->timestart),
+                )),
+                'end' => $output->render_from_template('local_excursions/cal_date', array(
+                    'day' => date('j', $this->data->timeend),
+                    'month' => date('M', $this->data->timeend),
+                    'year' => $endthisyear ? '' : date('Y', $this->data->timestart),
+                    'time' => date('g:ia', $this->data->timeend),
+                    'issameday' => (date('j M Y', $this->data->timestart) == date('j M Y', $this->data->timeend)),
+                )),
+            );
+        }
 
         $ispast = false;
-        if ($this->data->timeend < time()) {
+        if ($this->data->timeend && $this->data->timeend < time()) {
             $ispast = true;
         }
 

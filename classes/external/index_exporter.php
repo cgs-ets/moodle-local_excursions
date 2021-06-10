@@ -82,6 +82,11 @@ class index_exporter extends exporter {
                 'multiple' => true,
                 'optional' => false,
             ],
+            'indexurl' => [
+                'type' => PARAM_RAW,
+                'multiple' => false,
+                'optional' => false,
+            ],
             'activitycreateurl' => [
                 'type' => PARAM_RAW,
                 'multiple' => false,
@@ -182,9 +187,11 @@ class index_exporter extends exporter {
             $senioractivities[] = $activityexporter->export($output);
         }
 
-		$activitycreateurl = new \moodle_url('/local/excursions/activity.php', array(
-		    'create' => 1,
-		));
+        $indexurl = new \moodle_url('/local/excursions/index.php', []);
+
+        $activitycreateurl = new \moodle_url('/local/excursions/activity.php', array(
+            'create' => 1,
+        ));
 
         $noexcursions = false;
         if ( empty($useractivities) && 
@@ -208,6 +215,7 @@ class index_exporter extends exporter {
             'primaryactivities' => $primaryactivities,
             'senioractivities' => $senioractivities,
             'activitycreateurl' => $activitycreateurl->out(false),
+            'indexurl' => $indexurl->out(false),
             'isstaff' => $this->related['isstaff'],
             'isparent' => count($parentactivities),
             'noexcursions' => $noexcursions,
