@@ -222,6 +222,8 @@ class activity extends persistent {
         $originalactivity = new static($data->id);
         // Permissions is autosaved independentaly of the form, so it will not be in the formdata.
         $data->permissions = $originalactivity->get('permissions');
+        // Set absences flag back to 0 so that absences are cleaned in case of student list change.
+        $data->absencesprocessed = 0;
         // Save the activity.        
         $activity = new static($data->id, $data);
         $activity->save();

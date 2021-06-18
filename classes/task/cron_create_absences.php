@@ -102,6 +102,20 @@ class cron_create_absences extends \core\task\scheduled_task {
                     );
                     $externalDB->execute($sql, $params);
                 }
+
+                // Delete absences for students no longer attending event.
+                $studentscsv = implode(',', $attending);
+                $this->log("Delete absences for students not in list: " . $studentscsv, 2);
+                $sql = $config->deleteabsencessql . ':leavingdate, :returningdate, :comment, :studentscsv';
+                $params = array(
+                    'leavingdate' => $activitystart,
+                    'returningdate' => $activityend,
+                    'comment' => $activity->get('activityname'),
+                    'studentscsv' => implode(',', $attending),
+                );
+                $externalDB->execute($sql, $params);
+
+                // Mark as processed.
                 $activity->set('absencesprocessed', 1);
                 $activity->save();
                 $this->log("Finished creating absences for activity " . $activity->get('id'));
