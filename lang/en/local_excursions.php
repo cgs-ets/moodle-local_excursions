@@ -41,6 +41,7 @@ $string['publictaglistssql'] = 'Public taglists SQL';
 $string['taglistuserssql'] = 'Taglist users SQL';
 $string['checkabsencesql'] = 'Check absence SQL';
 $string['createabsencesql'] = 'Create absence SQL';
+$string['deleteabsencessql'] = 'Delete absences SQL';
 $string['studentdatachecksql'] = 'Student Data Check SQL';
 $string['excursionconsentsql'] = 'Excursions consent SQL';
 

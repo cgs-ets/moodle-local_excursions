@@ -61,4 +61,6 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_excursions/createabsencesql', get_string('createabsencesql', 'local_excursions'), '', ''));
     $settings->add(new admin_setting_configtext('local_excursions/studentdatachecksql', get_string('studentdatachecksql', 'local_excursions'), '', ''));
     $settings->add(new admin_setting_configtext('local_excursions/excursionconsentsql', get_string('excursionconsentsql', 'local_excursions'), '', ''));
+    $settings->add(new admin_setting_configtext('local_excursions/deleteabsencessql', get_string('deleteabsencessql', 'local_excursions'), '', ''));
+
 }
