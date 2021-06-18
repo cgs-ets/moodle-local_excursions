@@ -492,6 +492,9 @@
   /* Add students modal*/
   /* Recipient selector */
 }
+#page-local-excursions-activity .modal-PERMISSIONSHELP ul {
+  margin-left: 1rem;
+}
 #page-local-excursions-activity #fitem_id_studentlistjson {
   display: none;
 }
@@ -577,6 +580,16 @@
 }
 #page-local-excursions-activity .student-list-wrap .permissions .alert-warning {
   border: 1px solid #ecd7bc;
+}
+#page-local-excursions-activity .student-list-wrap .permissions #enablepermissionshelplink {
+  font-size: 93%;
+}
+#page-local-excursions-activity .student-list-wrap .permissions #enablepermissionshelplink .icon {
+  margin-right: 0;
+  margin-left: 10px;
+}
+#page-local-excursions-activity .student-list-wrap .permissions #enablepermissionshelpbody {
+  display: none;
 }
 #page-local-excursions-activity .student-list-wrap .permissions .not-approved-yet span {
   font-size: 80%;

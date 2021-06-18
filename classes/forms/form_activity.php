@@ -188,25 +188,6 @@ class form_activity extends \moodleform {
             $mform->addElement('textarea', 'otherparticipants', get_string("activityform:otherparticipants", "local_excursions"), 'wrap="virtual" rows="4" cols="51"');
             $mform->setType('otherparticipants', PARAM_TEXT);
 
-
-        //$mform->addElement('text', 'extraquestionsjson', 'Extra Questions JSON');
-        //$mform->setType('extraquestionsjson', PARAM_RAW);
-        /*
-        <TABLE NAME="excursions_extraquestions" COMMENT="Additional questions for activities stored as key-value">
-          <FIELDS>
-            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-            <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-            <FIELD NAME="question" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
-            <FIELD NAME="questioncode" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
-            <FIELD NAME="answer" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-          </FIELDS>
-          <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            <KEY NAME="fk_activityid" TYPE="foreign" FIELDS="activityid" REFTABLE="excursions" REFFIELDS="id"/>
-          </KEYS>
-        </TABLE>
-        */
-
         /*----------------------
          *   Students
          *----------------------*/
@@ -247,7 +228,7 @@ class form_activity extends \moodleform {
         $dueby->setValue($value);
         $activity->duebydatefield = $dueby->toHtml();
 
-        // Finally add the rendered html for the student list and permissionsa area to the form.
+        // Finally add the rendered html for the student list and permissions area to the form.
         $studentshtml = $OUTPUT->render_from_template('local_excursions/activityform_studentlist', $activity);
         $mform->addElement('html', $studentshtml);
 

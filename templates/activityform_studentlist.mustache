@@ -30,6 +30,8 @@
     <div class="permissions">
         <input name="enable-permissions" type="checkbox" data-activityid="{{id}}" {{#permissions}}checked{{/permissions}}>
         {{#str}}enablepermissions, local_excursions{{/str}}
+        <a id="enablepermissionshelplink" href="#"><i class="icon fa fa-question-circle text-info fa-fw"></i> {{#str}}enablepermissionshelplink, local_excursions{{/str}}</a>
+        <div id="enablepermissionshelpbody">{{#str}}enablepermissionshelpbody, local_excursions{{/str}}</div>
         <div class="not-approved-yet"><span>If checked, the ability to notify parents and track responses will be available once the activity is approved.</span></div>
         {{>local_excursions/activityform_studentlist_permissionsform}}
     </div>

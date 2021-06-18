@@ -99,7 +99,10 @@ $string['activityform:checkall'] = 'Select all';
 $string['activityform:uncheckall'] = 'Deselect all';
 $string['activityform:cost'] = 'Cost for student';
 
-$string['enablepermissions'] = 'This activity requires parent permission';
+$string['enablepermissions'] = 'This activity requires parent permission.';
+$string['enablepermissionshelplink'] = 'Do I need parent permission?';
+$string['enablepermissionshelpbody'] = '<p>Do not request parent permission unnecessarily. Bulk excursion permissions are obtained from parents annually.</p><p>You only need to request parent permission for your excursion if it is:</p><ul><li>international</li><li>overnight</li><li>CGS Care, PreK or Pre S or</li><li>additional risks (such as swimming) have been identified</li><ul>';
+
 $string['invitetypesystem'] = 'To send a system-generated email to parents, select the students below, and click the <b><i class="fa fa-envelope" aria-hidden="true"></i> Prepare message</b> button.';
 $string['invitetypemanual'] = 'To communiticate with parents manually or via an alternate system, direct parents to the following URL to register their permission.';
 $string['view:noactivities'] = 'No relevant activities found.';

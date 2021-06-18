@@ -85,6 +85,12 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             }
         });
 
+        // Do I need parent permission.
+        self.rootel.on('click', '#enablepermissionshelplink', function(e) {
+            e.preventDefault();
+            self.permissionHelpModal();
+        });
+
         // Add students.
         self.rootel.on('click', '#btn-addstudents', function(e) {
             e.preventDefault();
@@ -229,6 +235,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.modals = {
             ADDSTUDENTS: null,
             PREVIEWEMAIL: null,
+            PERMISSIONSHELP: null,
         };
         self.templates = {
             ADDSTUDENTS: 'local_excursions/activityform_studentselector',
@@ -238,6 +245,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         var preloads = [];
         preloads.push(self.loadModal('ADDSTUDENTS', '', 'Add', ModalFactory.types.SAVE_CANCEL));
         preloads.push(self.loadModal('PREVIEWEMAIL', 'Email template', '', ModalFactory.types.DEFAULT));
+        preloads.push(self.loadModal('PERMISSIONSHELP', 'Do I need parent permission?', '', ModalFactory.types.DEFAULT));
         preloads.push(self.loadTemplate('ADDSTUDENTS'));
         preloads.push(self.loadTemplate('PREVIEWEMAIL'));
 
@@ -973,6 +981,24 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             });
             self.modals.PREVIEWEMAIL.getModal().addClass('modal-xl');
             self.modals.PREVIEWEMAIL.show();
+        }
+    };
+
+    /**
+     * Permission help modal.
+     *
+     * @method
+     */
+    ActivityForm.prototype.permissionHelpModal = function () {
+        var self = this;
+
+        var body = self.rootel.find('#enablepermissionshelpbody').html();
+
+        if (self.modals.PERMISSIONSHELP) {
+            // Set the modal content.
+            self.modals.PERMISSIONSHELP.setBody(body);
+            self.modals.PERMISSIONSHELP.getModal().addClass('modal-xl');
+            self.modals.PERMISSIONSHELP.show();
         }
     };
 
