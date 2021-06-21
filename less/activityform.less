@@ -312,7 +312,7 @@
 
 
 	// Editable for creator, approvers, and staff in charge.
-	&:not(.usercanedit) {
+	&:not(.activity-canedit) {
 		#id_general > .fcontainer,
 		#id_staff > .fcontainer,
 		.permissions, 
@@ -347,7 +347,7 @@
 	}
 
 	// Users that are not: creator, staff in charge, accompanying, approver.
-	&:not(.usercanedit):not(.activity-accompanying) {
+	&:not(.activity-canedit):not(.activity-accompanying) {
 		.approvals {
 			.reply-form, .comments {
 				display: none !important;
