@@ -312,7 +312,7 @@
 
 
 	// Editable for creator, approvers, and staff in charge.
-	&:not(.activity-creator):not(.activity-approver):not(.activity-staffincharge) {
+	&:not(.usercanedit) {
 		#id_general > .fcontainer,
 		#id_staff > .fcontainer,
 		.permissions, 
@@ -336,11 +336,22 @@
 				display: none !important;
 			}
 		}
+
 		.prepare-message {
 			display: none !important;
 		}
+
 		.alert {
 			display: none !important;
+		}
+	}
+
+	// Users that are not: creator, staff in charge, accompanying, approver.
+	&:not(.usercanedit):not(.activity-accompanying) {
+		.approvals {
+			.reply-form, .comments {
+				display: none !important;
+			}
 		}
 	}
 	

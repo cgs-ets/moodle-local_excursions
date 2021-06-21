@@ -273,6 +273,14 @@ if ($activity->username == $USER->username) {
     $PAGE->add_body_class('activity-creator');
 }
 
+$accompanying = json_decode($activity->accompanyingstaffjson);
+foreach ($accompanying as $user) {
+    if ($USER->username == $user->idfield) {
+        $PAGE->add_body_class('activity-accompanying');
+        break;
+    }
+}
+
 $output = $OUTPUT->header();
 
 $output .= $formactivity->render();
