@@ -165,7 +165,7 @@ class index_exporter extends exporter {
         $accompanyingactivities = array();
         foreach ($this->related['accompanyingactivities'] as $activity) {
             if (isset($allactivities[$activity->get('id')])) {
-                $approveractivities[] = $allactivities[$activity->get('id')];
+                $accompanyingactivities[] = $allactivities[$activity->get('id')];
             } else {
                 $activityexporter = new activity_exporter($activity, $relateds);
                 $exported = $activityexporter->export($output);
@@ -177,7 +177,7 @@ class index_exporter extends exporter {
         $auditoractivities = array();
         foreach ($this->related['auditoractivities'] as $activity) {
             if (isset($allactivities[$activity->get('id')])) {
-                $approveractivities[] = $allactivities[$activity->get('id')];
+                $auditoractivities[] = $allactivities[$activity->get('id')];
             } else {
                 $activityexporter = new activity_exporter($activity, $relateds);
                 $exported = $activityexporter->export($output);
@@ -189,7 +189,7 @@ class index_exporter extends exporter {
         $parentactivities = array();
         foreach ($this->related['parentactivities'] as $activity) {
             if (isset($allactivities[$activity->get('id')])) {
-                $approveractivities[] = $allactivities[$activity->get('id')];
+                $parentactivities[] = $allactivities[$activity->get('id')];
             } else {
                 $activityexporter = new activity_exporter($activity, $relateds);
                 $exported = $activityexporter->export($output);
@@ -201,7 +201,7 @@ class index_exporter extends exporter {
         $studentactivities = array();
         foreach ($this->related['studentactivities'] as $activity) {
             if (isset($allactivities[$activity->get('id')])) {
-                $approveractivities[] = $allactivities[$activity->get('id')];
+                $studentactivities[] = $allactivities[$activity->get('id')];
             } else {
                 $activityexporter = new activity_exporter($activity, $relateds);
                 $exported = $activityexporter->export($output);
@@ -213,7 +213,7 @@ class index_exporter extends exporter {
         $primaryactivities = array();
         foreach ($this->related['primaryactivities'] as $activity) {
             if (isset($allactivities[$activity->get('id')])) {
-                $approveractivities[] = $allactivities[$activity->get('id')];
+                $primaryactivities[] = $allactivities[$activity->get('id')];
             } else {
                 $activityexporter = new activity_exporter($activity, $relateds);
                 $exported = $activityexporter->export($output);
@@ -225,7 +225,7 @@ class index_exporter extends exporter {
         $senioractivities = array();
         foreach ($this->related['senioractivities'] as $activity) {
             if (isset($allactivities[$activity->get('id')])) {
-                $approveractivities[] = $allactivities[$activity->get('id')];
+                $senioractivities[] = $allactivities[$activity->get('id')];
             } else {
                 $activityexporter = new activity_exporter($activity, $relateds);
                 $exported = $activityexporter->export($output);
