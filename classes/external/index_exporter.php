@@ -139,51 +139,53 @@ class index_exporter extends exporter {
      */
     protected function get_other_values(renderer_base $output) {
 
+        $relateds = array('minimal' => true);
+
         $useractivities = array();
 		foreach ($this->related['useractivities'] as $activity) {
-			$activityexporter = new activity_exporter($activity);
+			$activityexporter = new activity_exporter($activity, $relateds);
 			$useractivities[] = $activityexporter->export($output);
 		}
 
         $approveractivities = array();
         foreach ($this->related['approveractivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $approveractivities[] = $activityexporter->export($output);
         }
 
         $accompanyingactivities = array();
         foreach ($this->related['accompanyingactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $accompanyingactivities[] = $activityexporter->export($output);
         }
 
         $auditoractivities = array();
         foreach ($this->related['auditoractivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $auditoractivities[] = $activityexporter->export($output);
         }
 
         $parentactivities = array();
         foreach ($this->related['parentactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $parentactivities[] = $activityexporter->export($output);
         }
 
         $studentactivities = array();
         foreach ($this->related['studentactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $studentactivities[] = $activityexporter->export($output);
         }
 
         $primaryactivities = array();
         foreach ($this->related['primaryactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $primaryactivities[] = $activityexporter->export($output);
         }
 
         $senioractivities = array();
         foreach ($this->related['senioractivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity);
+            $activityexporter = new activity_exporter($activity, $relateds);
             $senioractivities[] = $activityexporter->export($output);
         }
 

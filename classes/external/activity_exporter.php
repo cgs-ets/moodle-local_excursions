@@ -141,6 +141,7 @@ class activity_exporter extends persistent_exporter {
     protected static function define_related() {
         return [
             'usercontext' => 'stdClass?',
+            'minimal' => 'bool?',
         ];
     }
 
@@ -156,6 +157,11 @@ class activity_exporter extends persistent_exporter {
         $usercontext = $USER;
         if (isset($this->related['usercontext'])) {
             $usercontext = $this->related['usercontext'];
+        }
+
+        $minimal = true;
+        if (isset($this->related['minimal'])) {
+            $minimal = $this->related['minimal'];
         }
 
         $manageurl = new \moodle_url('/local/excursions/activity.php', array(
@@ -253,28 +259,6 @@ class activity_exporter extends persistent_exporter {
             }
         }
 
-        $permissionshelper = locallib::permissions_helper($this->data->id);
-
-        $messagehistory = array_values(activity::get_messagehistory($this->data->id));
-        foreach ($messagehistory as &$emailaction) {
-            $emailaction->readabletime = date('j M Y g:ia', $emailaction->timecreated);
-            if ($emailaction->status == 0) {
-                $emailaction->statusreadable = 'Queued';
-            }
-            if ($emailaction->status == 1) {
-                $emailaction->statusreadable = 'Sending';
-            }
-            if ($emailaction->status == 2) {
-                $emailaction->statusreadable = 'Sent';
-            }
-            $emailaction->students = array();
-            $students = json_decode($emailaction->studentsjson);
-            foreach ($students as $username) {
-                $emailaction->students[] = fullname(\core_user::get_user_by_username($username));
-            }
-            $emailaction->sender = fullname(\core_user::get_user_by_username($emailaction->username));
-        }
-
         $userpermissions = array_values(activity::get_parent_permissions($this->data->id, $usercontext->username));
         foreach ($userpermissions as &$permission) {
             $student = \core_user::get_user_by_username($permission->studentusername);
@@ -314,13 +298,46 @@ class activity_exporter extends persistent_exporter {
             $usercansendmail = true;
         }
 
-        $formattedra = $this->export_riskassessment($output);
-
-        $formattedattachments = $this->export_attachments($output);
-
-        $numstudents = count(activity::get_excursion_students($this->data->id));
-
         $htmlnotes = nl2br($this->data->notes);
+
+        // More data.
+        $permissionshelper = null;
+        $messagehistory = [];
+        $formattedra = [];
+        $formattedattachments = [];
+        $numstudents = 0;
+        
+        if (!$minimal) {
+
+            $permissionshelper = locallib::permissions_helper($this->data->id);
+
+            $messagehistory = array_values(activity::get_messagehistory($this->data->id));
+            foreach ($messagehistory as &$emailaction) {
+                $emailaction->readabletime = date('j M Y g:ia', $emailaction->timecreated);
+                if ($emailaction->status == 0) {
+                    $emailaction->statusreadable = 'Queued';
+                }
+                if ($emailaction->status == 1) {
+                    $emailaction->statusreadable = 'Sending';
+                }
+                if ($emailaction->status == 2) {
+                    $emailaction->statusreadable = 'Sent';
+                }
+                $emailaction->students = array();
+                $students = json_decode($emailaction->studentsjson);
+                foreach ($students as $username) {
+                    $emailaction->students[] = fullname(\core_user::get_user_by_username($username));
+                }
+                $emailaction->sender = fullname(\core_user::get_user_by_username($emailaction->username));
+            }
+
+            $formattedra = $this->export_riskassessment($output);
+
+            $formattedattachments = $this->export_attachments($output);
+
+            $numstudents = count(activity::get_excursion_students($this->data->id));
+
+        }
 
     	return [
             'manageurl' => $manageurl->out(false),
