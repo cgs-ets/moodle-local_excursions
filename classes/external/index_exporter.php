@@ -142,51 +142,96 @@ class index_exporter extends exporter {
         $relateds = array('minimal' => true);
 
         $useractivities = array();
+        $allactivities = array();
 		foreach ($this->related['useractivities'] as $activity) {
 			$activityexporter = new activity_exporter($activity, $relateds);
-			$useractivities[] = $activityexporter->export($output);
+            $exported = $activityexporter->export($output);
+			$useractivities[] = $exported;
+            $allactivities[$exported->id] = $exported;
 		}
 
         $approveractivities = array();
         foreach ($this->related['approveractivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $approveractivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $approveractivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $accompanyingactivities = array();
         foreach ($this->related['accompanyingactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $accompanyingactivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $accompanyingactivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $auditoractivities = array();
         foreach ($this->related['auditoractivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $auditoractivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $auditoractivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $parentactivities = array();
         foreach ($this->related['parentactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $parentactivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $parentactivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $studentactivities = array();
         foreach ($this->related['studentactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $studentactivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $studentactivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $primaryactivities = array();
         foreach ($this->related['primaryactivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $primaryactivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $primaryactivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $senioractivities = array();
         foreach ($this->related['senioractivities'] as $activity) {
-            $activityexporter = new activity_exporter($activity, $relateds);
-            $senioractivities[] = $activityexporter->export($output);
+            if (isset($allactivities[$activity->get('id')])) {
+                $approveractivities[] = $allactivities[$activity->get('id')];
+            } else {
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                $senioractivities[] = $exported;
+                $allactivities[$exported->id] = $exported;
+            }
         }
 
         $indexurl = new \moodle_url('/local/excursions/index.php', []);
@@ -196,16 +241,11 @@ class index_exporter extends exporter {
         ));
 
         $noexcursions = false;
-        if ( empty($useractivities) && 
-             empty($approveractivities) && 
-             empty($accompanyingactivities) && 
-             empty($auditoractivities) && 
-             empty($parentactivities) && 
-             empty($studentactivities) && 
-             empty($primaryactivities) && 
-             empty($senioractivities) ) {
+        if ( empty($allactivities) ) {
             $noexcursions = true;
         }
+
+        unset($allactivities);
 
         return array(
             'useractivities' => $useractivities,
