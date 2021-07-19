@@ -159,11 +159,6 @@ class activity_exporter extends persistent_exporter {
             $usercontext = $this->related['usercontext'];
         }
 
-        $minimal = true;
-        if (isset($this->related['minimal'])) {
-            $minimal = $this->related['minimal'];
-        }
-
         $manageurl = new \moodle_url('/local/excursions/activity.php', array(
             'edit' => $this->data->id,
         ));
@@ -307,8 +302,8 @@ class activity_exporter extends persistent_exporter {
         $formattedattachments = [];
         $numstudents = 0;
         
-        if (!$minimal) {
-
+        // Minimal information for index page. Get everything for activity form page.
+        if (!$this->related['minimal']) {
             $permissionshelper = locallib::permissions_helper($this->data->id);
 
             $messagehistory = array_values(activity::get_messagehistory($this->data->id));

@@ -274,10 +274,12 @@ if ($activity->username == $USER->username) {
 }
 
 $accompanying = json_decode($activity->accompanyingstaffjson);
-foreach ($accompanying as $user) {
-    if ($USER->username == $user->idfield) {
-        $PAGE->add_body_class('activity-accompanying');
-        break;
+if ($accompanying) {
+    foreach ($accompanying as $user) {
+        if ($USER->username == $user->idfield) {
+            $PAGE->add_body_class('activity-accompanying');
+            break;
+        }
     }
 }
 
