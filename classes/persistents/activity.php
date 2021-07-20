@@ -350,15 +350,24 @@ class activity extends persistent {
         $approval->timemodified = time();
 
         if ($issenior) {
+            // Only apply to activities that are not already approved.
+            if (! $originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED) { 
+                // Senior School - 1nd approver.
+                $approval->type = 'senior_ra';
+                $approval->sequence = 1;
+                $approval->description = locallib::WORKFLOW['senior_ra']['name'];
+                $approvals[] = clone $approval;
+            }
+
             // Senior School - 2nd approver.
             $approval->type = 'senior_admin';
-            $approval->sequence = 1;
+            $approval->sequence = 2;
             $approval->description = locallib::WORKFLOW['senior_admin']['name'];
             $approvals[] = clone $approval;
 
             // Senior School - 3st approver.
             $approval->type = 'senior_hoss';
-            $approval->sequence = 2;
+            $approval->sequence = 3;
             $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
             $approvals[] = clone $approval;
 
