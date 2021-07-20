@@ -348,10 +348,10 @@ class activity extends persistent {
         $approval->activityid = $newactivity->get('id');
         $approval->username = ''; // The person that eventually approves it.
         $approval->timemodified = time();
-
         if ($issenior) {
-            // Only apply to activities that are not already approved.
-            if (! $originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED) { 
+            // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
+            $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
+            if (!$ignoreactivity) { 
                 // Senior School - 1nd approver.
                 $approval->type = 'senior_ra';
                 $approval->sequence = 1;
