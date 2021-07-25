@@ -1280,7 +1280,12 @@ class activity extends persistent {
     }
 
     /*
-    * Emails the comment to all parties involved.
+    * Emails the comment to all parties involved. Comments are sent to:
+    * - Next approver in line
+    * - Approvers that have already actioned approval
+    * - Activity creator
+    * - Comment poster
+    * - Staff in charge
     */
     protected static function send_comment_emails($comment) {
         global $PAGE;
@@ -1297,6 +1302,11 @@ class activity extends persistent {
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
             foreach($approvers as $approver) {
+                // Skip if approver does not want this notification.
+                if (isset($approver['notifications']) && !in_array('newcomment', $approver['notifications'])) {
+                    continue;
+                }
+                // Check email contacts.
                 if ($approver['contacts']) {
                     foreach ($approver['contacts'] as $email) {
                         static::send_comment_email($activity, $comment, $approver['username'], $email);
@@ -1313,14 +1323,21 @@ class activity extends persistent {
             break;
         }
 
-        // Send comment to approvers that have actioned an approval for this activity.
+        // Send comment to approvers that have already actioned an approval for this activity.
         $approvals = static::get_approvals($comment->activityid);
         foreach ($approvals as $approval) {
-            if ($approval->username) {
-                if ( ! in_array($approval->username, $recipients)) {
-                    static::send_comment_email($activity, $comment, $approval->username);
-                    $recipients[] = $approval->username;
+            if ( ! in_array($approval->username, $recipients)) {
+
+                // Skip if approver does not want this notification.
+                $config = locallib::WORKFLOW[$approval->type]['approvers'];
+                if (isset($config[$approval->username]) && 
+                    isset($config[$approval->username]['notifications']) && 
+                    !in_array('newcomment', $config[$approval->username]['notifications'])) {
+                        continue;
                 }
+            
+                static::send_comment_email($activity, $comment, $approval->username);
+                $recipients[] = $approval->username;
             }
         }
 
@@ -1333,6 +1350,13 @@ class activity extends persistent {
         // Send comment to the comment poster if they are not one of the above.
         if ( ! in_array($USER->username, $recipients)) {
             static::send_comment_email($activity, $comment, $USER->username);
+            $recipients[] = $USER->username;
+        }
+
+        // Send to staff in charge.
+        if ( ! in_array($activity->staffincharge, $recipients)) {
+            static::send_comment_email($activity, $comment, $activity->staffincharge);
+            $recipients[] = $activity->staffincharge;
         }
 
     }
@@ -1372,6 +1396,10 @@ class activity extends persistent {
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
             foreach($approvers as $approver) {
+                // Skip if approver does not want this notification.
+                if (isset($approver['notifications']) && !in_array('activityapproved', $approver['notifications'])) {
+                    continue;
+                }
                 $usercontext = \core_user::get_user_by_username($approver['username']);
                 $relateds = array('usercontext' => $usercontext);
                 $activityexporter = new activity_exporter($activity, $relateds);
@@ -1464,6 +1492,10 @@ class activity extends persistent {
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
             foreach($approvers as $approver) {
+                // Skip if approver does not want this notification.
+                if (isset($approver['notifications']) && !in_array('activitychanged', $approver['notifications'])) {
+                    continue;
+                }
                 if ($approver['contacts']) {
                     foreach ($approver['contacts'] as $email) {
                         static::send_datachanged_email($activity, $approver['username'], $email);

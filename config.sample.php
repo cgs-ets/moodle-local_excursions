@@ -23,7 +23,7 @@ class local_excursions_config {
 		            ),
 		        ),
 		    ),
-		    'prerequisites' => null
+		    'prerequisites' => null,
 	    ),
 	    'senior_hoss' => array(
 	    	'name' => 'HoSS Approval',
@@ -37,6 +37,11 @@ class local_excursions_config {
 		        array(
 		            'username' => 'admin', 
 		            'contacts' => null,
+					'notifications' => array(
+						'newcomment',
+						'activityapproved',
+						'activitychanged',
+					),
 		        ),
 		    ),
 		    'prerequisites' => array(
