@@ -208,7 +208,7 @@ if (!empty($formdata)) {
     $data->staffinchargejson = $formdata->staffinchargejson;
     $data->studentlistjson = $formdata->studentlistjson;
     $data->cohort = '';
-    if ($formdata->activitytype == 'incursion') {
+    if ($formdata->activitytype == 'incursion' && isset($formdata->cohort)) {
         $data->cohort = $formdata->cohort;
     } else {
         $data->transport = $formdata->transport;
