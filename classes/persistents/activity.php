@@ -68,6 +68,14 @@ class activity extends persistent {
                 'type' => PARAM_RAW,
                 'default' => '',
             ],
+            "activitytype" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "cohort" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
             "location" => [
                 'type' => PARAM_RAW,
                 'default' => '',
@@ -164,7 +172,7 @@ class activity extends persistent {
     */
     public static function save_from_data($data) {
         global $DB, $USER;
- 
+
         // Some validation.
         // Since activities are auto-created, the activity id should always be available.
         if (empty($data->id)) {
@@ -236,15 +244,17 @@ class activity extends persistent {
         $log->datajson = json_encode($data);
         $DB->insert_record(static::TABLE_EXCURSIONS_LOGS, $log);
 
-        // Overwrite the accompanying staff list.
-        $DB->delete_records(static::TABLE_EXCURSIONS_STAFF, array('activityid' => $data->id));
-        $accompanyingstaff = json_decode($data->accompanyingstaffjson);
-        if ($accompanyingstaff) {
-            foreach ($accompanyingstaff as $as) {
-                $staff = new \stdClass();
-                $staff->activityid = $data->id;
-                $staff->username = $as->idfield;
-                $DB->insert_record(static::TABLE_EXCURSIONS_STAFF, $staff);
+        if ($data->activitytype == 'excursion') {
+            // Overwrite the accompanying staff list.
+            $DB->delete_records(static::TABLE_EXCURSIONS_STAFF, array('activityid' => $data->id));
+            $accompanyingstaff = json_decode($data->accompanyingstaffjson);
+            if ($accompanyingstaff) {
+                foreach ($accompanyingstaff as $as) {
+                    $staff = new \stdClass();
+                    $staff->activityid = $data->id;
+                    $staff->username = $as->idfield;
+                    $DB->insert_record(static::TABLE_EXCURSIONS_STAFF, $staff);
+                }
             }
         }
         
@@ -262,8 +272,6 @@ class activity extends persistent {
 
         // Generate permissions based on student list.
         static::generate_permissions($data->id);
-        
-
 
         // If sending for review or saving after already in review, determine the approvers based on student list campuses.
         if ($data->status == locallib::ACTIVITY_STATUS_INREVIEW ||
@@ -336,65 +344,77 @@ class activity extends persistent {
             }
         }
 
-        // Determine whether this is primary or senior.
-        $issenior = true;
-        if($newactivity->get('campus') == 'primary') {
-            $issenior = false;
-        }
-
         // Approval stub.
         $approvals = array();
         $approval = new \stdClass();
         $approval->activityid = $newactivity->get('id');
         $approval->username = ''; // The person that eventually approves it.
         $approval->timemodified = time();
-        if ($issenior) {
-            // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
-            $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
-            if (!$ignoreactivity) { 
-                // Senior School - 1nd approver.
-                $approval->type = 'senior_ra';
-                $approval->sequence = 1;
-                $approval->description = locallib::WORKFLOW['senior_ra']['name'];
-                $approvals[] = clone $approval;
+
+        // Workflow.
+        switch ($newactivity->get('campus')) {
+            case 'senior': {
+                switch ($newactivity->get('activitytype')) {
+                    case 'incursion': {
+                        $approval->type = $newactivity->get('cohort');
+                        $approval->sequence = 1;
+                        $approval->description = locallib::WORKFLOW[$newactivity->get('cohort')]['name'];
+                        $approvals[] = clone $approval;
+                        break;
+                    }
+                    case 'excursion': {
+                        // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
+                        $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
+                        if (!$ignoreactivity) { 
+                            // Senior School - 1nd approver.
+                            $approval->type = 'senior_ra';
+                            $approval->sequence = 1;
+                            $approval->description = locallib::WORKFLOW['senior_ra']['name'];
+                            $approvals[] = clone $approval;
+                        }
+
+                        // Senior School - 2nd approver.
+                        $approval->type = 'senior_admin';
+                        $approval->sequence = 2;
+                        $approval->description = locallib::WORKFLOW['senior_admin']['name'];
+                        $approvals[] = clone $approval;
+
+                        // Senior School - 3st approver.
+                        $approval->type = 'senior_hoss';
+                        $approval->sequence = 3;
+                        $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
+                        $approvals[] = clone $approval;
+                        break;
+                    }
+                }
+                break;
             }
+            case 'primary': {
+                // Primary School - 1st approver.
+                $approval->type = 'primary_admin';
+                $approval->sequence = 1;
+                $approval->description = locallib::WORKFLOW['primary_admin']['name'];
+                $approvals[] = clone $approval;
 
-            // Senior School - 2nd approver.
-            $approval->type = 'senior_admin';
-            $approval->sequence = 2;
-            $approval->description = locallib::WORKFLOW['senior_admin']['name'];
-            $approvals[] = clone $approval;
-
-            // Senior School - 3st approver.
-            $approval->type = 'senior_hoss';
-            $approval->sequence = 3;
-            $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
-            $approvals[] = clone $approval;
-
-        } else {
-            // Primary School - 1st approver.
-            $approval->type = 'primary_admin';
-            $approval->sequence = 1;
-            $approval->description = locallib::WORKFLOW['primary_admin']['name'];
-            $approvals[] = clone $approval;
-
-            // Primary School - 2nd approver.
-            $approval->type = 'primary_hops';
-            $approval->sequence = 2;
-            $approval->description = locallib::WORKFLOW['primary_hops']['name'];
-            $approvals[] = clone $approval;
+                // Primary School - 2nd approver.
+                $approval->type = 'primary_hops';
+                $approval->sequence = 2;
+                $approval->description = locallib::WORKFLOW['primary_hops']['name'];
+                $approvals[] = clone $approval;
+                break;
+            }
         }
+
+        //echo "<pre>"; var_export($approvals); exit;
 
         // Invalidate approvals that should not be there.
         $approvaltypes = array_column($approvals, 'type');
-        list($insql, $inparams) = $DB->get_in_or_equal($approvaltypes);
         $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
                    SET invalidated = 1
                  WHERE activityid = ?
                    AND invalidated = 0
-                   AND type NOT $insql";
+                   AND type NOT IN ('" . implode("','", $approvaltypes) . "')";
         $params = array($newactivity->get('id'));
-        $params = array_merge($params, $inparams);
         $DB->execute($sql, $params);
 
         // Insert the approval if it doesn't already exist.

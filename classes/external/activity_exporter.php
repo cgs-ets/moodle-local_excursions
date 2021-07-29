@@ -128,6 +128,9 @@ class activity_exporter extends persistent_exporter {
             'htmlnotes' => [
                 'type' => PARAM_RAW,
             ],
+            'isexcursion' => [
+                'type' => PARAM_BOOL,
+            ],
         ];
     }
 
@@ -199,6 +202,11 @@ class activity_exporter extends persistent_exporter {
         $ispast = false;
         if ($this->data->timeend && $this->data->timeend < time()) {
             $ispast = true;
+        }
+
+        $isexcursion = true;
+        if ($this->data->activitytype == 'incursion') {
+            $isexcursion = false;
         }
 
         $endreadabletime = '';
@@ -360,6 +368,7 @@ class activity_exporter extends persistent_exporter {
             'ispast' => $ispast,
             'numstudents' => $numstudents,
             'htmlnotes' => $htmlnotes,
+            'isexcursion' => $isexcursion,
 	    ];
     }
 

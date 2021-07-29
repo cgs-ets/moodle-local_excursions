@@ -25,11 +25,11 @@
 }}
 <div id="activity-summary">
     <b>Activity Name:</b> {{activityname}}<br>
-    <b>Location:</b> {{location}}<br>
+    <b>Location:</b> {{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}<br>
     <b>Start:</b> {{startreadabletime}}<br>
     <b>End:</b> {{endreadabletime}}<br>
     <b>Details:</b> {{{htmlnotes}}}<br>
-    <b>Transport:</b> {{transport}}<br>
+    {{#isexcursion}}<b>Transport:</b> {{transport}}<br>{{/isexcursion}}
     {{#cost}}<b>Cost:</b> {{cost}}<br>{{/cost}}
     <b>Staff in charge:</b> {{staffinchargeinfo.fullname}}<br>
     <b>Number of students:</b> {{numstudents}}<br>

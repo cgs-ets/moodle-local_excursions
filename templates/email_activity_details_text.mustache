@@ -24,10 +24,12 @@
     Partial for emails containing activity details
 }}
 Activity name: {{activityname}}
-Location: {{location}}
+Location: {{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}
 Start: {{startreadabletime}}
 End: {{endreadabletime}}
 Details: {{notes}}
+{{#isexcursion}}
 Transport: {{transport}}
 {{#cost}}Cost: {{cost}}{{/cost}}
+{{/isexcursion}}
 Staff in charge: {{staffinchargeinfo.fullname}}

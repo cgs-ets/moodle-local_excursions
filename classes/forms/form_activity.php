@@ -114,11 +114,32 @@ class form_activity extends \moodleform {
             /*----------------------
              *   Campus
              *----------------------*/
-            $radioarray=array();
+            $radioarray = array();
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Primary School', 'primary', '');
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Senior School', 'senior', '');
             $mform->addGroup($radioarray, 'campus', get_string('activityform:campus', 'local_excursions'), array(' '), false);
             $mform->addElement('html', '<div id="fitem_id_campusdesc" class="form-group row fitem"><div class="col-md-3"></div><div class="campus-desc col-md-9">' . get_string('activityform:campus_desc', 'local_excursions') . "</div></div>");
+
+            /*----------------------
+             *   Acitivty type - Incursion / Excursion
+             *----------------------*/
+            $radioarray = array();
+            $radioarray[] = $mform->createElement('radio', 'activitytype', '', 'Excursion', 'excursion', '');
+            $radioarray[] = $mform->createElement('radio', 'activitytype', '', 'Incursion', 'incursion', '');
+            $mform->addGroup($radioarray, 'activitytype', get_string('activityform:activitytype', 'local_excursions'), array(' '), false);
+            $mform->setDefault('activitytype', 'excursion');
+            $mform->hideIf('activitytype', 'campus', 'neq', 'senior');
+
+            /*----------------------
+             *   Cohort
+             *----------------------*/
+            $radioarray = array();
+            $radioarray[] = $mform->createElement('radio', 'cohort', '', 'Years 7 - 10', 'years_7_10', '');
+            $radioarray[] = $mform->createElement('radio', 'cohort', '', 'Years 11 - 12 HSC/VET', 'years_11_12_hsc_vet', '');
+            $radioarray[] = $mform->createElement('radio', 'cohort', '', 'Years 11 - 12 IB', 'years_11_12_ib', '');
+            $mform->addGroup($radioarray, 'cohort', get_string('activityform:cohort', 'local_excursions'), array(' '), false);
+            $mform->setDefault('cohort', 'years_7_10');
+            $mform->hideIf('cohort', 'activitytype', 'neq', 'incursion');
 
             /*----------------------
              *   Location
@@ -149,7 +170,6 @@ class form_activity extends \moodleform {
              *----------------------*/
             $mform->addElement('text', 'cost', get_string('activityform:cost', 'local_excursions'));
             $mform->setType('cost', PARAM_TEXT);
-
 
         /*----------------------
          *   Leadership

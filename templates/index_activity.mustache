@@ -29,7 +29,7 @@
     <td class="cell c-timestart">{{{calicons.start}}}</td>
     <td class="cell c-timeend">{{{calicons.end}}}</td>
     <td class="cell c-name">{{activityname}}</td>
-    <td class="cell c-location">{{location}}</td>
+    <td class="cell c-location">{{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}</td>
     {{^isstaff}}<td class="cell c-details">{{{htmlnotes}}}</td>{{/isstaff}}
     <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
     {{#isstaff}}

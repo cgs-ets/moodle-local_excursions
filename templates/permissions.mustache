@@ -27,12 +27,14 @@
     <h5>Activity details</h5>
     <div class="activity-details">
         <div><strong>Activity name: </strong> {{activityname}}</div>
-        <div><strong>Location: </strong> {{location}}</div>
+        <div><strong>Location: </strong> {{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}</div>
         <div><strong>Start: </strong> {{startreadabletime}}</div>
         <div><strong>End: </strong> {{endreadabletime}}</div>
         <div><strong>Details: </strong> {{{htmlnotes}}}</div>
+        {{#isexcursion}}
         <div><strong>Transport: </strong> {{transport}}</div>
         {{#cost}}<div><strong>Cost: </strong> {{cost}}</div>{{/cost}}
+        {{/isexcursion}}
         <div>
             <strong>Staff in charge: </strong>
             <img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}

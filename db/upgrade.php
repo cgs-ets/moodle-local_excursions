@@ -47,5 +47,21 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
     }
 
+    
+    if ($oldversion < 2021041601) {
+        $table = new xmldb_table('excursions');
+
+        $activitytype = new xmldb_field('activitytype', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, null, 'campus');
+        if (!$dbman->field_exists($table, $activitytype)) {
+            $dbman->add_field($table, $activitytype);
+        }
+
+        $cohort = new xmldb_field('cohort', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, null, 'activitytype');
+        if (!$dbman->field_exists($table, $cohort)) {
+            $dbman->add_field($table, $cohort);
+        }        // Psgrading savepoint reached.
+        upgrade_mod_savepoint(true, 2021041601, 'excursions');
+    }
+
     return true;
 }

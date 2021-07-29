@@ -85,6 +85,15 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             }
         });
 
+        // Activity type change - excursion / incursion
+        self.rootel.on('change', 'input[name="activitytype"]', function(e) {
+            var radio = $(this);
+            self.rootel.removeClass(function (index, className) {
+                return (className.match (/(^|\s)activitytype-\S+/g) || []).join(' ');
+            });
+            self.rootel.addClass('activitytype-' + radio.val());
+        });
+
         // Do I need parent permission.
         self.rootel.on('click', '#enablepermissionshelplink', function(e) {
             e.preventDefault();
