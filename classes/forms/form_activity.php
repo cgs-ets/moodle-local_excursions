@@ -326,6 +326,10 @@ class form_activity extends \moodleform {
             $errors['timeend'] = 'End time must be greater than start time';
         }
 
+        if ($data['activitytype'] == 'incursion' && empty($data['cohort'])) {
+            $errors['cohort'] = 'Cohort is required for incursions.';
+        }
+
         if (!is_numeric($data['cost'])) {
             $errors['cost'] = 'Cost must be a numeric value (integer or decimal). Do not enter symbols such as "$" or currencies.';
         }

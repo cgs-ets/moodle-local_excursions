@@ -207,6 +207,7 @@ if (!empty($formdata)) {
     $data->notes = $formdata->notes;
     $data->staffinchargejson = $formdata->staffinchargejson;
     $data->studentlistjson = $formdata->studentlistjson;
+    $data->cohort = '';
     if ($formdata->activitytype == 'incursion') {
         $data->cohort = $formdata->cohort;
     } else {
