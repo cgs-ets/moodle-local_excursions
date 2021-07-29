@@ -59,8 +59,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
         $cohort = new xmldb_field('cohort', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, null, 'activitytype');
         if (!$dbman->field_exists($table, $cohort)) {
             $dbman->add_field($table, $cohort);
-        }        // Psgrading savepoint reached.
-        upgrade_mod_savepoint(true, 2021041601, 'excursions');
+        }
     }
 
     return true;
