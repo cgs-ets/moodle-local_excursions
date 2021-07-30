@@ -326,7 +326,7 @@ class form_activity extends \moodleform {
             $errors['timeend'] = 'End time must be greater than start time';
         }
 
-        if ($data['activitytype'] == 'incursion' && empty($data['cohort'])) {
+        if ($data['campus'] == 'senior' && $data['activitytype'] == 'incursion' && empty($data['cohort'])) {
             $errors['cohort'] = 'Cohort is required for incursions.';
         }
 

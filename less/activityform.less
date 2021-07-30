@@ -354,12 +354,10 @@
 			}
 		}
 	}
-	&.activitytype-excursion {
-		#fgroup_id_cohort {
-			display: none !important;
-		}
+	#fgroup_id_cohort {
+		display: none;
 	}
-	&.activitytype-incursion {
+	&.activitycampus-senior.activitytype-incursion {
 		#fitem_id_transport,
 		#fitem_id_cost,
 		#accompanyingstaff,
@@ -367,6 +365,9 @@
 		#fitem_id_riskassessment,
 		.student-list-wrap > .permissions {
 			display: none !important;
+		}
+		#fgroup_id_cohort {
+			display: flex;
 		}
 	}
 

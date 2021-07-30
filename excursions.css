@@ -490,16 +490,19 @@
 #page-local-excursions-activity:not(.activity-canedit):not(.activity-accompanying) .approvals .comments {
   display: none !important;
 }
-#page-local-excursions-activity.activitytype-excursion #fgroup_id_cohort {
+#page-local-excursions-activity #fgroup_id_cohort {
+  display: none;
+}
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion #fitem_id_transport,
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion #fitem_id_cost,
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion #accompanyingstaff,
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion #fitem_id_otherparticipants,
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion #fitem_id_riskassessment,
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion .student-list-wrap > .permissions {
   display: none !important;
 }
-#page-local-excursions-activity.activitytype-incursion #fitem_id_transport,
-#page-local-excursions-activity.activitytype-incursion #fitem_id_cost,
-#page-local-excursions-activity.activitytype-incursion #accompanyingstaff,
-#page-local-excursions-activity.activitytype-incursion #fitem_id_otherparticipants,
-#page-local-excursions-activity.activitytype-incursion #fitem_id_riskassessment,
-#page-local-excursions-activity.activitytype-incursion .student-list-wrap > .permissions {
-  display: none !important;
+#page-local-excursions-activity.activitycampus-senior.activitytype-incursion #fgroup_id_cohort {
+  display: flex;
 }
 /* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
 #page-local-excursions-activity {

@@ -85,6 +85,15 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             }
         });
 
+        // Activity campus change - Primary / senior
+        self.rootel.on('change', 'input[name="campus"]', function(e) {
+            var radio = $(this);
+            self.rootel.removeClass(function (index, className) {
+                return (className.match (/(^|\s)activitycampus-\S+/g) || []).join(' ');
+            });
+            self.rootel.addClass('activitycampus-' + radio.val());
+        });
+
         // Activity type change - excursion / incursion
         self.rootel.on('change', 'input[name="activitytype"]', function(e) {
             var radio = $(this);
@@ -93,6 +102,8 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             });
             self.rootel.addClass('activitytype-' + radio.val());
         });
+        self.rootel.find('input[name="campus"]').change();
+        self.rootel.find('input[name="activitytype"]').change();
 
         // Do I need parent permission.
         self.rootel.on('click', '#enablepermissionshelplink', function(e) {
