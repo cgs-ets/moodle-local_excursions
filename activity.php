@@ -288,10 +288,10 @@ if ($activity->activitytype == 'incursion') {
 } else {
     $PAGE->add_body_class('activitytype-excursion');
 }
-if ($activity->campus == 'primary') {
-    $PAGE->add_body_class('activitycampus-primary');
-} else {
+if ($activity->campus == 'senior') {
     $PAGE->add_body_class('activitycampus-senior');
+} else {
+    $PAGE->add_body_class('activitycampus-primary');
 }
 
 $accompanying = json_decode($activity->accompanyingstaffjson);
