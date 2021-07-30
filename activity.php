@@ -288,7 +288,7 @@ if ($activity->activitytype == 'incursion') {
 } else {
     $PAGE->add_body_class('activitytype-excursion');
 }
-if ($activity->campus == 'senior') {
+if ($data->campus == 'senior') {
     $PAGE->add_body_class('activitycampus-senior');
 } else {
     $PAGE->add_body_class('activitycampus-primary');

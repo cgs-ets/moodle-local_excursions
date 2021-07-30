@@ -128,7 +128,7 @@ class form_activity extends \moodleform {
             $radioarray[] = $mform->createElement('radio', 'activitytype', '', 'Incursion', 'incursion', '');
             $mform->addGroup($radioarray, 'activitytype', get_string('activityform:activitytype', 'local_excursions'), array(' '), false);
             $mform->setDefault('activitytype', 'excursion');
-            $mform->hideIf('activitytype', 'campus', 'neq', 'senior');
+            //$mform->hideIf('activitytype', 'campus', 'neq', 'senior');
 
             /*----------------------
              *   Cohort
@@ -139,7 +139,7 @@ class form_activity extends \moodleform {
             $radioarray[] = $mform->createElement('radio', 'cohort', '', 'Years 11 - 12 IB', 'years_11_12_ib', '');
             $mform->addGroup($radioarray, 'cohort', get_string('activityform:cohort', 'local_excursions'), array(' '), false);
             $mform->setDefault('cohort', 'years_7_10');
-            $mform->hideIf('cohort', 'activitytype', 'neq', 'incursion');
+            //$mform->hideIf('cohort', 'activitytype', 'neq', 'incursion');
 
             /*----------------------
              *   Location

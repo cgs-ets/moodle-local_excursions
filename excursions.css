@@ -490,6 +490,12 @@
 #page-local-excursions-activity:not(.activity-canedit):not(.activity-accompanying) .approvals .comments {
   display: none !important;
 }
+#page-local-excursions-activity #fgroup_id_activitytype {
+  display: none;
+}
+#page-local-excursions-activity.activitycampus-senior #fgroup_id_activitytype {
+  display: flex;
+}
 #page-local-excursions-activity #fgroup_id_cohort {
   display: none;
 }
