@@ -88,10 +88,12 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         // Activity campus change - Primary / senior
         self.rootel.on('change', 'input[name="campus"]', function(e) {
             var radio = $(this);
-            self.rootel.removeClass(function (index, className) {
-                return (className.match (/(^|\s)activitycampus-\S+/g) || []).join(' ');
-            });
-            self.rootel.addClass('activitycampus-' + radio.val());
+            if (radio.is(':checked')) {
+                self.rootel.removeClass(function (index, className) {
+                    return (className.match (/(^|\s)activitycampus-\S+/g) || []).join(' ');
+                });
+                self.rootel.addClass('activitycampus-' + radio.val());
+            }
         });
 
         // Activity type change - excursion / incursion
