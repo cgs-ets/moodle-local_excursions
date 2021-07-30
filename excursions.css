@@ -490,6 +490,9 @@
 #page-local-excursions-activity:not(.activity-canedit):not(.activity-accompanying) .approvals .comments {
   display: none !important;
 }
+#page-local-excursions-activity.activitytype-excursion #fgroup_id_cohort {
+  display: none !important;
+}
 #page-local-excursions-activity.activitytype-incursion #fitem_id_transport,
 #page-local-excursions-activity.activitytype-incursion #fitem_id_cost,
 #page-local-excursions-activity.activitytype-incursion #accompanyingstaff,
