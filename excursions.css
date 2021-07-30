@@ -590,7 +590,7 @@
   display: none;
 }
 #page-local-excursions-activity .student-list-wrap .permissions {
-  display: none;
+  display: block;
   margin: 0 0 20px;
 }
 #page-local-excursions-activity .student-list-wrap .permissions input[name="enable-permissions"] {
@@ -692,9 +692,6 @@
   margin: 10px auto;
 }
 #page-local-excursions-activity .student-list-wrap .prepare-message.sent .sent-animation {
-  display: block;
-}
-#page-local-excursions-activity .student-list-wrap.has-students .permissions {
   display: block;
 }
 #page-local-excursions-activity .student-list-wrap.has-students .student-list {
