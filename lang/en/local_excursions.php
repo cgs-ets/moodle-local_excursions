@@ -63,7 +63,6 @@ $string['activityform:name'] = 'Activity name';
 $string['activityform:campus'] = 'Campus';
 $string['activityform:campus_desc'] = 'Senior should be chosen for whole school events.';
 $string['activityform:activitytype'] = 'Type';
-$string['activityform:cohort'] = 'Cohort';
 $string['activityform:location'] = 'Location';
 $string['activityform:notes'] = 'Details <br><small>Summary of event</small>';
 $string['activityform:transport'] = 'Transport <br><small>E.g. walking, bus, taxi, including authorised driver</small>';

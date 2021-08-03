@@ -55,11 +55,6 @@ function xmldb_local_excursions_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $activitytype)) {
             $dbman->add_field($table, $activitytype);
         }
-
-        $cohort = new xmldb_field('cohort', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, null, 'activitytype');
-        if (!$dbman->field_exists($table, $cohort)) {
-            $dbman->add_field($table, $cohort);
-        }
     }
 
     return true;

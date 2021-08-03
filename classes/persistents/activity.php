@@ -64,15 +64,11 @@ class activity extends persistent {
                 'type' => PARAM_RAW,
                 'default' => '',
             ],
-            "campus" => [
-                'type' => PARAM_RAW,
-                'default' => '',
-            ],
             "activitytype" => [
                 'type' => PARAM_RAW,
                 'default' => '',
             ],
-            "cohort" => [
+            "campus" => [
                 'type' => PARAM_RAW,
                 'default' => '',
             ],
@@ -354,39 +350,27 @@ class activity extends persistent {
         // Workflow.
         switch ($newactivity->get('campus')) {
             case 'senior': {
-                switch ($newactivity->get('activitytype')) {
-                    case 'incursion': {
-                        $approval->type = $newactivity->get('cohort');
-                        $approval->sequence = 1;
-                        $approval->description = locallib::WORKFLOW[$newactivity->get('cohort')]['name'];
-                        $approvals[] = clone $approval;
-                        break;
-                    }
-                    case 'excursion': {
-                        // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
-                        $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
-                        if (!$ignoreactivity) { 
-                            // Senior School - 1nd approver.
-                            $approval->type = 'senior_ra';
-                            $approval->sequence = 1;
-                            $approval->description = locallib::WORKFLOW['senior_ra']['name'];
-                            $approvals[] = clone $approval;
-                        }
-
-                        // Senior School - 2nd approver.
-                        $approval->type = 'senior_admin';
-                        $approval->sequence = 2;
-                        $approval->description = locallib::WORKFLOW['senior_admin']['name'];
-                        $approvals[] = clone $approval;
-
-                        // Senior School - 3st approver.
-                        $approval->type = 'senior_hoss';
-                        $approval->sequence = 3;
-                        $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
-                        $approvals[] = clone $approval;
-                        break;
-                    }
+                // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
+                $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
+                if (!$ignoreactivity) { 
+                    // Senior School - 1nd approver.
+                    $approval->type = 'senior_ra';
+                    $approval->sequence = 1;
+                    $approval->description = locallib::WORKFLOW['senior_ra']['name'];
+                    $approvals[] = clone $approval;
                 }
+
+                // Senior School - 2nd approver.
+                $approval->type = 'senior_admin';
+                $approval->sequence = 2;
+                $approval->description = locallib::WORKFLOW['senior_admin']['name'];
+                $approvals[] = clone $approval;
+
+                // Senior School - 3st approver.
+                $approval->type = 'senior_hoss';
+                $approval->sequence = 3;
+                $approval->description = locallib::WORKFLOW['senior_hoss']['name'];
+                $approvals[] = clone $approval;
                 break;
             }
             case 'primary': {

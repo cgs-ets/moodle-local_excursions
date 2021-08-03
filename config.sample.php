@@ -92,52 +92,6 @@ class local_excursions_config {
 		    	'primary_admin',
 		    ),
 	    ),
-		// INCURSION YEARS 7-10
-		'years_7_10' => array(
-	    	'name' => 'Approval',
-	    	'invalidated_on_edit' => array (
-	    		'timestart',
-	    		'timeend',
-	    	),
-	    	'approvers' => array(
-		        array(
-		            'username' => 'admin',
-		            'contacts' => null,
-		        ),
-		    ),
-		    'prerequisites' => null,
-	    ),
-		// INCURSION YEARS 11 to 12 HSC/VET
-		'years_11_12_hsc_vet' => array(
-	    	'name' => 'Approval',
-	    	'invalidated_on_edit' => array (
-	    		'timestart',
-	    		'timeend',
-	    	),
-	    	'approvers' => array(
-		        array(
-		            'username' => 'admin',
-		            'contacts' => null,
-		        ),
-		    ),
-		    'prerequisites' => null,
-	    ),
-		// INCURSION YEARS 11 to 12 IB
-		'years_11_12_ib' => array(
-	    	'name' => 'Approval',
-	    	'invalidated_on_edit' => array (
-	    		'timestart',
-	    		'timeend',
-	    	),
-	    	'approvers' => array(
-		        array(
-		            'username' => 'admin',
-		            'contacts' => null,
-		        ),
-		    ),
-		    'prerequisites' => null,
-	    ),
-
 	);
 	
 }

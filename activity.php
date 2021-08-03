@@ -134,7 +134,6 @@ $data->activitytype = $activity->activitytype;
 if (empty($data->activitytype)) {
     $data->activitytype = 'excursion';
 }
-$data->cohort = $activity->cohort;
 $data->transport = $activity->transport;
 $data->cost = $activity->cost;
 $data->location = $activity->location;
@@ -207,25 +206,20 @@ if (!empty($formdata)) {
     $data->notes = $formdata->notes;
     $data->staffinchargejson = $formdata->staffinchargejson;
     $data->studentlistjson = $formdata->studentlistjson;
-    $data->cohort = '';
-    if ($formdata->activitytype == 'incursion' && isset($formdata->cohort)) {
-        $data->cohort = $formdata->cohort;
-    } else {
-        $data->transport = $formdata->transport;
-        $data->cost = $formdata->cost;
-        $data->accompanyingstaffjson = $formdata->accompanyingstaffjson;
-        $data->otherparticipants = $formdata->otherparticipants;
-        $data->permissionstype = $formdata->hiddeninvitetype;
-        $data->permissionslimit = $formdata->hiddenlimit;
-        $data->permissionsdueby = $formdata->hiddendueby;
-        if (!is_numeric($formdata->hiddendueby)) {
-            $dueby = json_decode($formdata->hiddendueby);
-            $duebystring = "{$dueby[2]}-{$dueby[1]}-{$dueby[0]} {$dueby[3]}:{$dueby[4]}"; // Format yyyy-m-d h:m.
-            $data->permissionsdueby = strtotime($duebystring);
-        }
-        if (isset($formdata->riskassessment)) {
-            $data->riskassessment = $formdata->riskassessment;
-        }
+    $data->transport = $formdata->transport;
+    $data->cost = $formdata->cost;
+    $data->accompanyingstaffjson = $formdata->accompanyingstaffjson;
+    $data->otherparticipants = $formdata->otherparticipants;
+    $data->permissionstype = $formdata->hiddeninvitetype;
+    $data->permissionslimit = $formdata->hiddenlimit;
+    $data->permissionsdueby = $formdata->hiddendueby;
+    if (!is_numeric($formdata->hiddendueby)) {
+        $dueby = json_decode($formdata->hiddendueby);
+        $duebystring = "{$dueby[2]}-{$dueby[1]}-{$dueby[0]} {$dueby[3]}:{$dueby[4]}"; // Format yyyy-m-d h:m.
+        $data->permissionsdueby = strtotime($duebystring);
+    }
+    if (isset($formdata->riskassessment)) {
+        $data->riskassessment = $formdata->riskassessment;
     }
     if (isset($formdata->attachments)) {
         $data->attachments = $formdata->attachments;
