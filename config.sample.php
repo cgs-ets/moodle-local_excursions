@@ -49,6 +49,7 @@ class local_excursions_config {
 		    'prerequisites' => array(
 		    	'senior_admin',
 		    ),
+			'canskip' => true,
 	    ),
 		// PRIMARY ADMIN
 	    'primary_admin' => array(
@@ -91,6 +92,7 @@ class local_excursions_config {
 		    'prerequisites' => array(
 		    	'primary_admin',
 		    ),
+			'canskip' => true,
 	    ),
 	);
 	
