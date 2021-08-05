@@ -1082,20 +1082,14 @@ class activity extends persistent {
 
         // Check if user is allowed to do this.
         $isapprover = static::is_approver_of_activity($activityid);
-        if ($isapprover) {
-            $userapprovertypes = locallib::get_approver_types($USER->username);
-        }
 
         // Update the approval status.
-        list($insql, $inparams) = $DB->get_in_or_equal($userapprovertypes);
         $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
                    SET skip = ?, username = ?, timemodified = ?
                  WHERE id = ?
                    AND activityid = ?
-                   AND invalidated = 0
-                   AND type $insql";
+                   AND invalidated = 0";
         $params = array($skip, $USER->username, time(), $approvalid, $activityid);
-        $params = array_merge($params, $inparams);
         $DB->execute($sql, $params);
 
         // Check for approval finalisation and return new status.
