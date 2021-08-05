@@ -152,6 +152,10 @@ class activity extends persistent {
                 'type' => PARAM_INT,
                 'default' => 0,
             ],
+            "remindersprocessed" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
             "isdraft" => [
                 'type' => PARAM_INT,
                 'default' => 0,
@@ -728,12 +732,30 @@ class activity extends persistent {
         // - ended within the past 7 days ($endlimit)  OR
         $sql = "SELECT *
                   FROM {" . static::TABLE . "}
-                 WHERE absencesprocessed != 1
+                 WHERE absencesprocessed = 0
                    AND (
                     (timestart <= {$startlimit} AND timestart >= {$now}) OR
                     (timestart <= {$now} AND timeend >= {$now}) OR
                     (timeend >= {$endlimit} AND timeend <= {$now}) OR
                    )
+                   AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
+        $records = $DB->get_records_sql($sql, null);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+        
+        return $activities;
+    }
+
+    public static function get_for_attendance_reminders() {
+        global $DB;
+
+        $now = time();
+        $sql = "SELECT *
+                  FROM {" . static::TABLE . "}
+                 WHERE remindersprocessed = 0
+                   AND timeend <= {$now}
                    AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
         $records = $DB->get_records_sql($sql, null);
         $activities = array();

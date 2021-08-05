@@ -33,6 +33,7 @@
         <FIELD NAME="accompanyingstaffjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="otherparticipants" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="absencesprocessed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="remindersprocessed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

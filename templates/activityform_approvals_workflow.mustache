@@ -37,7 +37,7 @@
                     </td>
                     <td class="cell c-photo">
                         {{#userphoto}}
-                            <img class="round" title="{{description}}" src="{{{userphoto}}}">
+                            <img class="round" title="{{#skip}}Skipped{{/skip}}{{^skip}}Approved{{/skip}} by {{username}}" src="{{{userphoto}}}">
                         {{/userphoto}}
                     </td>
                     <td class="cell c-status">

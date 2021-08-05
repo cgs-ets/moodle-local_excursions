@@ -39,7 +39,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
     }
 
     if ($oldversion < 2021032505) {
-        // Add absencesprocessed field.
+        // Add campus field.
         $table = new xmldb_table('excursions');
         $campus = new xmldb_field('campus', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, null, 'activityname');
         if (!$dbman->field_exists($table, $campus)) {
@@ -63,6 +63,15 @@ function xmldb_local_excursions_upgrade($oldversion) {
         $skip = new xmldb_field('skip', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, null, 'invalidated');
         if (!$dbman->field_exists($table, $skip)) {
             $dbman->add_field($table, $skip);
+        }
+    }
+    
+    if ($oldversion < 2021041603) {
+        // Add remindersprocessed field.
+        $table = new xmldb_table('excursions');
+        $remindersprocessed = new xmldb_field('remindersprocessed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, null, 'absencesprocessed');
+        if (!$dbman->field_exists($table, $remindersprocessed)) {
+            $dbman->add_field($table, $remindersprocessed);
         }
     }
 

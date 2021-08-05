@@ -53,4 +53,13 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*'
     ),
+    array(
+        'classname' => 'local_excursions\task\cron_send_attendance_reminders',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*'
+    ),
 );
