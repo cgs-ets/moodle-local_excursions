@@ -14,7 +14,7 @@ The workflow is automatically determined based on the campus roles (custom profi
  - invalidated_on_edit → Fields in the activity planning form that cause the workflow step to be reset if they are edited after the step has been actioned.
  - approvers → Users that can action this workflow step. The username of the user must be provided. Contacts is an optional array of email addresses to notify instead of the user's email address.
  - prerequisites → Workflow steps that must be actioned before this workflow step can be actioned.
- - skippable → whether the workflow step can be disabled/skipped by other workflow users.
+ - canskip → whether the workflow step can be disabled/skipped by other workflow users.
 
 ### Completing the form
 
@@ -23,7 +23,7 @@ Activity name, location, times and cost will automatically be included in permis
 ![](/screenshots/local_excursions_general_details.png?raw=true)
 
 #### People
-Update the Student list with any changes: students can be added individually, by course, group or via a Synergetic taglist. Participating students will automatically be marked in class rolls as expected absences a day before the event takes place.
+Update the Student list with any changes: students can be added individually, by course, group or via a Synergetic taglist. Participating students will automatically be marked in class rolls as expected absences. Changes to the student list will begin syncing to absences 2 weeks out from the activity, and continue syncing until 7 days after the activity has completed. Organisers will receive an email following the activity reminding them to check the student list to ensure accurate absence data.
 ![](/screenshots/local_excursions_people.png?raw=true)
 
 #### Documents
