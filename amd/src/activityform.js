@@ -194,12 +194,14 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
         // Skip approval
         self.rootel.on('click', '.approval .action-skip[data-skip="0"]', function(e) {
+            e.preventDefault();
             var button = $(this);
             self.skipApproval(button, 1);
         });
         
         // Renable approval
         self.rootel.on('click', '.approval .action-skip[data-skip="1"]', function(e) {
+            e.preventDefault();
             var button = $(this);
             self.skipApproval(button, 0);
         });
