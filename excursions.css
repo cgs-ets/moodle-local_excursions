@@ -309,9 +309,9 @@
 #page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="0"]:before {
   position: absolute;
   content: '';
-  left: 0;
-  top: 7px;
-  right: 0;
+  left: -3px;
+  top: 8px;
+  right: 0px;
   border-top: 1px solid;
   border-color: inherit;
   -webkit-transform: skewY(-33deg);
