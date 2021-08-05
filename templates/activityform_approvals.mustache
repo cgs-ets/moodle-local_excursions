@@ -25,41 +25,7 @@
 }}
 <div class="approvals">
     {{>local_excursions/activityform_approvals_status}}
-    <div class="workflow">
-        <h5>Approvals</h5>
-        <table class="table">
-            <tbody>
-                {{#approvals}}
-                    <tr class="approval {{#canapprove}}is-approver{{/canapprove}}" data-status="{{status}}" data-type="{{type}}">
-                        <td class="cell c-type">
-                            {{description}}
-                        </td>
-                        <td class="cell c-photo">
-                            {{#userphoto}}
-                                <img class="round" title="{{description}}" src="{{{userphoto}}}">
-                            {{/userphoto}}
-                        </td>
-                        <td class="cell c-status">
-                            {{^canapprove}}
-                                {{^statushelper.isactioned}}
-                                    <i class="fa fa-clock-o" aria-hidden="true" title="{{#str}}status:waiting, local_excursions{{/str}}"></i>
-                                {{/statushelper.isactioned}}
-                                {{#statushelper.isapproved}}
-                                    <i class="fa fa-check" aria-hidden="true" title="Approved"></i>
-                                {{/statushelper.isapproved}}
-                                {{#statushelper.isrejected}}
-                                    <i class="fa fa-times" aria-hidden="true" title="Rejected"></i>
-                                {{/statushelper.isrejected}}
-                            {{/canapprove}}
-                            {{#canapprove}}
-                                <input class="approve" type="checkbox" data-id="{{id}}" {{#status}}checked{{/status}}>
-                            {{/canapprove}}
-                        </td>
-                    </tr>
-                {{/approvals}}
-            </tbody>
-        </table>
-    </div>
+    {{>local_excursions/activityform_approvals_workflow}}
     <div class="reply-form">
         <textarea class="reply-comment form-control" rows="4" spellcheck="true" placeholder="Add a comment"></textarea>
         <a href="#" id="btn-postcomment" class="btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>

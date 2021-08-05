@@ -292,6 +292,47 @@
   background-color: #f8d7da;
   border-color: #f5c6cb;
 }
+#page-local-excursions-activity .approvals .workflow tr[data-skip="1"] {
+  background-color: #ccc;
+  color: #555;
+  text-decoration: line-through;
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="1"],
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="0"] {
+  position: relative;
+  width: 18px;
+  display: inline-block;
+  height: 18px;
+  text-align: center;
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="1"]:before,
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="0"]:before {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 7px;
+  right: 0;
+  border-top: 1px solid;
+  border-color: inherit;
+  -webkit-transform: skewY(-33deg);
+  -moz-transform: skewY(-33deg);
+  transform: skewY(-33deg);
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="1"] {
+  color: #555;
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="1"]:hover {
+  color: #005b94;
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="1"]:hover:before {
+  display: none;
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="0"]:before {
+  display: none;
+}
+#page-local-excursions-activity .approvals .workflow tr .action-skip[data-skip="0"]:hover:before {
+  display: block;
+}
 #page-local-excursions-activity .approvals .workflow td {
   vertical-align: middle;
 }
@@ -307,6 +348,9 @@
 #page-local-excursions-activity .approvals .workflow .c-status {
   width: 65px;
   text-align: center;
+}
+#page-local-excursions-activity .approvals .workflow i {
+  font-size: 15px;
 }
 #page-local-excursions-activity .approvals .reply-form {
   padding: 0;
@@ -486,8 +530,46 @@
 #page-local-excursions-activity:not(.activity-canedit) .alert {
   display: none !important;
 }
-#page-local-excursions-activity:not(.activity-canedit):not(.activity-accompanying) .approvals .reply-form,
-#page-local-excursions-activity:not(.activity-canedit):not(.activity-accompanying) .approvals .comments {
+#page-local-excursions-activity.activity-accompanying #id_general > .fcontainer input,
+#page-local-excursions-activity.activity-accompanying #id_staff > .fcontainer input,
+#page-local-excursions-activity.activity-accompanying .permissions input,
+#page-local-excursions-activity.activity-accompanying #fitem_id_riskassessment input,
+#page-local-excursions-activity.activity-accompanying #fitem_id_attachments input,
+#page-local-excursions-activity.activity-accompanying #id_general > .fcontainer select,
+#page-local-excursions-activity.activity-accompanying #id_staff > .fcontainer select,
+#page-local-excursions-activity.activity-accompanying .permissions select,
+#page-local-excursions-activity.activity-accompanying #fitem_id_riskassessment select,
+#page-local-excursions-activity.activity-accompanying #fitem_id_attachments select,
+#page-local-excursions-activity.activity-accompanying #id_general > .fcontainer textarea,
+#page-local-excursions-activity.activity-accompanying #id_staff > .fcontainer textarea,
+#page-local-excursions-activity.activity-accompanying .permissions textarea,
+#page-local-excursions-activity.activity-accompanying #fitem_id_riskassessment textarea,
+#page-local-excursions-activity.activity-accompanying #fitem_id_attachments textarea,
+#page-local-excursions-activity.activity-accompanying #id_general > .fcontainer a,
+#page-local-excursions-activity.activity-accompanying #id_staff > .fcontainer a,
+#page-local-excursions-activity.activity-accompanying .permissions a,
+#page-local-excursions-activity.activity-accompanying #fitem_id_riskassessment a,
+#page-local-excursions-activity.activity-accompanying #fitem_id_attachments a,
+#page-local-excursions-activity.activity-accompanying #id_general > .fcontainer .form-check-label,
+#page-local-excursions-activity.activity-accompanying #id_staff > .fcontainer .form-check-label,
+#page-local-excursions-activity.activity-accompanying .permissions .form-check-label,
+#page-local-excursions-activity.activity-accompanying #fitem_id_riskassessment .form-check-label,
+#page-local-excursions-activity.activity-accompanying #fitem_id_attachments .form-check-label {
+  background-color: #e9ecef !important;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+#page-local-excursions-activity.activity-accompanying .prepare-message {
+  display: none !important;
+}
+#page-local-excursions-activity.activity-accompanying .alert {
+  display: none !important;
+}
+#page-local-excursions-activity:not(.activity-canedit) .approvals .reply-form,
+#page-local-excursions-activity:not(.activity-canedit) .approvals .comments {
   display: none !important;
 }
 /* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
@@ -1160,10 +1242,10 @@
 }
 #activity-summary {
   max-width: 900px;
-  width: 900px;
+  width: auto;
   margin: 8px auto;
-  font-size: 15px;
-  font-family: sans-serif;
+  font-size: 11pt;
+  font-family: "Calibri", sans-serif;
   color: #000;
   line-height: 1.4;
 }

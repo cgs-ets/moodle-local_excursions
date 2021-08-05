@@ -192,6 +192,18 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             self.submitApproval(checkbox);
         });
 
+        // Skip approval
+        self.rootel.on('click', '.approval .action-skip[data-skip="0"]', function(e) {
+            var button = $(this);
+            self.skipApproval(button, 1);
+        });
+        
+        // Renable approval
+        self.rootel.on('click', '.approval .action-skip[data-skip="1"]', function(e) {
+            var button = $(this);
+            self.skipApproval(button, 0);
+        });
+
         // Enable permissions
         self.rootel.on('change', 'input[name="enable-permissions"]', function(e) {
             var checkbox = $(this);
@@ -816,8 +828,13 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                 var data = JSON.parse(response);
                 approval.removeClass('submitting');
                 approval.attr('data-status', checked);
+                // Update status HTML.
                 var status = self.rootel.find('.status');
-                status.replaceWith(data.html);
+                status.replaceWith(data.statushtml);
+                // Update workflow HTML.
+                var workflow = self.rootel.find('.workflow');
+                workflow.replaceWith(data.workflowhtml);
+                // Update activity status.
                 self.rootel.removeClass (function (index, className) {
                     return (className.match (/(^|\s)activity-status-\S+/g) || []).join(' ');
                 });
@@ -830,6 +847,56 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             }
         }]);
 
+    };
+
+    /**
+     * Skip approval
+     *
+     * @method postComment
+     */
+     ActivityForm.prototype.skipApproval = function (button, skip) {
+        var self = this;
+
+        var activityid = self.form.find('input[name="edit"]').val();
+        var approval = button.closest('.approval');
+        var approvalid = approval.data('id');
+
+        approval.addClass('submitting');
+      
+        Ajax.call([{
+            methodname: 'local_excursions_formcontrol',
+            args: { 
+                action: 'skip_approval',
+                data: JSON.stringify({
+                    'activityid' : activityid,
+                    'approvalid' : approvalid,
+                    'skip' : skip,
+                }),
+            },
+            done: function(response) {
+                var data = JSON.parse(response);
+                approval.removeClass('submitting');
+                // Update skip status.
+                approval.attr('data-skip', skip);
+                button.attr('data-skip', skip);
+                // Update status HTML.
+                var status = self.rootel.find('.status');
+                status.replaceWith(data.statushtml);
+                // Update workflow HTML.
+                var workflow = self.rootel.find('.workflow');
+                workflow.replaceWith(data.workflowhtml);
+                // Update activity status.
+                self.rootel.removeClass (function (index, className) {
+                    return (className.match (/(^|\s)activity-status-\S+/g) || []).join(' ');
+                });
+                self.rootel.addClass('activity-status-' + data.status);
+            },
+            fail: function(reason) {
+                approval.removeClass('submitting');
+                Log.error('local_excursions/activityform: failed to submit approval skip.');
+                Log.debug(reason);
+            }
+        }]);
     };
 
     /**

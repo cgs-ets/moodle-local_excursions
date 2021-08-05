@@ -57,5 +57,14 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
     }
 
+    if ($oldversion < 2021041602) {
+        // Add skip field.
+        $table = new xmldb_table('excursions_approvals');
+        $skip = new xmldb_field('skip', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, null, 'invalidated');
+        if (!$dbman->field_exists($table, $skip)) {
+            $dbman->add_field($table, $skip);
+        }
+    }
+
     return true;
 }

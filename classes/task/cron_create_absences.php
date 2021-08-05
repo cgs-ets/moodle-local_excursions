@@ -53,14 +53,14 @@ class cron_create_absences extends \core\task\scheduled_task {
      * Execute the scheduled task.
      */
     public function execute() {
-        // Find approved activities taking place tomorrow.
-        $tomorrowstart = strtotime('tomorrow');
-        $readabletomorrowstart = date('Y-m-d H:i:s', $tomorrowstart);
-        $tomorrowend = strtotime('+1 day', $tomorrowstart);
-        $readabletomorrowend = date('Y-m-d H:i:s', $tomorrowend);
-        $this->log_start("Fetching approved activities starting tomorrow (>= {$readabletomorrowstart} < {$readabletomorrowend}).");
-        $activities = activity::get_for_absences($tomorrowstart, $tomorrowend);
-
+        // Find activities that need to be synced.
+        $now = time();
+        $plus14days = strtotime('+14 day', $now);
+        $minus7days = strtotime('-7 day', $now);
+        $readableplus14days= date('Y-m-d H:i:s', $plus14days);
+        $readableminus7days = date('Y-m-d H:i:s', $minus7days);
+        $this->log_start("Fetching approved activities starting before {$readableplus14days} and finishing after {$readableminus7days}.");
+        $activities = activity::get_for_absences($now, $plus14days, $minus7days);
         try {
 
             $config = get_config('local_excursions');

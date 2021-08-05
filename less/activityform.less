@@ -159,6 +159,47 @@
 				    background-color: #f8d7da;
 				    border-color: #f5c6cb;
 				}
+				&[data-skip="1"] {
+					background-color: #ccc;
+					color: #555;
+					text-decoration: line-through;
+				}
+				.action-skip[data-skip="1"], .action-skip[data-skip="0"] {
+					position: relative;
+					width: 18px;
+					display: inline-block;
+					height: 18px;
+					text-align: center;
+					&:before {
+						position: absolute;
+						content: '';
+						left: 0;
+						top: 7px;
+						right: 0;
+						border-top: 1px solid;
+						border-color: inherit;
+						-webkit-transform: skewY(-33deg);
+						-moz-transform: skewY(-33deg);
+						transform: skewY(-33deg);
+					}
+				}
+				.action-skip[data-skip="1"] {
+					color: #555;
+					&:hover {
+						color: #005b94;
+						&:before {
+							display: none;
+						}
+					}
+				}
+				.action-skip[data-skip="0"] {
+					&:before {
+						display: none;
+					}
+					&:hover:before {
+						display: block;
+					}
+				}
 		    }
 			td {
 				vertical-align: middle;
@@ -175,6 +216,9 @@
 			.c-status {
 				width: 65px;
 				text-align: center;
+			}
+			i {
+				font-size: 15px;
 			}
 	    }
 	    .reply-form {
@@ -330,24 +374,46 @@
 			  	pointer-events:none !important;
 			}
 		}
-
 		.student-list, .actions {
 			input, select, textarea, a, .c-checkbox {
 				display: none !important;
 			}
 		}
-
 		.prepare-message {
 			display: none !important;
 		}
+		.alert {
+			display: none !important;
+		}
+	}
 
+	// Accompanying staff can edit student list and nothing else.
+	&.activity-accompanying {
+		#id_general > .fcontainer,
+		#id_staff > .fcontainer,
+		.permissions, 
+		#fitem_id_riskassessment,
+		#fitem_id_attachments
+		{
+			input, select, textarea, a, .form-check-label {
+				background-color: #e9ecef !important;
+			  	-webkit-user-select: none;
+			  	-moz-user-select: none;
+			  	-ms-user-select: none;
+			  	user-select: none !important;
+			  	pointer-events:none !important;
+			}
+		}
+		.prepare-message {
+			display: none !important;
+		}
 		.alert {
 			display: none !important;
 		}
 	}
 
 	// Users that are not: creator, staff in charge, accompanying, approver.
-	&:not(.activity-canedit):not(.activity-accompanying) {
+	&:not(.activity-canedit) {
 		.approvals {
 			.reply-form, .comments {
 				display: none !important;

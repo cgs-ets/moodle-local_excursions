@@ -277,25 +277,8 @@ if ($activity->isapprover) {
 if ($activity->username == $USER->username) {
     $PAGE->add_body_class('activity-creator');
 }
-if ($activity->activitytype == 'incursion') {
-    $PAGE->add_body_class('activitytype-incursion');
-} else {
-    $PAGE->add_body_class('activitytype-excursion');
-}
-if ($data->campus == 'senior') {
-    $PAGE->add_body_class('activitycampus-senior');
-} else {
-    $PAGE->add_body_class('activitycampus-primary');
-}
-
-$accompanying = json_decode($activity->accompanyingstaffjson);
-if ($accompanying) {
-    foreach ($accompanying as $user) {
-        if ($USER->username == $user->idfield) {
-            $PAGE->add_body_class('activity-accompanying');
-            break;
-        }
-    }
+if ($activity->isaccompanying) {
+    $PAGE->add_body_class('activity-accompanying');
 }
 
 $output = $OUTPUT->header();

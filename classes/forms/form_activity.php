@@ -324,7 +324,6 @@ class form_activity extends \moodleform {
 
         // Validation for review stage only.
 
-
         return $errors;
     }
 

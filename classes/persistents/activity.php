@@ -717,14 +717,23 @@ class activity extends persistent {
         return $activities;
     }
 
-    public static function get_for_absences($start, $end) {
+    public static function get_for_absences($now, $startlimit, $endlimit) {
         global $DB;
 
+        // Activies must:
+        // - be approved.
+        // - be unprocessed since the last change.
+        // - start within the next two weeks ($startlimit) OR
+        // - currently running OR
+        // - ended within the past 7 days ($endlimit)  OR
         $sql = "SELECT *
                   FROM {" . static::TABLE . "}
-                 WHERE timestart >= {$start}
-                   AND timestart < {$end}
-                   AND absencesprocessed != 1
+                 WHERE absencesprocessed != 1
+                   AND (
+                    (timestart <= {$startlimit} AND timestart >= {$now}) OR
+                    (timestart <= {$now} AND timeend >= {$now}) OR
+                    (timeend >= {$endlimit} AND timeend <= {$now}) OR
+                   )
                    AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
         $records = $DB->get_records_sql($sql, null);
         $activities = array();
@@ -773,6 +782,7 @@ class activity extends persistent {
                   FROM {" . static::TABLE_EXCURSIONS_APPROVALS . "}
                  WHERE activityid = ?
                    AND invalidated = 0
+                   AND skip = 0
                    AND status != 1
               ORDER BY sequence ASC";
         $params = array($activityid);
@@ -1043,6 +1053,36 @@ class activity extends persistent {
     }
 
     /*
+    * Save skip
+    */
+    public static function save_skip($activityid, $approvalid, $skip) {
+        global $DB, $USER;
+
+        // Check if user is allowed to do this.
+        $isapprover = static::is_approver_of_activity($activityid);
+        if ($isapprover) {
+            $userapprovertypes = locallib::get_approver_types($USER->username);
+        }
+
+        // Update the approval status.
+        list($insql, $inparams) = $DB->get_in_or_equal($userapprovertypes);
+        $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                   SET skip = ?, username = ?, timemodified = ?
+                 WHERE id = ?
+                   AND activityid = ?
+                   AND invalidated = 0
+                   AND type $insql";
+        $params = array($skip, $USER->username, time(), $approvalid, $activityid);
+        $params = array_merge($params, $inparams);
+        $DB->execute($sql, $params);
+
+        // Check for approval finalisation and return new status.
+        $newstatusinfo = static::check_status($activityid, null, true);
+
+        return json_encode($newstatusinfo);
+    }
+
+    /*
     * Enable permissions
     */
     public static function enable_permissions($activityid, $checked) {
@@ -1140,11 +1180,17 @@ class activity extends persistent {
         }
 
         // Render the html for the overall activity status.
-        $html = $OUTPUT->render_from_template('local_excursions/activityform_approvals_status', array('statushelper' => $newstatus));
+        $statushtml = $OUTPUT->render_from_template('local_excursions/activityform_approvals_status', array('statushelper' => $newstatus));
+
+        // Render the html for the workflow area.
+        $activityexporter = new activity_exporter($activity);
+        $exported = $activityexporter->export($OUTPUT);
+        $workflowhtml = $OUTPUT->render_from_template('local_excursions/activityform_approvals_workflow', $exported);
 
         return (object) array(
             'status' => $status, 
-            'html' => $html,
+            'statushtml' => $statushtml,
+            'workflowhtml' => $workflowhtml,
         );
 
     }

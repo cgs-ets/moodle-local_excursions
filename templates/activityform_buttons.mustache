@@ -28,7 +28,8 @@
         <input type="submit" class="btn btn-secondary" name="savedraft" id="btn-savedraft" value="{{#str}}activityform:savedraft, local_excursions{{/str}}">
         <input type="submit" class="btn btn-primary" name="sendforreview" id="btn-sendforreview" value="{{#str}}activityform:sendforreview, local_excursions{{/str}}">
         <input type="submit" class="btn btn-secondary" name="cancelchanges" id="btn-cancel" value="{{#str}}activityform:cancel, local_excursions{{/str}}">
-        {{^activity.statushelper.isapproved}}{{#activity.iscreator}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.iscreator}}{{/activity.statushelper.isapproved}}
+        {{^activity.isapprover}}{{#activity.iscreator}}{{^activity.statushelper.isapproved}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.statushelper.isapproved}}{{/activity.iscreator}}{{/activity.isapprover}}
+        {{#activity.isapprover}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.isapprover}}
     {{/activity.statushelper.cansavedraft}}
     {{^activity.statushelper.cansavedraft}}
         <div class="alert alert-danger" role="alert">
@@ -36,6 +37,7 @@
         </div>
         <input type="submit" class="btn btn-primary" name="sendforreview" id="btn-sendforreview" value="{{#str}}activityform:savechanges, local_excursions{{/str}}">
         <input type="submit" class="btn btn-secondary" name="cancelchanges" id="btn-cancel" value="{{#str}}activityform:cancel, local_excursions{{/str}}">
-        {{^activity.statushelper.isapproved}}{{#activity.iscreator}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.iscreator}}{{/activity.statushelper.isapproved}}
+        {{^activity.isapprover}}{{#activity.iscreator}}{{^activity.statushelper.isapproved}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.statushelper.isapproved}}{{/activity.iscreator}}{{/activity.isapprover}}
+        {{#activity.isapprover}}<input type="submit" class="btn btn-danger float-right" name="delete" id="btn-delete" value="{{#str}}activityform:delete, local_excursions{{/str}}">{{/activity.isapprover}}
     {{/activity.statushelper.cansavedraft}}
 </div>

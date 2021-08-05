@@ -95,6 +95,11 @@ trait formcontrol {
             return activity::save_approval($data->activityid, $data->approvalid, $data->checked);
         }
 
+        if ($action == 'skip_approval') {
+            $data = json_decode($data);
+            return activity::save_skip($data->activityid, $data->approvalid, $data->skip);
+        }
+
         if ($action == 'post_comment') {
             $data = json_decode($data);
             return activity::post_comment($data->activityid, $data->comment);

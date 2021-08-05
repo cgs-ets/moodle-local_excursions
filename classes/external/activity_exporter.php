@@ -80,6 +80,9 @@ class activity_exporter extends persistent_exporter {
             'isapprover' => [
                 'type' => PARAM_BOOL,
             ],
+            'isaccompanying' => [
+                'type' => PARAM_BOOL,
+            ],
             'isstaffincharge' => [
                 'type' => PARAM_BOOL,
             ],
@@ -223,6 +226,17 @@ class activity_exporter extends persistent_exporter {
 
         $iscreator = ($this->data->username == $usercontext->username);
 
+        $isaccompanying = false;
+        $accompanying = json_decode($this->data->accompanyingstaffjson);
+        if ($accompanying) {
+            foreach ($accompanying as $user) {
+                if ($USER->username == $user->idfield) {
+                    $isaccompanying = true;
+                    break;
+                }
+            }
+        }
+
         $isapprover = activity::is_approver_of_activity($this->data->id);
         if ($isapprover) {
             $userapprovertypes = locallib::get_approver_types($usercontext->username);
@@ -233,6 +247,7 @@ class activity_exporter extends persistent_exporter {
         $approvals = activity::get_approvals($this->data->id);
         $i = 0;
         foreach ($approvals as $approval) {
+            // If approved, get the approvers display info.
             if ($approval->username) {
                 $user = \core_user::get_user_by_username($approval->username);
                 if ($user) {
@@ -242,18 +257,23 @@ class activity_exporter extends persistent_exporter {
                 } else {
                     $approval->userphoto = new \moodle_url('/user/pix.php/0/f2.jpg');
                 }
-                
             }
+            // Check if last approval.
             if(++$i === count($approvals)) {
                 $approval->last = true;
             }
+            // Check if ready to approve.
             if ($isapprover) {
+                // Check if skippable.
+                if (isset(locallib::WORKFLOW[$approval->type]['canskip'])) {
+                    $approval->canskip = true;
+                }
                 if (in_array($approval->type, $userapprovertypes)) {
                     // No unactioned prerequisites found, user can approver this.
                     $prerequisites = activity::get_prerequisites($this->data->id, $approval->type);
                     if (empty($prerequisites)) {
                         $approval->canapprove = true;
-                        if ($approval->status == 0) { //
+                        if ($approval->status == 0) {
                             $iswaitingforyou = true;
                         }
                     }
@@ -292,7 +312,7 @@ class activity_exporter extends persistent_exporter {
         }
 
         $usercanedit = false;
-        if ($iscreator || $isstaffincharge || $isapprover) {
+        if ($iscreator || $isstaffincharge || $isapprover || $isaccompanying) {
             $usercanedit = true;
         }
 
@@ -352,6 +372,7 @@ class activity_exporter extends persistent_exporter {
             'statushelper' => $statushelper,
             'iscreator' => $iscreator,
             'isapprover' => $isapprover,
+            'isaccompanying' => $isaccompanying,
             'isstaffincharge' => $isstaffincharge,
             'iswaitingforyou' => $iswaitingforyou,
             'approvals' => $approvals,

@@ -47,7 +47,7 @@ $tasks = array(
     array(
         'classname' => 'local_excursions\task\cron_create_absences',
         'blocking' => 0,
-        'minute' => '*',
+        'minute' => '0',
         'hour' => '*',
         'day' => '*',
         'month' => '*',
