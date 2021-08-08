@@ -736,7 +736,7 @@ class activity extends persistent {
                    AND (
                     (timestart <= {$startlimit} AND timestart >= {$now}) OR
                     (timestart <= {$now} AND timeend >= {$now}) OR
-                    (timeend >= {$endlimit} AND timeend <= {$now}) OR
+                    (timeend >= {$endlimit} AND timeend <= {$now})
                    )
                    AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
         $records = $DB->get_records_sql($sql, null);
