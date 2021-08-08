@@ -69,14 +69,14 @@ class cron_send_attendance_reminders extends \core\task\scheduled_task {
             $recipients[$data->staffincharge] = \core_user::get_user_by_username($data->staffincharge);
 
             // Add accompanying staff to list of recipients.
-            $accompanyingstaff = json_decode($data->accompanyingstaffjson);
-            if ($accompanyingstaff) {
-                foreach ($accompanyingstaff as $as) {
-                    if (!isset($recipients[$as->idfield])) {
-                        $recipients[$as->idfield] = \core_user::get_user_by_username($as->idfield);
-                    }
-                }
-            }
+            //$accompanyingstaff = json_decode($data->accompanyingstaffjson);
+            //if ($accompanyingstaff) {
+            //    foreach ($accompanyingstaff as $as) {
+            //        if (!isset($recipients[$as->idfield])) {
+            //            $recipients[$as->idfield] = \core_user::get_user_by_username($as->idfield);
+            //        }
+            //    }
+            //}
 
             // Send the reminders.
             foreach ($recipients as $recipient) {
