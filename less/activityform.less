@@ -388,7 +388,7 @@
 	}
 
 	// Accompanying staff can edit student list and nothing else.
-	&.activity-accompanying {
+	&.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) {
 		#id_general > .fcontainer,
 		#id_staff > .fcontainer,
 		.permissions, 
