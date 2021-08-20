@@ -1830,9 +1830,9 @@ class activity extends persistent {
         $isstaffincharge = ($activity->get('staffincharge') == $USER->username);
 
         // Update activity.
-        if ($iscreator || $isstaffincharge || $isstaffincharge) {
+        if ($iscreator || $isapprover || $isstaffincharge) {
             $activity->set('deleted', 1);
-            $activity->save();
+            $activity->update();
         }
     }
 
