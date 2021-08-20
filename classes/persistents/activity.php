@@ -1832,7 +1832,7 @@ class activity extends persistent {
         // Update activity.
         if ($iscreator || $isstaffincharge || $isstaffincharge) {
             $activity->set('deleted', 1);
-            $activity->update();
+            $activity->save();
         }
     }
 
