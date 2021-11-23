@@ -357,7 +357,7 @@ class activity extends persistent {
                 // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
                 $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
                 if (!$ignoreactivity) { 
-                    // Senior School - 1nd approver.
+                    // Senior School - 1st approver.
                     $approval->type = 'senior_ra';
                     $approval->sequence = 1;
                     $approval->description = locallib::WORKFLOW['senior_ra']['name'];
@@ -378,6 +378,17 @@ class activity extends persistent {
                 break;
             }
             case 'primary': {
+
+                // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, Nov 23, 2021 11:18 AM.
+                $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1637626717);
+                if (!$ignoreactivity) { 
+                    // Primary School - 1st approver.
+                    $approval->type = 'primary_ra';
+                    $approval->sequence = 1;
+                    $approval->description = locallib::WORKFLOW['primary_ra']['name'];
+                    $approvals[] = clone $approval;
+                }
+
                 // Primary School - 1st approver.
                 $approval->type = 'primary_admin';
                 $approval->sequence = 1;
