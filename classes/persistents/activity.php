@@ -697,7 +697,8 @@ class activity extends persistent {
             $sql = "SELECT id, activityid, type
                       FROM {" . static::TABLE_EXCURSIONS_APPROVALS. "} 
                      WHERE type $insql
-                       AND invalidated = 0";
+                       AND invalidated = 0
+                       AND skip = 0";
             $approvals = $DB->get_records_sql($sql, $inparams);
             $approvals = static::filter_approvals_with_prerequisites($approvals);
             $orderby = '';
@@ -1233,6 +1234,7 @@ class activity extends persistent {
                       FROM {" . activity::TABLE_EXCURSIONS_APPROVALS . "}
                      WHERE activityid = ?
                        AND invalidated = 0
+                       AND skip = 0
                        AND type $insql
                        AND status != 1";
             $params = array_merge(array($activityid), $inparams);
