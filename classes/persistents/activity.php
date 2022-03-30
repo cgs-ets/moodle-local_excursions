@@ -1772,6 +1772,10 @@ class activity extends persistent {
         $params = array($response, time(), $permissionid, $USER->username);
         $DB->execute($sql, $params);
 
+        // Reset absences processed as attendance may have changed due to permission given.
+        $activity->set('absencesprocessed', 0);
+        $activity->update();
+
         // If it is a yes, sent an email to the student to tell them their parent indicated that they will be attending.
         if ($response == '1') {
             static::send_attending_email($permissionid);
@@ -1845,6 +1849,8 @@ class activity extends persistent {
         // Update activity.
         if ($iscreator || $isapprover || $isstaffincharge) {
             $activity->set('deleted', 1);
+            // Reset absences processed so that Synergetic is updated.
+            $activity->set('absencesprocessed', 0);
             $activity->update();
         }
     }
