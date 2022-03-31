@@ -78,7 +78,7 @@ class cron_create_absences extends \core\task\scheduled_task {
                 foreach ($attending as $student) {
 
                     // Sanity check whether absence already exists for student.
-                    $sql = $config->checkabsencesql . ' :username, :leavingdate, :returningdate';
+                    $sql = $config->checkabsencesql . ' :username, :leavingdate, :returningdate, :comment';
                     $params = array(
                         'username' => $student,
                         'leavingdate' => $activitystart,
