@@ -83,6 +83,7 @@ class cron_create_absences extends \core\task\scheduled_task {
                         'username' => $student,
                         'leavingdate' => $activitystart,
                         'returningdate' => $activityend,
+                        'comment' => '#ID-' . $activity->get('id'),
                     );
                     $absenceevents = $externalDB->get_field_sql($sql, $params);
                     if ($absenceevents) {
@@ -98,7 +99,7 @@ class cron_create_absences extends \core\task\scheduled_task {
                         'leavingdate' => $activitystart,
                         'returningdate' => $activityend,
                         'staffincharge' => $activity->get('staffincharge'),
-                        'comment' => $activity->get('activityname'),
+                        'comment' => $activity->get('activityname') . ' #ID-' . $activity->get('id'),
                     );
                     $externalDB->execute($sql, $params);
                 }
@@ -110,7 +111,7 @@ class cron_create_absences extends \core\task\scheduled_task {
                 $params = array(
                     'leavingdate' => $activitystart,
                     'returningdate' => $activityend,
-                    'comment' => $activity->get('activityname'),
+                    'comment' => '#ID-' . $activity->get('id'),
                     'studentscsv' => implode(',', $attending),
                 );
                 $externalDB->execute($sql, $params);
