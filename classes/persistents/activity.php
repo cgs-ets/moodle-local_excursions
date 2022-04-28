@@ -472,7 +472,7 @@ class activity extends persistent {
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
                    AND username = ?
-              ORDER BY isdraft DESC, ispastevent ASC, timestart ASC";
+              ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
         $params = array($username);
 
         $records = $DB->get_records_sql($sql, $params);
@@ -506,7 +506,7 @@ class activity extends persistent {
                  WHERE deleted = 0
                    AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                    AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
-              ORDER BY isdraft DESC, ispastevent ASC, timestart ASC";
+              ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
         $records = $DB->get_records_sql($sql, array());
         
         $activities = array();
@@ -591,7 +591,7 @@ class activity extends persistent {
                      WHERE deleted = 0
                        AND status = 3
                        AND campus = 'primary'
-                  ORDER BY ispastevent ASC, timestart ASC";
+                  ORDER BY ispastevent ASC, timestart DESC";
             $records = $DB->get_records_sql($sql);
             $activities = array();
             foreach ($records as $record) {
@@ -634,7 +634,7 @@ class activity extends persistent {
                      WHERE deleted = 0
                        AND status = 3
                        AND campus = 'senior'
-                  ORDER BY ispastevent ASC, timestart ASC";
+                  ORDER BY ispastevent ASC, timestart DESC";
             $records = $DB->get_records_sql($sql);
             $activities = array();
             foreach ($records as $record) {
@@ -671,7 +671,7 @@ class activity extends persistent {
             }
 
             if (empty($orderby)) {
-                $orderby = 'isdraft DESC, ispastevent ASC, timestart ASC';
+                $orderby = 'isdraft DESC, ispastevent ASC, timestart DESC';
             }
             $sql .= " ORDER BY " . $orderby;
 
