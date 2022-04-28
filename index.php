@@ -84,6 +84,8 @@ $relateds = array(
 $indexexporter = new index_exporter(null, $relateds);
 $data = $indexexporter->export($OUTPUT);
 
+//var_export($data); exit;
+
 // Render the announcement list.
 $output .= $OUTPUT->render_from_template('local_excursions/index', $data);
 

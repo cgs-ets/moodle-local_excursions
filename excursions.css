@@ -1098,17 +1098,54 @@
   pointer-events: none;
 }
 #page-local-excursions-index .header {
-  padding: 20px 0;
+  padding: 0 0 20px 0;
+  text-align: right;
 }
-#page-local-excursions-index .list-activities {
-  padding: 20px;
-  background: #f2f4f6;
+#page-local-excursions-index .filter-header {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
 }
-#page-local-excursions-index .list-activities h5 {
+#page-local-excursions-index .filter-header h5 {
+  line-height: 1;
+  margin: 0;
+  margin-right: 20px;
+}
+#page-local-excursions-index .filter-header label {
   margin: 0;
 }
-#page-local-excursions-index .list-activities small {
-  margin-bottom: 10px;
+#page-local-excursions-index .list-activities .activity.past {
+  display: none;
+}
+#page-local-excursions-index.show-past-activities .list-activities .activity.past {
+  display: table-row;
+}
+#page-local-excursions-index .activities-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  width: 1400px;
+}
+#page-local-excursions-index .activities-tabs .activities-tab {
+  width: 12%;
+  padding: 20px;
+  background: #f2f2f2;
+  border: 1px solid #fff;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
+#page-local-excursions-index .activities-tabs .activities-tab:hover {
+  background: #eaeaea;
+}
+#page-local-excursions-index .activities-tabs .activities-tab.selected {
+  background: #005b94;
+  color: #fff;
+}
+#page-local-excursions-index .list-activities {
+  display: none;
+}
+#page-local-excursions-index .list-activities.selected {
   display: block;
 }
 #page-local-excursions-index .th-id {

@@ -70,18 +70,55 @@
 		}
 	}
 	.header {
-		padding: 20px 0;
+		padding: 0 0 20px 0;
+    text-align: right;
 	}
+  .filter-header {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+    h5 {
+      line-height: 1;
+      margin: 0;
+      margin-right: 20px;
+    }
+    label {
+      margin: 0;
+    }
+  }
+  .list-activities .activity.past {
+    display: none;
+  }
+  &.show-past-activities .list-activities .activity.past {
+    display: table-row;
+  }
+  .activities-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    width: 1400px;
+    .activities-tab {
+      width: 12%;
+      padding: 20px;
+      background: #f2f2f2;
+      border: 1px solid #fff;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background: #eaeaea;
+      }
+      &.selected {
+        background: #005b94;
+        color: #fff;
+      }
+    }
+  }
 	.list-activities {
-		padding: 20px;
-	    background: #f2f4f6;
-		h5 {
-			margin: 0;
-		}
-		small {
-			margin-bottom: 10px;
-    		display: block;
-		}
+    display: none;
+    &.selected {
+      display: block;
+    }
 	}
 
 	.th-id {

@@ -82,6 +82,58 @@ class index_exporter extends exporter {
                 'multiple' => true,
                 'optional' => false,
             ],
+
+
+            'has_useractivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_approveractivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_accompanyingactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_auditoractivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_parentactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_studentactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_primaryactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'has_senioractivities' => [
+                'type' => PARAM_INT,
+            ],
+
+            'isselected_useractivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_approveractivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_accompanyingactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_auditoractivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_parentactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_studentactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_primaryactivities' => [
+                'type' => PARAM_INT,
+            ],
+            'isselected_senioractivities' => [
+                'type' => PARAM_INT,
+            ],
+
             'indexurl' => [
                 'type' => PARAM_RAW,
                 'multiple' => false,
@@ -247,6 +299,41 @@ class index_exporter extends exporter {
 
         unset($allactivities);
 
+        $has_parentactivities = count($parentactivities);
+        $has_studentactivities = count($studentactivities);
+        $has_useractivities = count($useractivities);
+        $has_accompanyingactivities = count($accompanyingactivities);
+        $has_approveractivities = count($approveractivities);
+        $has_auditoractivities = count($auditoractivities);
+        $has_primaryactivities = count($primaryactivities);
+        $has_senioractivities = count($senioractivities);
+
+        $isselected_parentactivities = 0;
+        $isselected_studentactivities = 0;
+        $isselected_useractivities = 0;
+        $isselected_accompanyingactivities = 0;
+        $isselected_approveractivities = 0;
+        $isselected_auditoractivities = 0;
+        $isselected_primaryactivities = 0;
+        $isselected_senioractivities = 0;
+        if ($has_parentactivities) {
+            $isselected_parentactivities = 1;
+        } else if ($has_studentactivities) {
+            $isselected_studentactivities = 1;
+        } else if ($has_useractivities) {
+            $isselected_useractivities = 1;
+        } else if ($has_accompanyingactivities) {
+            $isselected_accompanyingactivities = 1;
+        } else if ($has_approveractivities) {
+            $isselected_approveractivities = 1;
+        } else if ($has_auditoractivities) {
+            $isselected_auditoractivities = 1;
+        } else if ($has_primaryactivities) {
+            $isselected_primaryactivities = 1;
+        } else if ($has_senioractivities) {
+            $isselected_senioractivities = 1;
+        }
+
         return array(
             'useractivities' => $useractivities,
             'approveractivities' => $approveractivities,
@@ -256,6 +343,25 @@ class index_exporter extends exporter {
             'studentactivities' => $studentactivities,
             'primaryactivities' => $primaryactivities,
             'senioractivities' => $senioractivities,
+
+            'has_parentactivities' => $has_parentactivities,
+            'has_studentactivities' => $has_studentactivities,
+            'has_useractivities' => $has_useractivities,
+            'has_accompanyingactivities' => $has_accompanyingactivities,
+            'has_approveractivities' => $has_approveractivities,
+            'has_auditoractivities' => $has_auditoractivities,
+            'has_primaryactivities' => $has_primaryactivities,
+            'has_senioractivities' => $has_senioractivities,
+
+            'isselected_parentactivities' => $isselected_parentactivities,
+            'isselected_studentactivities' => $isselected_studentactivities,
+            'isselected_useractivities' => $isselected_useractivities,
+            'isselected_accompanyingactivities' => $isselected_accompanyingactivities,
+            'isselected_approveractivities' => $isselected_approveractivities,
+            'isselected_auditoractivities' => $isselected_auditoractivities,
+            'isselected_primaryactivities' => $isselected_primaryactivities,
+            'isselected_senioractivities' => $isselected_senioractivities,
+
             'activitycreateurl' => $activitycreateurl->out(false),
             'indexurl' => $indexurl->out(false),
             'isstaff' => $this->related['isstaff'],

@@ -64,6 +64,31 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
    Index.prototype.main = function () {
         var self = this;
 
+        // Tabs.
+        self.rootel.on('click', '.activities-tab', function(e) {
+          e.preventDefault();
+
+          // Get the target.
+          var ref = $(this).data('ref');
+
+          // Remove the current selected.
+          self.rootel.find('.activities-tab').removeClass('selected');
+          self.rootel.find('.list-activities').removeClass('selected');
+
+          // Show the tab.
+          $(this).addClass('selected');
+          self.rootel.find('.list-activities.' + ref).addClass('selected');
+        });
+
+        // Show past.
+        self.rootel.on('change', 'input.show-past-activities', function(e) {
+          if ($(this).is(':checked')) {
+            self.rootel.addClass('show-past-activities');
+          } else {
+            self.rootel.removeClass('show-past-activities');
+          }
+        });
+
         // Delete activity.
         self.rootel.on('click', '.delete-activity', function(e) {
             e.preventDefault();
@@ -89,6 +114,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
             }]);
         });  
         
+        self.rootel.find('input.show-past-activities').change();
 
     };
 
