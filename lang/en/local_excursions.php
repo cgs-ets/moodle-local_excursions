@@ -44,6 +44,11 @@ $string['createabsencesql'] = 'Create absence SQL';
 $string['deleteabsencessql'] = 'Delete absences SQL';
 $string['studentdatachecksql'] = 'Student Data Check SQL';
 $string['excursionconsentsql'] = 'Excursions consent SQL';
+$string['createclasssql'] = 'Create class SQL';
+$string['insertclassstaffsql'] = 'Insert class staff SQL';
+$string['insertclassstudentsql'] = 'Insert class student SQL';
+$string['deleteclassstudentssql'] = 'Delete class students SQL';
+$string['getterminfosql'] = 'Get term info SQL';
 
 $string['excursions:audit'] = 'Audit local_excursions activities';
 
@@ -121,6 +126,7 @@ $string['pastlimit'] = 'The maximum number of students has been reached for this
 $string['cron_queue_permissions'] = 'Queue permissions for sending';
 $string['cron_send_permissions'] = 'Send permission notifications';
 $string['cron_create_absences'] = 'Create excursion absences in Synergetic';
+$string['cron_create_classes'] = 'Create excursion class rolls in Synergetic';
 $string['cron_send_attendance_reminders'] = 'Send attendance reminders to organisers';
 $string['messagequeued'] = 'Permissions have been queued for sending. Permissions will appear in the student list above as parents respond.';
 
@@ -130,3 +136,5 @@ $string['extrapermissionsinfo'] = 'If your child has recently had a medical cond
 $string['studentnotuptodate'] = '<small>Your student may not be able to attend until updated information has been provided through the <b><u><a href="https://infiniti.canberragrammar.org.au/Infiniti/Produce/launch.aspx?id=f95c8a98-8410-4a3e-ab46-0c907ddb9390&portal=1" target="_blank" rel="noopener">Student Data Form</a></u></b>. We ask for this to be updated at least once each year.</small>';
 $string['studentinlistnotuptodate'] = 'Student information is not up to date. Parents should be encouraged to complete the student data form. If permissions are enabled parents will be advised by the system.';
 $string['nosisconsent'] = 'Parents do not consent to excursion participation.';
+
+

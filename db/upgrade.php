@@ -75,5 +75,14 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
     }
 
+    if ($oldversion < 2022050201) {
+        // Add classrollprocessed field.
+        $table = new xmldb_table('excursions');
+        $field = new xmldb_field('classrollprocessed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, null, 'remindersprocessed');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
     return true;
 }

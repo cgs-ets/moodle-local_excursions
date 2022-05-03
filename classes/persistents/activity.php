@@ -156,6 +156,10 @@ class activity extends persistent {
                 'type' => PARAM_INT,
                 'default' => 0,
             ],
+            "classrollprocessed" => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
             "isdraft" => [
                 'type' => PARAM_INT,
                 'default' => 0,
@@ -232,6 +236,7 @@ class activity extends persistent {
         $data->permissions = $originalactivity->get('permissions');
         // Set absences flag back to 0 so that absences are cleaned in case of student list change.
         $data->absencesprocessed = 0;
+        $data->classrollprocessed = 0;
         // Save the activity.        
         $activity = new static($data->id, $data);
         $activity->save();
@@ -749,6 +754,31 @@ class activity extends persistent {
                     (timestart <= {$startlimit} AND timestart >= {$now}) OR
                     (timestart <= {$now} AND timeend >= {$now}) OR
                     (timeend >= {$endlimit} AND timeend <= {$now})
+                   )
+                   AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
+        $records = $DB->get_records_sql($sql, null);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+        
+        return $activities;
+    }
+
+    public static function get_for_roll_creation($now, $startlimit) {
+        global $DB;
+
+        // Activies must:
+        // - be approved.
+        // - be unprocessed since the last change.
+        // - start within the next x days ($startlimit) OR
+        // - currently running OR
+        $sql = "SELECT *
+                  FROM {" . static::TABLE . "}
+                 WHERE classrollprocessed = 0
+                   AND (
+                    (timestart <= {$startlimit} AND timestart >= {$now}) OR
+                    (timestart <= {$now} AND timeend >= {$now})
                    )
                    AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
         $records = $DB->get_records_sql($sql, null);
@@ -1774,6 +1804,7 @@ class activity extends persistent {
 
         // Reset absences processed as attendance may have changed due to permission given.
         $activity->set('absencesprocessed', 0);
+        $activity->set('classrollprocessed', 0);
         $activity->update();
 
         // If it is a yes, sent an email to the student to tell them their parent indicated that they will be attending.
@@ -1851,6 +1882,7 @@ class activity extends persistent {
             $activity->set('deleted', 1);
             // Reset absences processed so that Synergetic is updated.
             $activity->set('absencesprocessed', 0);
+            $activity->set('classrollprocessed', 0);
             $activity->update();
         }
     }
