@@ -89,6 +89,15 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
           }
         });
 
+        // Show inreview.
+        self.rootel.on('change', 'input.show-inreview-activities', function(e) {
+          if ($(this).is(':checked')) {
+            self.rootel.addClass('show-inreview-activities');
+          } else {
+            self.rootel.removeClass('show-inreview-activities');
+          }
+        });
+
         // Delete activity.
         self.rootel.on('click', '.delete-activity', function(e) {
             e.preventDefault();

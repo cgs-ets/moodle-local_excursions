@@ -597,7 +597,23 @@ class activity extends persistent {
                        AND status = 3
                        AND campus = 'primary'
                   ORDER BY ispastevent ASC, timestart DESC";
+
+            // If auditor...
+            if (has_capability('local/excursions:audit', \context_system::instance(), null, false)) {
+                $sql = "SELECT *
+                            ,case
+                                when timeend < " . time() . " then 1
+                                else 0
+                            end as ispastevent
+                        FROM {" . static::TABLE . "}
+                        WHERE deleted = 0
+                            AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
+                            AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
+                            AND campus = 'primary'
+                        ORDER BY ispastevent ASC, timestart DESC";
+            }
             $records = $DB->get_records_sql($sql);
+
             $activities = array();
             foreach ($records as $record) {
                 $activities[] = new static($record->id, $record);
@@ -640,6 +656,20 @@ class activity extends persistent {
                        AND status = 3
                        AND campus = 'senior'
                   ORDER BY ispastevent ASC, timestart DESC";
+            // If auditor...
+            if (has_capability('local/excursions:audit', \context_system::instance(), null, false)) {
+                $sql = "SELECT *
+                            ,case
+                                when timeend < " . time() . " then 1
+                                else 0
+                            end as ispastevent
+                        FROM {" . static::TABLE . "}
+                        WHERE deleted = 0
+                            AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
+                            AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
+                            AND campus = 'senior'
+                        ORDER BY ispastevent ASC, timestart DESC";
+            }
             $records = $DB->get_records_sql($sql);
             $activities = array();
             foreach ($records as $record) {

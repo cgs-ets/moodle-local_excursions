@@ -36,12 +36,23 @@
     {{^noexcursions}}
       <div class="filter-header">
         <h5>Filter activities</h5>
+        
         <label>
           <input class="show-past-activities" type="checkbox" /> 
           Show past activities
         </label>
+
+        {{^isauditor}}
+          <label>
+            <input class="show-inreview-activities" type="checkbox" /> 
+            Show in-review activities
+          </label>
+        {{/isauditor}}
+
       </div>
     {{/noexcursions}}
+
+    
 
     <div class="activities-tabs">
       {{#has_parentactivities}}

@@ -1109,15 +1109,36 @@
 #page-local-excursions-index .filter-header h5 {
   line-height: 1;
   margin: 0;
-  margin-right: 20px;
 }
 #page-local-excursions-index .filter-header label {
   margin: 0;
+  margin-left: 20px;
 }
 #page-local-excursions-index .list-activities .activity.past {
   display: none;
 }
 #page-local-excursions-index.show-past-activities .list-activities .activity.past {
+  display: table-row;
+}
+#page-local-excursions-index .list-activities .activity.in-review {
+  display: none;
+}
+#page-local-excursions-index .list-activities.user-activities .activity.in-review {
+  display: table-row;
+}
+#page-local-excursions-index .list-activities.accompanying-activities .activity.in-review {
+  display: table-row;
+}
+#page-local-excursions-index .list-activities.approver-activities .activity.in-review {
+  display: table-row;
+}
+#page-local-excursions-index.show-inreview-activities .list-activities .activity.in-review {
+  display: table-row;
+}
+#page-local-excursions-index .list-activities .activity.past.in-review {
+  display: none;
+}
+#page-local-excursions-index.show-past-activities.show-inreview-activities .list-activities .activity.past.in-review {
   display: table-row;
 }
 #page-local-excursions-index .activities-tabs {

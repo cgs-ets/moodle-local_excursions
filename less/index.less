@@ -80,16 +80,37 @@
     h5 {
       line-height: 1;
       margin: 0;
-      margin-right: 20px;
     }
     label {
       margin: 0;
+      margin-left: 20px;
     }
   }
   .list-activities .activity.past {
     display: none;
   }
   &.show-past-activities .list-activities .activity.past {
+    display: table-row;
+  }
+  .list-activities .activity.in-review {
+    display: none;
+  }
+  .list-activities.user-activities .activity.in-review {
+    display: table-row;
+  }
+  .list-activities.accompanying-activities .activity.in-review {
+    display: table-row;
+  }
+  .list-activities.approver-activities .activity.in-review {
+    display: table-row;
+  }
+  &.show-inreview-activities .list-activities .activity.in-review {
+    display: table-row;
+  }
+  .list-activities .activity.past.in-review {
+    display: none;
+  }
+  &.show-past-activities.show-inreview-activities .list-activities .activity.past.in-review {
     display: table-row;
   }
   .activities-tabs {
