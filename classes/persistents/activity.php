@@ -740,7 +740,10 @@ class activity extends persistent {
             if ($sortby == 'created') {
                 $orderby = 'timecreated DESC';
             }
-            $activities = static::get_by_ids(array_column($approvals, 'activityid'), null, $orderby); // order by timecreated
+            if ($sortby == 'start') {
+                $orderby = 'timestart ASC';
+            }
+            $activities = static::get_by_ids(array_column($approvals, 'activityid'), null, $orderby); 
         }
 
         return $activities;
