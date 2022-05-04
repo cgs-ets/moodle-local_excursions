@@ -57,11 +57,6 @@ class index_exporter extends exporter {
                 'multiple' => true,
                 'optional' => false,
             ],
-            /*'auditoractivities' => [
-                'type' => activity_exporter::read_properties_definition(),
-                'multiple' => true,
-                'optional' => false,
-            ],*/
             'parentactivities' => [
                 'type' => activity_exporter::read_properties_definition(),
                 'multiple' => true,
@@ -82,8 +77,6 @@ class index_exporter extends exporter {
                 'multiple' => true,
                 'optional' => false,
             ],
-
-
             'has_useractivities' => [
                 'type' => PARAM_INT,
             ],
@@ -93,9 +86,6 @@ class index_exporter extends exporter {
             'has_accompanyingactivities' => [
                 'type' => PARAM_INT,
             ],
-            //'has_auditoractivities' => [
-            //    'type' => PARAM_INT,
-            //],
             'has_parentactivities' => [
                 'type' => PARAM_INT,
             ],
@@ -118,9 +108,6 @@ class index_exporter extends exporter {
             'isselected_accompanyingactivities' => [
                 'type' => PARAM_INT,
             ],
-            //'isselected_auditoractivities' => [
-            //    'type' => PARAM_INT,
-            //],
             'isselected_parentactivities' => [
                 'type' => PARAM_INT,
             ],
@@ -174,7 +161,6 @@ class index_exporter extends exporter {
             'useractivities' => 'local_excursions\persistents\activity[]',
             'approveractivities' => 'local_excursions\persistents\activity[]',
             'accompanyingactivities' => 'local_excursions\persistents\activity[]',
-            //'auditoractivities' => 'local_excursions\persistents\activity[]',
             'parentactivities' => 'local_excursions\persistents\activity[]',
             'studentactivities' => 'local_excursions\persistents\activity[]',
             'primaryactivities' => 'local_excursions\persistents\activity[]',
@@ -225,18 +211,6 @@ class index_exporter extends exporter {
                 $allactivities[$exported->id] = $exported;
             }
         }
-
-        /*$auditoractivities = array();
-        foreach ($this->related['auditoractivities'] as $activity) {
-            if (isset($allactivities[$activity->get('id')])) {
-                $auditoractivities[] = $allactivities[$activity->get('id')];
-            } else {
-                $activityexporter = new activity_exporter($activity, $relateds);
-                $exported = $activityexporter->export($output);
-                $auditoractivities[] = $exported;
-                $allactivities[$exported->id] = $exported;
-            }
-        }*/
 
         $parentactivities = array();
         foreach ($this->related['parentactivities'] as $activity) {
@@ -304,7 +278,6 @@ class index_exporter extends exporter {
         $has_useractivities = count($useractivities);
         $has_accompanyingactivities = count($accompanyingactivities);
         $has_approveractivities = count($approveractivities);
-        //$has_auditoractivities = count($auditoractivities);
         $has_primaryactivities = count($primaryactivities);
         $has_senioractivities = count($senioractivities);
 
@@ -313,7 +286,6 @@ class index_exporter extends exporter {
         $isselected_useractivities = 0;
         $isselected_accompanyingactivities = 0;
         $isselected_approveractivities = 0;
-        //$isselected_auditoractivities = 0;
         $isselected_primaryactivities = 0;
         $isselected_senioractivities = 0;
         if ($has_parentactivities) {
@@ -326,8 +298,6 @@ class index_exporter extends exporter {
             $isselected_accompanyingactivities = 1;
         } else if ($has_approveractivities) {
             $isselected_approveractivities = 1;
-        //} else if ($has_auditoractivities) {
-        //    $isselected_auditoractivities = 1;
         } else if ($has_primaryactivities) {
             $isselected_primaryactivities = 1;
         } else if ($has_senioractivities) {
@@ -338,7 +308,6 @@ class index_exporter extends exporter {
             'useractivities' => $useractivities,
             'approveractivities' => $approveractivities,
             'accompanyingactivities' => $accompanyingactivities,
-            //'auditoractivities' => $auditoractivities,
             'parentactivities' => $parentactivities,
             'studentactivities' => $studentactivities,
             'primaryactivities' => $primaryactivities,
@@ -349,7 +318,6 @@ class index_exporter extends exporter {
             'has_useractivities' => $has_useractivities,
             'has_accompanyingactivities' => $has_accompanyingactivities,
             'has_approveractivities' => $has_approveractivities,
-            //'has_auditoractivities' => $has_auditoractivities,
             'has_primaryactivities' => $has_primaryactivities,
             'has_senioractivities' => $has_senioractivities,
 
@@ -358,7 +326,6 @@ class index_exporter extends exporter {
             'isselected_useractivities' => $isselected_useractivities,
             'isselected_accompanyingactivities' => $isselected_accompanyingactivities,
             'isselected_approveractivities' => $isselected_approveractivities,
-            //'isselected_auditoractivities' => $isselected_auditoractivities,
             'isselected_primaryactivities' => $isselected_primaryactivities,
             'isselected_senioractivities' => $isselected_senioractivities,
 

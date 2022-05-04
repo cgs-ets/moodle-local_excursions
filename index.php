@@ -64,7 +64,6 @@ $output = $OUTPUT->header();
 $useractivities = activity::get_for_user($USER->username);
 $approveractivities = activity::get_for_approver($USER->username, $sortby);
 $accompanyingactivities = activity::get_for_accompanying($USER->username);
-//$auditoractivities = activity::get_for_auditor($USER->username);
 $parentactivities = activity::get_for_parent($USER->username);
 $studentactivities = activity::get_for_student($USER->username);
 $primaryschoolactivities = activity::get_for_primary($USER->username);
@@ -74,7 +73,6 @@ $relateds = array(
 	'useractivities' => $useractivities,
 	'approveractivities' => $approveractivities,
 	'accompanyingactivities' => $accompanyingactivities,
-	//'auditoractivities' => $auditoractivities,
 	'parentactivities' => $parentactivities,
 	'studentactivities' => $studentactivities,
 	'primaryactivities' => $primaryschoolactivities,
@@ -86,6 +84,12 @@ $indexexporter = new index_exporter(null, $relateds);
 $data = $indexexporter->export($OUTPUT);
 
 //var_export($data); exit;
+if ($sortby && $data->has_approveractivities) {
+    // If sorting by then we want the approver tab.
+    $data->isselected_parentactivities = $data->isselected_studentactivities = $data->isselected_useractivities = 
+    $data->isselected_accompanyingactivities = $data->isselected_primaryactivities = $data->isselected_senioractivities = 0;
+    $data->isselected_approveractivities = 1;
+}
 
 // Render the announcement list.
 $output .= $OUTPUT->render_from_template('local_excursions/index', $data);
