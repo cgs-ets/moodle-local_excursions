@@ -32,7 +32,8 @@ use local_excursions\locallib;
 require_login();
 $isstaff = locallib::is_cgs_staff();
 
-$sortby = optional_param('sortby', '', PARAM_RAW);
+$sortbyoption = optional_param('sortby', '', PARAM_RAW);
+$sortby = $sortbyoption;
 $indexurl = new moodle_url('/local/excursions/index.php', array(
 	'sortby' => $sortby,
 ));
@@ -84,7 +85,7 @@ $indexexporter = new index_exporter(null, $relateds);
 $data = $indexexporter->export($OUTPUT);
 
 //var_export($data); exit;
-if ($sortby && $data->has_approveractivities) {
+if ($sortbyoption && $data->has_approveractivities) {
     // If sorting by then we want the approver tab.
     $data->isselected_parentactivities = $data->isselected_studentactivities = $data->isselected_useractivities = 
     $data->isselected_accompanyingactivities = $data->isselected_primaryactivities = $data->isselected_senioractivities = 0;
