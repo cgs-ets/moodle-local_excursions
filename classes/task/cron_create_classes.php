@@ -78,8 +78,18 @@ class cron_create_classes extends \core\task\scheduled_task {
                 $activityend = date('Y-m-d H:i', $activity->get('timeend'));
 
                 // 1. Create the class.
-                $this->log("Creating the class with staff in charge: " . 'EX_' . $activity->get('id'));
+                $this->log("Creating the class " . 'EX_' . $activity->get('id') . ", with staff in charge " .  $activity->get('staffincharge') . ", start time " .  $activitystart );
                 $sql = $config->createclasssql . ' :fileyear, :filesemester, :classcampus, :classcode, :description, :staffid, :leavingdate, :returningdate';
+                
+                // Keep within schedule limits.
+                $activitystarthour = date('H', $activity->get('timestart'));
+                if ($activitystarthour < 6) {
+                    $activitystart = date('Y-m-d 06:i', $activity->get('timestart'));
+                }
+                if ($activitystarthour > 18 ) {
+                    $activitystart = date('Y-m-d 18:i', $activity->get('timestart'));
+                }
+
                 $params = array(
                     'fileyear' => $currentterminfo->fileyear,
                     'filesemester' => $currentterminfo->filesemester,
@@ -128,8 +138,11 @@ class cron_create_classes extends \core\task\scheduled_task {
                 // 4. Remove students no longer attending. 
                 $studentscsv = implode(',', $attending);
                 $this->log("Delete class students not in list: " . $studentscsv, 2);
-                $sql = $config->deleteclassstudentssql . ' :classcode, :studentscsv';
+                $sql = $config->deleteclassstudentssql . ' :fileyear, :filesemester, :classcampus, :classcode, :studentscsv';
                 $params = array(
+                    'fileyear' => $currentterminfo->fileyear,
+                    'filesemester' => $currentterminfo->filesemester,
+                    'classcampus' => $activity->get('campus') == 'senior' ? 'SEN' : 'PRI',
                     'classcode' => 'EX_' . $activity->get('id'),
                     'studentscsv' => implode(',', $attending),
                 );
@@ -140,8 +153,6 @@ class cron_create_classes extends \core\task\scheduled_task {
                 $activity->save();
                 $this->log("Finished creating class roll for activity " . $activity->get('id'));
             }
-
-            exit;
 
         } catch (Exception $ex) {
             // Error.
