@@ -92,6 +92,9 @@ class activity_exporter extends persistent_exporter {
             'approvals' => [
                 'type' => PARAM_RAW,
             ],
+            'notices' => [
+                'type' => PARAM_RAW,
+            ],
             'permissionshelper' => [
                 'type' => PARAM_RAW,
             ],
@@ -282,6 +285,9 @@ class activity_exporter extends persistent_exporter {
             }
         }
 
+        // Get notices.
+        $notices = activity::get_notices($this->data->id, $approvals);
+
         $userpermissions = array_values(activity::get_parent_permissions($this->data->id, $usercontext->username));
         foreach ($userpermissions as &$permission) {
             $student = \core_user::get_user_by_username($permission->studentusername);
@@ -376,6 +382,7 @@ class activity_exporter extends persistent_exporter {
             'isstaffincharge' => $isstaffincharge,
             'iswaitingforyou' => $iswaitingforyou,
             'approvals' => $approvals,
+            'notices' => $notices,
             'permissionshelper' => $permissionshelper,
             'messagehistory' => $messagehistory,
             'userpermissions' => $userpermissions,

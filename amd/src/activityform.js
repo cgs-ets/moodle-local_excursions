@@ -199,11 +199,17 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             self.skipApproval(button, 1);
         });
         
-        // Renable approval
+        // Reenable approval
         self.rootel.on('click', '.approval .action-skip[data-skip="1"]', function(e) {
             e.preventDefault();
             var button = $(this);
             self.skipApproval(button, 0);
+        });
+
+        // Notice - Delete previous absences
+        self.rootel.on('click', '.notice .action-delete-absences', function(e) {
+            var button = $(this);
+            self.deletePreviousAbsences(button);
         });
 
         // Enable permissions
@@ -902,9 +908,41 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     };
 
     /**
-     * Submit approve
+     * Delete previous absences
      *
-     * @method postComment
+     * @method deletePreviousAbsences
+     */
+     ActivityForm.prototype.deletePreviousAbsences = function (button) {
+      var self = this;
+
+      var activityid = self.form.find('input[name="edit"]').val();
+      var notice = button.closest('.notice');
+      notice.addClass('submitting');
+    
+      Ajax.call([{
+          methodname: 'local_excursions_formcontrol',
+          args: { 
+            action: 'delete_previous_activities',
+            data: activityid,
+          },
+          done: function(response) {
+            notice.html('<td>' + response + '</td>');
+            notice.removeClass('submitting');
+            notice.addClass('completed');
+          },
+          fail: function(reason) {
+            notice.removeClass('submitting');
+            Log.error('local_excursions/activityform: failed to delete previous absences.');
+            Log.debug(reason);
+          }
+      }]);
+
+  };
+
+    /**
+     * Enable permissions
+     *
+     * @method enablePermissions
      */
     ActivityForm.prototype.enablePermissions = function (checkbox) {
         var self = this;

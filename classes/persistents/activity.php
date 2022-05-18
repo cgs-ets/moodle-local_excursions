@@ -916,6 +916,70 @@ class activity extends persistent {
         return false;
     }
 
+    public static function get_notices($activityid, $approvals) {
+        global $DB;
+
+        $notices = array();
+
+        // Check to see if activity has existing absences.
+        foreach ($approvals as $approval) {
+            // There is only a small window when this is available to avoid deletion of new absences.
+            // If it is an "admin" approval and user can approve it, and the approval is still 0 and it is not skipped.
+            if (strpos($approval->type, 'admin') !== false && 
+                isset($approval->canapprove) &&
+                $approval->status == 0 &&
+                $approval->skip == 0 ) {
+
+                $config = get_config('local_excursions');
+                $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
+                $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
+                $sql = $config->checkabsencesql . ' :username, :leavingdate, :returningdate, :comment';
+                $params = array(
+                    'username' => '*',
+                    'leavingdate' => '1800-01-01',
+                    'returningdate' =>  '9999-01-01',
+                    'comment' => '#ID-' . $activityid,
+                );
+                $absenceevents = $externalDB->get_field_sql($sql, $params);
+                if ($absenceevents) {
+                    $notices[] = array(
+                        'text' => 'Absences exist for previous dates which have since changed in the form. New absences will be added if this activity is approved. Click the icon to delete previous absences created for this activity. Ignore this notice to retain previous absences.', 
+                        'action' => 'action-delete-absences',
+                        'description' => 'Delete previous absences',
+                        'icon' => '<i class="fa fa-trash-o" aria-hidden="true"></i>',
+                    );
+                }
+                // Don't need to do any more checking.
+                break;
+            }
+        }
+
+        return $notices;
+    }
+
+    public static function delete_existing_absences($activityid) {   
+        
+        if (! (is_int($activityid) && $activityid > 0) ) {
+            return false;
+        }
+        
+        // Some basic security - check if user is an approver in this activity.
+        $isapprover = static::is_approver_of_activity($activityid);
+
+        $config = get_config('local_excursions');
+        $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
+        $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
+        $sql = $config->deleteabsencessql . ' :leavingdate, :returningdate, :comment, :studentscsv';
+        $params = array(
+            'leavingdate' => '1800-01-01',
+            'returningdate' =>  '9999-01-01',
+            'comment' => '#ID-' . $activityid,
+            'studentscsv' => '0',
+        );
+        $externalDB->execute($sql, $params);
+        return true;
+
+    }
 
     /*
     * Save a draft of the activity, used by the auto-save service. At present, the only

@@ -19,17 +19,25 @@
     @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
 {{!
-    @template local_excursions/activityform_approvals
+    @template local_excursions/activityform_approvals_notices
 
-    View for the approvals section of the activity form.
+    View for the notices section of the activity form.
 }}
-<div class="approvals">
-    {{>local_excursions/activityform_approvals_status}}
-    {{>local_excursions/activityform_approvals_notices}}
-    {{>local_excursions/activityform_approvals_workflow}}
-    <div class="reply-form">
-        <textarea class="reply-comment form-control" rows="4" spellcheck="true" placeholder="Add a comment"></textarea>
-        <a href="#" id="btn-postcomment" class="btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
-    </div>
-    <div class="comments"></div>
+
+{{#notices.0}}
+<div class="notices">
+    <h5>Notice</h5>
+    <table class="table">
+        <tbody>
+          {{#notices}}
+            <tr class="notice">
+                <td class="cell c-text">{{text}}</td>
+                <td class="cell c-action">
+                  <a class="{{action}}" data-toggle="tooltip" data-placement="right" title="" href="#" data-original-title="{{description}}">{{{icon}}}</a>
+                </td>
+            </tr>
+          {{/notices}}
+        </tbody>
+    </table>
 </div>
+{{/notices.0}}

@@ -259,8 +259,31 @@
   min-height: 1500px;
   border-bottom: 1px solid #ccc;
 }
-#page-local-excursions-activity .approvals .workflow {
-  box-shadow: 0 1px 6px 0px #555;
+#page-local-excursions-activity .approvals .notices h5 {
+  margin: 0;
+  padding: 10px;
+  background: #fff;
+}
+#page-local-excursions-activity .approvals .notices table {
+  margin-bottom: 5px;
+}
+#page-local-excursions-activity .approvals .notices .notice,
+#page-local-excursions-activity .approvals .notices a {
+  color: red;
+}
+#page-local-excursions-activity .approvals .notices i {
+  font-size: 17px;
+}
+#page-local-excursions-activity .approvals .notices .notice.submitting {
+  pointer-events: none;
+  opacity: 0.4;
+}
+#page-local-excursions-activity .approvals .notices .notice.completed {
+  pointer-events: none;
+  color: green;
+}
+#page-local-excursions-activity .approvals .notices .notice.completed a {
+  display: non;
 }
 #page-local-excursions-activity .approvals .workflow h5 {
   margin: 0;

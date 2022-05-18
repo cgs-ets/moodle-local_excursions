@@ -127,12 +127,40 @@
 	    right: -20px;
 	    min-height: 1500px;
 	    border-bottom: 1px solid #ccc;
-	    .workflow {
-    		box-shadow: 0 1px 6px 0px #555;
+      .notices {
 		    h5 {
 		    	margin: 0;
 			    padding: 10px;
-			    //font-size: 16px;
+			    background: #fff;
+		    }
+        table {
+          margin-bottom: 5px;
+        }
+        .notice, a {
+          color: red;
+        }
+        i {
+          font-size: 17px;
+        }
+        .notice {
+          &.submitting {
+				    pointer-events: none;
+				    opacity: 0.4;
+				  }
+          &.completed {
+				    pointer-events: none;
+            color: green;
+            a {
+              display: non;
+            }
+				  }
+        }
+      }
+	    .workflow {
+    		//box-shadow: 0 1px 6px 0px #555;
+		    h5 {
+		    	margin: 0;
+			    padding: 10px;
 			    background: #fff;
 		    }
 		    table {

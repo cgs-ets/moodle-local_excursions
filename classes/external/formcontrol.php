@@ -151,6 +151,13 @@ trait formcontrol {
             return json_encode($usernames);
         }
 
+        if ($action == 'delete_previous_activities') {
+            $activityid = json_decode($data);
+            if (activity::delete_existing_absences($activityid)) {
+                return 'Previous absences successfully deleted';
+            }
+        }
+
         return 1;
 
     }
