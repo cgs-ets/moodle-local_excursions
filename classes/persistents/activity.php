@@ -957,12 +957,12 @@ class activity extends persistent {
         return $notices;
     }
 
-    public static function delete_existing_absences($activityid) {   
-        
+    public static function delete_existing_absences($activityid) {
+
         if (! (is_int($activityid) && $activityid > 0) ) {
             return false;
         }
-        
+
         // Some basic security - check if user is an approver in this activity.
         $isapprover = static::is_approver_of_activity($activityid);
 
