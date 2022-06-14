@@ -1690,6 +1690,7 @@ class activity extends persistent {
         $activityexporter = new activity_exporter($activity);
         $activity = $activityexporter->export($output);
         $activity->fieldschanged = array_values($fieldschanged); // Inject fields changed for emails.
+        $activity->fieldschangedstring = json_encode($fieldschanged); // Inject fields changed for emails.
 
         $recipients = array();
 
