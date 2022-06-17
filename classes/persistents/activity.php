@@ -445,6 +445,14 @@ class activity extends persistent {
         $form = new form_activity('', array('edit' => $originalactivity->get('id')), 'post');
 
         foreach (static::properties_definition() as $key => $definition) {
+            // skip if one of the meta data.
+            if ($key == 'absencesprocessed' || 
+                $key == 'remindersprocessed' || 
+                $key == 'classrollprocessed' || 
+                $key == 'isdraft' || 
+                $key == 'ispastevent') {
+                continue;
+            }
             if ($originalactivity->get($key) != $newactivity->get($key)) {
                 $changed[$key] = array(
                     'field' => $key,
