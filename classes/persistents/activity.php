@@ -454,9 +454,22 @@ class activity extends persistent {
                 continue;
             }
             if ($originalactivity->get($key) != $newactivity->get($key)) {
+                $label = $form->get_element_label($key);
+                if ($key == "permissionstype") {
+                    $label = 'Permission invite type';
+                }
+                if ($key == "permissionslimit") {
+                    $label = 'Permissions limit';
+                }
+                if ($key == "permissionsdueby") {
+                    $label = 'Permission due by date';
+                }
+                if (empty($label)) {
+                    $label = $key;
+                }
                 $changed[$key] = array(
                     'field' => $key,
-                    'label' => $form->get_element_label($key),
+                    'label' => $label,
                     'originalval' => $originalactivity->get($key),
                     'newval' => $newactivity->get($key),
                 );
