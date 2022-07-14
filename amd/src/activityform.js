@@ -125,7 +125,6 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.rootel.on('change', 'input[name="addstudentby"]', function(e) {
             var radio = $(this);
             var studentselector = radio.closest('.student-selector');
-            //var value = $('input[name="addstudentby"]:checked').val();
             studentselector.attr('class', 'student-selector').addClass(radio.val());
         });
 
@@ -140,37 +139,31 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             self.deleteStudents();
         });
 
+
+
+
         // Save draft.
-        self.rootel.on('click', '#btn-savedraft', function(e) {
-            e.preventDefault();
-            window.onbeforeunload = null;
+        self.rootel.on('click', 'input[name="savedraft"]', function(e) {
             self.form.find('[name="action"]').val('savedraft');
-            self.form.submit();
         });
 
         // Cancel.
-        self.rootel.on('click', '#btn-cancel', function(e) {
-            e.preventDefault();
-            window.onbeforeunload = null;
+        self.rootel.on('click', 'input[name="cancel"]', function(e) {
             self.form.find('[name="action"]').val('cancel');
-            self.form.submit();
         });
 
         // Delete.
-        self.rootel.on('click', '#btn-delete', function(e) {
-            e.preventDefault();
-            window.onbeforeunload = null;
+        self.rootel.on('click', 'input[name="delete"]', function(e) {
             self.form.find('[name="action"]').val('delete');
-            self.form.submit();
         });
 
         // Send for review.
-        self.rootel.on('click', '#btn-sendforreview', function(e) {
-            e.preventDefault();
-            window.onbeforeunload = null;
+        self.rootel.on('click', 'input[name="sendforreview"]', function(e) {
             self.form.find('[name="action"]').val('sendforreview');
-            self.form.submit();
         });
+
+
+
 
         // Post comment.
         self.rootel.on('click', '#btn-postcomment', function(e) {

@@ -120,7 +120,7 @@ file_prepare_draft_area($draftatt, $context->id, 'local_excursions',
 $activityexporter = new activity_exporter($activity);
 $activity = $activityexporter->export($OUTPUT);
 $data = new \stdClass();
-$data->general = get_string('activityform:details', 'local_excursions');
+$data->general = '';
 $data->edit = $edit;
 $data->activityname = $activity->activityname;
 $data->campus = $activity->campus;

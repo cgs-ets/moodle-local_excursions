@@ -1,4 +1,13 @@
 /* Helpers */
+.path-local-excursions .collapsible-actions {
+  display: none;
+}
+.path-local-excursions a[data-toggle="collapse"] {
+  display: none;
+}
+.path-local-excursions .mform fieldset .fcontainer.collapseable .col-form-label {
+  padding: 0;
+}
 .path-local-excursions .spinner {
   display: none;
   padding: 0;
@@ -174,15 +183,22 @@
 }
 #page-local-excursions-activity form[data-form="excursions-activity"] .col-md-3 {
   max-width: 170px;
-  margin-right: 0;
-  padding-right: 0;
+  margin: 0;
+  padding: 0;
+  padding-left: 25px;
 }
 #page-local-excursions-activity form[data-form="excursions-activity"] fieldset#id_actions .ftoggler {
   display: none;
 }
-#page-local-excursions-activity form[data-form="excursions-activity"] .custom-footer-buttons {
-  padding: 25px 0 30px;
-  text-align: left;
+#page-local-excursions-activity form[data-form="excursions-activity"] #fgroup_id_buttonar fieldset {
+  position: relative;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] #fgroup_id_buttonar .col-md-3 {
+  display: none !important;
+}
+#page-local-excursions-activity form[data-form="excursions-activity"] #fgroup_id_buttonar .col-md-9 {
+  max-width: 100%;
+  flex: none;
 }
 #page-local-excursions-activity form[data-form="excursions-activity"] #id_general legend {
   display: none;
@@ -249,15 +265,18 @@
   font-size: 85%;
   position: relative;
   width: 25%;
-  top: -21px;
   height: 100%;
-  border-left: 1px solid #ccc;
   background-color: #EEF2F7;
   overflow: hidden;
   float: right;
-  right: -20px;
   min-height: 1500px;
+  top: -21px;
+  right: -20px;
+  border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  top: 0px;
+  right: -15px;
+  border: 1px solid #ccc;
 }
 #page-local-excursions-activity .approvals .notices h5 {
   margin: 0;
@@ -452,10 +471,7 @@
 #page-local-excursions-activity.activity-status-3 form > .status {
   display: block;
   text-align: left;
-  margin-top: -21px;
-  margin-bottom: 21px;
-  margin-left: -20px;
-  margin-right: -20px;
+  margin-bottom: 15px;
 }
 #page-local-excursions-activity.activity-status-3 form > .status i {
   display: inline-block;
@@ -594,6 +610,13 @@
 #page-local-excursions-activity:not(.activity-canedit) .approvals .reply-form,
 #page-local-excursions-activity:not(.activity-canedit) .approvals .comments {
   display: none !important;
+}
+#page-local-excursions-activity input#id_delete {
+  right: 0;
+  position: absolute;
+  color: #fff;
+  background-color: #ca3120;
+  border-color: #ca3120;
 }
 /* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
 #page-local-excursions-activity {
@@ -938,6 +961,7 @@
   position: absolute;
   top: 9px;
   right: 0;
+  height: 21px;
 }
 #page-local-excursions-activity .recipient-selector .spinner .circle {
   display: block;
