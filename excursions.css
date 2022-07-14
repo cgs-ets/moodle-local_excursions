@@ -177,6 +177,7 @@
 }
 #page-local-excursions-activity #region-main {
   position: relative;
+  overflow: visible;
 }
 #page-local-excursions-activity form[data-form="excursions-activity"] {
   position: relative;
@@ -237,7 +238,7 @@
 #page-local-excursions-activity .usefullinks {
   position: absolute;
   top: -19px;
-  right: -11px;
+  right: 0;
   font-size: 13px;
 }
 #page-local-excursions-activity .status {
