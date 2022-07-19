@@ -166,7 +166,6 @@ class index_exporter extends exporter {
             'primaryactivities' => 'local_excursions\persistents\activity[]',
             'senioractivities' => 'local_excursions\persistents\activity[]',
             'isstaff' => 'bool',
-            'isauditor' => 'bool',
         ];
     }
 
@@ -333,7 +332,7 @@ class index_exporter extends exporter {
             'activitycreateurl' => $activitycreateurl->out(false),
             'indexurl' => $indexurl->out(false),
             'isstaff' => $this->related['isstaff'],
-            'isauditor' => $this->related['isauditor'],
+            'isauditor' => has_capability('local/excursions:audit', \context_system::instance(), null, false),
             'isparent' => count($parentactivities),
             'noexcursions' => $noexcursions,
         );

@@ -79,7 +79,6 @@ $relateds = array(
 	'primaryactivities' => $primaryschoolactivities,
 	'senioractivities' => $seniorschoolactivities,
 	'isstaff' => $isstaff,
-    'isauditor' => has_capability('local/excursions:audit', \context_system::instance(), null, false),
 );
 $indexexporter = new index_exporter(null, $relateds);
 $data = $indexexporter->export($OUTPUT);
