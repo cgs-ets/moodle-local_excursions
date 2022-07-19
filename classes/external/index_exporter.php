@@ -136,6 +136,11 @@ class index_exporter extends exporter {
                 'multiple' => false,
                 'optional' => false,
             ],
+            'isauditor' => [
+                'type' => PARAM_BOOL,
+                'multiple' => false,
+                'optional' => false,
+            ],
             'isparent' => [
                 'type' => PARAM_BOOL,
                 'multiple' => false,
