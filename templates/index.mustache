@@ -80,11 +80,6 @@
           Approver
         </a>
       {{/has_approveractivities}}
-      {{#has_auditoractivities}}
-        <a class="activities-tab {{#isselected_auditoractivities}}selected{{/isselected_auditoractivities}}" data-ref="auditor-activities">
-          Auditor
-        </a>
-      {{/has_auditoractivities}}
       {{#has_primaryactivities}}
         <a class="activities-tab {{#isselected_primaryactivities}}selected{{/isselected_primaryactivities}}" data-ref="primary-activities">
           Primary School
@@ -138,20 +133,6 @@
         </table>
     </div>
     {{/approveractivities.0}}
-    
-    {{#auditoractivities.0}}
-    <div class="list-activities auditor-activities {{#isselected_auditoractivities}}selected{{/isselected_auditoractivities}}">
-        <!--<p>A list of all activities for auditors of the system.</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#auditoractivities}}
-                    {{>local_excursions/index_activity}}
-                {{/auditoractivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/auditoractivities.0}}
 
     {{#parentactivities.0}}
     <div class="list-activities parent-activities {{#isselected_parentactivities}}selected{{/isselected_parentactivities}}">
