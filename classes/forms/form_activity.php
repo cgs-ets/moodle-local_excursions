@@ -290,14 +290,14 @@ class form_activity extends \moodleform {
             //$mform->addElement('html', $OUTPUT->render_from_template('local_excursions/activityform_buttons', array(
             //  'activity' => $activity,
             //)));
-
             $buttonarray = array();
             if ($activity->statushelper->cansavedraft) {
                 $buttonarray[] = &$mform->createElement('submit','savedraft', get_string('activityform:savedraft', 'local_excursions'));
+                $buttonarray[] = &$mform->createElement('submit','sendforreview', get_string('activityform:sendforreview', 'local_excursions'));
             } else {
                 $mform->addElement('html', '<div class="alert alert-danger" role="alert">' . get_string('activityform:savemayinvalidate', 'local_excursions') . '</div>');
+                $buttonarray[] = &$mform->createElement('submit','sendforreview', get_string('activityform:savechanges', 'local_excursions'));
             }   
-            $buttonarray[] = &$mform->createElement('submit','sendforreview', get_string('activityform:sendforreview', 'local_excursions'));
             $buttonarray[] = &$mform->createElement('submit','cancel', get_string('cancel', 'moodle'));
             if (($activity->isapprover) || ($activity->iscreator && !$activity->statushelper->isapproved)) {
                 $buttonarray[] = &$mform->createElement('submit', 'delete', get_string('activityform:delete', 'local_excursions'));
