@@ -104,6 +104,8 @@ $string['activityform:delete'] = 'Delete';
 $string['activityform:checkall'] = 'Select all';
 $string['activityform:uncheckall'] = 'Deselect all';
 $string['activityform:cost'] = 'Cost for student';
+$string['activityform:resources'] = 'Resources';
+$string['activityform:resources_content'] = '<a target="_blank" href="https://infiniti.canberragrammar.org.au/Infiniti/Produce/wizard/cd06206f-781e-4e37-8a02-30803481bfc0/">Boarders lunch order form</a>';
 
 $string['enablepermissions'] = 'This activity requires parent permission.';
 $string['enablepermissionshelplink'] = 'Do I need parent permission?';

@@ -282,6 +282,14 @@ class form_activity extends \moodleform {
                 $chargesheethtml = $OUTPUT->render_from_template('local_excursions/activityform_chargesheet', array('activityid' => $edit));
                 $mform->addElement('html', $chargesheethtml);
             }
+            
+            /*----------------------
+             *   Resources
+             *----------------------*/
+            if ($activity->statushelper->isapproved) {
+                $resourceshtml = $OUTPUT->render_from_template('local_excursions/activityform_resources', array());
+                $mform->addElement('html', $resourceshtml);
+            }
 
         // Buttons.
         if ($activity->usercanedit) {
