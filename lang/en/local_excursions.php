@@ -139,4 +139,5 @@ $string['studentnotuptodate'] = '<small>Your student may not be able to attend u
 $string['studentinlistnotuptodate'] = 'Student information is not up to date. Parents should be encouraged to complete the student data form. If permissions are enabled parents will be advised by the system.';
 $string['nosisconsent'] = 'Parents do not consent to excursion participation.';
 
+$string['covidcampsterms'] = '<p class="alert-info p-4"><strong>For Residential Excursions or Camps (upon submission of this form)</strong><br>I agree that I will undertake to RAT test my child the night before they attend Camp and upload the results via CGS Connect “Report Absence” portal if they prove to be COVID positive.  I consent to the School/Camp Providers administering a RAT test to my child if they develop signs/symptoms whilst on camp and agree to collect my child from Camp should they test positive.</p>';
 

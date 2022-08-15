@@ -25,7 +25,7 @@
 }}
 {{#userpermissions.0}}
     <h5>Activity details</h5>
-    <div class="activity-details">
+    <div class="activity-details alert-dark p-4">
         <div><strong>Activity name: </strong> {{activityname}}</div>
         <div><strong>Location: </strong> {{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}</div>
         <div><strong>Start: </strong> {{startreadabletime}}</div>
@@ -59,8 +59,11 @@
         </div>
     {{/permissionshelper.ispastlimit}}
 
+
+    {{#str}}covidcampsterms, local_excursions{{/str}}
+
     <h5>Permissions</h5>
-    <div class="permissions 
+    <div class="permissions p-4 
         {{#permissionshelper.ispastdueby}}past-due-date{{/permissionshelper.ispastdueby}}
         {{#permissionshelper.activitystarted}}past-due-date{{/permissionshelper.activitystarted}} 
         {{#permissionshelper.ispastlimit}}past-limit{{/permissionshelper.ispastlimit}}">
