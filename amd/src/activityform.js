@@ -73,6 +73,9 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
         // Initialise staff in charge.
         self.staffincharge = RecipientSelector.init('staffincharge', 'staff', 0);
+        
+        // Initialise planning staff.
+        self.planningstaff = RecipientSelector.init('planningstaff', 'staff', 1);
 
         // Initialise accompanying staff.
         self.accompanyingstaff = RecipientSelector.init('accompanyingstaff', 'staff', 1);

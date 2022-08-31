@@ -76,6 +76,7 @@ $string['activityform:timeend'] = 'End time';
 $string['helpguide'] = '<a target="_blank" href="https://kb.cgs.act.edu.au/guides/excursion-planning/">KB Guide</a>';
 
 $string['activityform:staffincharge'] = 'Staff member in charge';
+$string['activityform:planningstaff'] = 'Additional planning staff';
 $string['activityform:accompanyingstaff'] = 'Accompanying staff';
 $string['activityform:otherparticipants'] = 'Non-school participants';
 $string['activityform:staff'] = 'Staff';

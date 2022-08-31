@@ -62,7 +62,7 @@ $PAGE->requires->js_call_amd('local_excursions/index', 'init');
 
 $output = $OUTPUT->header();
 
-$useractivities = activity::get_for_user($USER->username);
+$useractivities = activity::get_for_plannner($USER->username);
 $approveractivities = activity::get_for_approver($USER->username, $sortby);
 $accompanyingactivities = activity::get_for_accompanying($USER->username);
 $parentactivities = activity::get_for_parent($USER->username);

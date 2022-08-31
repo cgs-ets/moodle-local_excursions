@@ -84,5 +84,35 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
     }
 
+    if ($oldversion < 2022083100) {
+        // Add planningstaffjson field.
+        $table = new xmldb_table('excursions');
+        $field = new xmldb_field('planningstaffjson', XMLDB_TYPE_TEXT, null, null, null, null, null, 'staffinchargejson');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
+
+    if ($oldversion < 2022083101) {
+        // Define table excursions_planning_staff to be created.
+        $table = new xmldb_table('excursions_planning_staff');
+
+        // Adding fields to table excursions_planning_staff.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('activityid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('username', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table excursions_planning_staff.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('fk_activityid', XMLDB_KEY_FOREIGN, ['activityid'], 'excursions', ['id']);
+
+        // Conditionally launch create table for excursions_planning_staff.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+    }
+
+
     return true;
 }

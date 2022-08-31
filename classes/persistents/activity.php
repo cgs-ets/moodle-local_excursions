@@ -48,6 +48,8 @@ class activity extends persistent {
     const TABLE_EXCURSIONS_PERMISSIONS_SEND = 'excursions_permissions_send';
     const TABLE_EXCURSIONS_PERMISSIONS = 'excursions_permissions';
     const TABLE_EXCURSIONS_STAFF = 'excursions_staff';
+    const TABLE_EXCURSIONS_PLANNING_STAFF = 'excursions_planning_staff';
+    
 
 
     /**
@@ -137,6 +139,10 @@ class activity extends persistent {
                 'default' => '',
             ],
             "staffinchargejson" => [
+                'type' => PARAM_RAW,
+                'default' => '',
+            ],
+            "planningstaffjson" => [
                 'type' => PARAM_RAW,
                 'default' => '',
             ],
@@ -250,6 +256,18 @@ class activity extends persistent {
         $DB->insert_record(static::TABLE_EXCURSIONS_LOGS, $log);
 
         if ($data->activitytype == 'excursion') {
+            // Overwrite the planning staff list.
+            $DB->delete_records(static::TABLE_EXCURSIONS_PLANNING_STAFF, array('activityid' => $data->id));
+            $planningstaff = json_decode($data->planningstaffjson);
+            if ($planningstaff) {
+                foreach ($planningstaff as $as) {
+                    $staff = new \stdClass();
+                    $staff->activityid = $data->id;
+                    $staff->username = $as->idfield;
+                    $DB->insert_record(static::TABLE_EXCURSIONS_PLANNING_STAFF, $staff);
+                }
+            }
+
             // Overwrite the accompanying staff list.
             $DB->delete_records(static::TABLE_EXCURSIONS_STAFF, array('activityid' => $data->id));
             $accompanyingstaff = json_decode($data->accompanyingstaffjson);
@@ -509,6 +527,32 @@ class activity extends persistent {
 
         return $activities;
     }
+
+    public static function get_for_plannner($username) {
+        global $DB;
+
+        $activities = array();
+
+        $sql = "SELECT id
+                FROM {" . static::TABLE . "}
+                WHERE deleted = 0
+                AND username = ?";
+        $useractivities = $DB->get_records_sql($sql, array($username));
+        $useractivityids = array_column($useractivities, 'id');
+
+        $sql = "SELECT id, activityid
+                    FROM {" . static::TABLE_EXCURSIONS_PLANNING_STAFF. "} 
+                    WHERE username = ?";
+        $planningstaff = $DB->get_records_sql($sql, array($username));
+        $planningids = array_column($planningstaff, 'activityid');
+        
+        $activities = static::get_by_ids(array_merge($planningids, $useractivityids));
+
+        return $activities;
+    }
+
+
+
 
     public static function get_for_auditor($username) {
         global $DB;
@@ -1646,6 +1690,19 @@ class activity extends persistent {
             }
         }
 
+        // Send to planning staff.
+        $planningstaff = static::get_planning_staff($activityid);
+        foreach ($planningstaff as $staff) {
+            if ( ! in_array($staff->username, $recipients)) {
+                $usercontext = \core_user::get_user_by_username($staff->username);
+                $relateds = array('usercontext' => $usercontext);
+                $activityexporter = new activity_exporter($activity, $relateds);
+                $exported = $activityexporter->export($output);
+                static::send_approved_email($exported, $staff->username);
+                $recipients[] = $staff->username;
+            }
+        }
+
         // Send to accompanying staff.
         $accompanyingstaff = static::get_accompanying_staff($activityid);
         foreach ($accompanyingstaff as $staff) {
@@ -1735,6 +1792,15 @@ class activity extends persistent {
                         $recipients[] = $approver['username'];
                     }
                 }
+            }
+        }
+
+        // Send to accompanying staff.
+        $planningstaff = static::get_planning_staff($activityid);
+        foreach ($planningstaff as $staff) {
+            if ( ! in_array($staff->username, $recipients)) {
+                static::send_datachanged_email($activity, $staff->username);
+                $recipients[] = $staff->username;
             }
         }
 
@@ -1965,6 +2031,23 @@ class activity extends persistent {
 
     }
 
+    public static function get_planning_staff($activityid) {
+        global $DB;
+        
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_PLANNING_STAFF . "}
+                 WHERE activityid = ?";
+        $params = array($activityid);
+        $records = $DB->get_records_sql($sql, $params);
+
+        $staff = array();
+        foreach ($records as $record) {
+            $staff[] = (object) $record;
+        }
+
+        return $staff;
+    }
+
     public static function get_accompanying_staff($activityid) {
         global $DB;
         
@@ -1985,7 +2068,6 @@ class activity extends persistent {
     public static function soft_delete($id) {
         global $DB, $USER;
 
-        // Get the block instance id of the post.
         $activity = new static($id);
         if (empty($activity)) {
             return;
@@ -2003,6 +2085,7 @@ class activity extends persistent {
             $activity->set('absencesprocessed', 0);
             $activity->set('classrollprocessed', 0);
             $activity->update();
+            return 1;
         }
     }
 

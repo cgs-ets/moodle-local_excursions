@@ -178,6 +178,19 @@ class form_activity extends \moodleform {
             $mform->addElement('text', 'staffinchargejson', 'Staff in Charge');
             $mform->setType('staffinchargejson', PARAM_RAW);
 
+            /*----------------------------
+             *   Additional planning staff
+             *---------------------------*/
+            $staffselectorhtml = $OUTPUT->render_from_template('local_excursions/staff_selector', array(
+                'id' => 'planningstaff', 
+                'maxusers' => 0,
+                'question' => get_string("activityform:planningstaff", "local_excursions"),
+            )); 
+            $mform->addElement('html', $staffselectorhtml);
+            $mform->addElement('text', 'planningstaffjson', 'Planning Staff');
+            $mform->setType('planningstaffjson', PARAM_RAW);
+
+
             /*----------------------
              *   Accompanying staff
              *----------------------*/
@@ -255,7 +268,7 @@ class form_activity extends \moodleform {
             /*----------------------
              *   RA
              *----------------------*/
-            if ($activity->isstaffincharge || $activity->iscreator || $activity->isapprover) {
+            if ($activity->usercanedit) { //$activity->isstaffincharge || $activity->iscreator || $activity->isapprover || $activity->isplanner) {
                 $mform->addElement('filemanager', 'riskassessment', get_string("activityform:riskassessment", "local_excursions"), null, self::ra_options());
             } else {
                 // list the files.
@@ -266,7 +279,7 @@ class form_activity extends \moodleform {
             /*----------------------
              *   Additional attachments
              *----------------------*/
-            if ($activity->isstaffincharge || $activity->iscreator || $activity->isapprover) {
+            if ($activity->usercanedit) { //activity->isstaffincharge || $activity->iscreator || $activity->isapprover) {
                 $mform->addElement('filemanager', 'attachments', get_string('activityform:attachments', 'local_excursions'), null,
                     self::attachment_options());
             } else {

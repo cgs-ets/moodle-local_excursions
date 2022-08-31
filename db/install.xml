@@ -30,6 +30,7 @@
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="staffincharge" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="staffinchargejson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="planningstaffjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="accompanyingstaffjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="otherparticipants" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="absencesprocessed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -55,6 +56,18 @@
     </TABLE>
 
     <TABLE NAME="excursions_staff" COMMENT="Accompanying staff for an activity">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_activityid" TYPE="foreign" FIELDS="activityid" REFTABLE="excursions" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="excursions_planning_staff" COMMENT="Planning staff for an activity">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

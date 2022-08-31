@@ -508,6 +508,9 @@
 #page-local-excursions-activity #staffincharge.has-tags .recipient-input-wrap {
   display: none;
 }
+#page-local-excursions-activity #fitem_id_planningstaffjson {
+  display: none;
+}
 #page-local-excursions-activity #fitem_id_accompanyingstaffjson {
   display: none;
 }

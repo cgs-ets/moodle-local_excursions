@@ -147,6 +147,7 @@ $data->hiddenlimit = $activity->permissionslimit;
 $data->hiddendueby = $activity->permissionsdueby;
 $data->riskassessment = $draftra;
 $data->attachments = $draftatt;
+$data->planningstaffjson = $activity->planningstaffjson;
 $data->accompanyingstaffjson = $activity->accompanyingstaffjson;
 $data->otherparticipants = $activity->otherparticipants;
 
@@ -208,6 +209,7 @@ if (!empty($formdata)) {
     $data->studentlistjson = $formdata->studentlistjson;
     $data->transport = $formdata->transport;
     $data->cost = $formdata->cost;
+    $data->planningstaffjson = $formdata->planningstaffjson;
     $data->accompanyingstaffjson = $formdata->accompanyingstaffjson;
     $data->otherparticipants = $formdata->otherparticipants;
     $data->permissionstype = $formdata->hiddeninvitetype;

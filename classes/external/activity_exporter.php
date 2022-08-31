@@ -80,6 +80,9 @@ class activity_exporter extends persistent_exporter {
             'isapprover' => [
                 'type' => PARAM_BOOL,
             ],
+            'isplanner' => [
+                'type' => PARAM_BOOL,
+            ],
             'isaccompanying' => [
                 'type' => PARAM_BOOL,
             ],
@@ -229,6 +232,17 @@ class activity_exporter extends persistent_exporter {
 
         $iscreator = ($this->data->username == $usercontext->username);
 
+        $isplanner = false;
+        $planning = json_decode($this->data->planningstaffjson);
+        if ($planning) {
+            foreach ($planning as $user) {
+                if ($USER->username == $user->idfield) {
+                    $isplanner = true;
+                    break;
+                }
+            }
+        }
+
         $isaccompanying = false;
         $accompanying = json_decode($this->data->accompanyingstaffjson);
         if ($accompanying) {
@@ -318,12 +332,12 @@ class activity_exporter extends persistent_exporter {
         }
 
         $usercanedit = false;
-        if ($iscreator || $isstaffincharge || $isapprover || $isaccompanying) {
+        if ($iscreator || $isstaffincharge || $isapprover || $isplanner) {
             $usercanedit = true;
         }
 
         $usercansendmail = false;
-        if ($iscreator || $isstaffincharge) {
+        if ($iscreator || $isstaffincharge || $isplanner) {
             $usercansendmail = true;
         }
 
@@ -378,6 +392,7 @@ class activity_exporter extends persistent_exporter {
             'statushelper' => $statushelper,
             'iscreator' => $iscreator,
             'isapprover' => $isapprover,
+            'isplanner' => $isplanner,
             'isaccompanying' => $isaccompanying,
             'isstaffincharge' => $isstaffincharge,
             'iswaitingforyou' => $iswaitingforyou,
