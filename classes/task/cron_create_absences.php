@@ -115,8 +115,10 @@ class cron_create_absences extends \core\task\scheduled_task {
                     'studentscsv' => implode(',', $attending),
                 );
                 $externalDB->execute($sql, $params);
+                $this->log("Deletion complete", 2);
 
                 // Mark as processed.
+                $this->log("Setting absencesprocess to 1", 2);
                 $activity->set('absencesprocessed', 1);
                 $activity->save();
                 $this->log("Finished creating absences for activity " . $activity->get('id'));
