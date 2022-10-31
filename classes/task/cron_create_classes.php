@@ -78,7 +78,7 @@ class cron_create_classes extends \core\task\scheduled_task {
                 $activityend = date('Y-m-d H:i', $activity->get('timeend'));
 
                 // 1. Create the class.
-                $this->log("Creating the class " . 'EX_' . $activity->get('id') . ", with staff in charge " .  $activity->get('staffincharge') . ", start time " .  $activitystart );
+                $this->log("Creating the class " . 'EX_' . $activity->get('id') . ", with staff in charge " .  $activity->get('staffincharge') . ", start time " .  $activitystart, 2 );
                 $sql = $config->createclasssql . ' :fileyear, :filesemester, :classcampus, :classcode, :description, :staffid, :leavingdate, :returningdate';
                 
                 // Keep within schedule limits.
@@ -102,11 +102,12 @@ class cron_create_classes extends \core\task\scheduled_task {
                 );
                 $seqnums = $externalDB->get_records_sql($sql, $params); // Returns staffscheduleseq, subjectclassesseq.
                 $seqnums =  array_pop($seqnums);
+                $this->log("The sequence nums (staffscheduleseq, subjectclassesseq): " . json_encode($seqnums), 2);
 
                 // 2. Insert the extra staff.
                 $extrastaff = $DB->get_records('excursions_staff', array('activityid' => $activity->get('id')));
                 foreach ($extrastaff as $e) {
-                    $this->log("Inserting extra class teacher: " . $e->username);
+                    $this->log("Inserting extra class teacher: " . $e->username, 2);
                     $sql = $config->insertclassstaffsql . ' :fileyear, :filesemester, :classcampus, :classcode, :staffid';
                     $params = array(
                         'fileyear' => $currentterminfo->fileyear,
