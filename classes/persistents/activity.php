@@ -1656,7 +1656,7 @@ class activity extends persistent {
             'comment' => $comment,
         );
 
-        $subject = "Re: " . $activity->activityname;
+        $subject = "Comment re: " . $activity->activityname;
         $output = $PAGE->get_renderer('core');
         $messageText = $output->render_from_template('local_excursions/email_comment_text', $data);
         $messageHtml = $output->render_from_template('local_excursions/email_comment_html', $data);
