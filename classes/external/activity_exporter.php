@@ -140,6 +140,9 @@ class activity_exporter extends persistent_exporter {
             'isexcursion' => [
                 'type' => PARAM_BOOL,
             ],
+            'stepname' => [
+                'type' => PARAM_RAW,
+            ],
         ];
     }
 
@@ -229,11 +232,6 @@ class activity_exporter extends persistent_exporter {
         }
 
         $statushelper = locallib::status_helper($this->data->status);
-        
-        $stepname = '';
-        if ($statushelper->inreview) {
-            $stepname = 'test';
-        }
 
         $iscreator = ($this->data->username == $usercontext->username);
 
@@ -298,15 +296,17 @@ class activity_exporter extends persistent_exporter {
         }
 
         // More data.
+        $stepname = '';
         $usercansendmail = false;
         $permissionshelper = null;
         $messagehistory = [];
         $formattedra = [];
         $formattedattachments = [];
         $numstudents = 0;
-        
-        // Minimal information for index page. Get everything for activity form page.
-        if (!$this->related['minimal']) {
+
+
+        // Minimal information for index page, if in review need to get some approval info for index page too. 
+        if (!$this->related['minimal'] || $statushelper->inreview) {
             // Get approvals.
             $iswaitingforyou = false;
             $approvals = activity::get_approvals($this->data->id);
@@ -346,7 +346,19 @@ class activity_exporter extends persistent_exporter {
                     }
                 }
             }
-                
+
+            // Determine current step name. Find the first unapproved step.
+            foreach ($approvals as $approval) {
+                if ($approval->status == 0) {
+                    $stepname = $approval->description;
+                    break;
+                }
+            }
+        }
+        
+        // Minimal information for index page. Get everything for activity form page.
+        if (!$this->related['minimal']) {
+  
             // Get notices.
             $notices = activity::get_notices($this->data->id, $approvals);
 
