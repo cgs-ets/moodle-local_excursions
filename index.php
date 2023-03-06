@@ -80,6 +80,7 @@ $relateds = array(
 	'senioractivities' => $seniorschoolactivities,
 	'isstaff' => $isstaff,
 );
+
 $indexexporter = new index_exporter(null, $relateds);
 $data = $indexexporter->export($OUTPUT);
 

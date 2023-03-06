@@ -249,6 +249,7 @@ class locallib extends local_excursions_config {
         if (!$user) {
             return;
         }
+        profile_load_custom_fields($user);
 
         $userphoto = new \user_picture($user);
         $userphoto->size = 2; // Size f2.
@@ -258,6 +259,7 @@ class locallib extends local_excursions_config {
         $info->fullname = fullname($user);
         $info->fullnamereverse = $user->lastname . ', ' . $user->firstname;
         $info->profilephoto = $userphoto->get_url($PAGE)->out(false);
+        $info->year = isset($user->profile['Year']) ? $user->profile['Year'] : '';
 
         return $info;
     }
