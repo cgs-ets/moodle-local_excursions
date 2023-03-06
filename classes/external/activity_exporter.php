@@ -259,49 +259,6 @@ class activity_exporter extends persistent_exporter {
             $userapprovertypes = locallib::get_approver_types($usercontext->username);
         }
 
-        // Get approvals.
-        $iswaitingforyou = false;
-        $approvals = activity::get_approvals($this->data->id);
-        $i = 0;
-        foreach ($approvals as $approval) {
-            // If approved, get the approvers display info.
-            if ($approval->username) {
-                $user = \core_user::get_user_by_username($approval->username);
-                if ($user) {
-                    $userphoto = new \user_picture($user);
-                    $userphoto->size = 2; // Size f2.
-                    $approval->userphoto = $userphoto->get_url($PAGE)->out(false); 
-                } else {
-                    $approval->userphoto = new \moodle_url('/user/pix.php/0/f2.jpg');
-                }
-            }
-            // Check if last approval.
-            if(++$i === count($approvals)) {
-                $approval->last = true;
-            }
-            // Check if ready to approve.
-            if ($isapprover) {
-                // Check if skippable.
-                if (isset(locallib::WORKFLOW[$approval->type]['canskip'])) {
-                    $approval->canskip = true;
-                }
-                if (in_array($approval->type, $userapprovertypes)) {
-                    // No unactioned prerequisites found, user can approver this.
-                    $prerequisites = activity::get_prerequisites($this->data->id, $approval->type);
-                    if (empty($prerequisites)) {
-                        $approval->canapprove = true;
-                        if ($approval->status == 0) {
-                            $iswaitingforyou = true;
-                        }
-                    }
-                    
-                }
-            }
-        }
-
-        // Get notices.
-        $notices = activity::get_notices($this->data->id, $approvals);
-
         $userpermissions = array_values(activity::get_parent_permissions($this->data->id, $usercontext->username));
         foreach ($userpermissions as &$permission) {
             $student = \core_user::get_user_by_username($permission->studentusername);
@@ -311,7 +268,6 @@ class activity_exporter extends persistent_exporter {
             $permission->userphoto = $userphoto->get_url($PAGE)->out(false);
             $permission->isyes = ($permission->response == 1);
             $permission->isno = ($permission->response == 2);
-            $permission->uptodate = locallib::get_studentdatacheck($permission->studentusername);
         }
 
         $staffinchargeinfo = new \stdClass();
@@ -336,14 +292,8 @@ class activity_exporter extends persistent_exporter {
             $usercanedit = true;
         }
 
-        $usercansendmail = false;
-        if ($iscreator || $isstaffincharge || $isplanner) {
-            $usercansendmail = true;
-        }
-
-        $htmlnotes = nl2br($this->data->notes);
-
         // More data.
+        $usercansendmail = false;
         $permissionshelper = null;
         $messagehistory = [];
         $formattedra = [];
@@ -352,6 +302,59 @@ class activity_exporter extends persistent_exporter {
         
         // Minimal information for index page. Get everything for activity form page.
         if (!$this->related['minimal']) {
+            // Get approvals.
+            $iswaitingforyou = false;
+            $approvals = activity::get_approvals($this->data->id);
+            $i = 0;
+            foreach ($approvals as $approval) {
+                // If approved, get the approvers display info.
+                if ($approval->username) {
+                    $user = \core_user::get_user_by_username($approval->username);
+                    if ($user) {
+                        $userphoto = new \user_picture($user);
+                        $userphoto->size = 2; // Size f2.
+                        $approval->userphoto = $userphoto->get_url($PAGE)->out(false); 
+                    } else {
+                        $approval->userphoto = new \moodle_url('/user/pix.php/0/f2.jpg');
+                    }
+                }
+                // Check if last approval.
+                if(++$i === count($approvals)) {
+                    $approval->last = true;
+                }
+                // Check if ready to approve.
+                if ($isapprover) {
+                    // Check if skippable.
+                    if (isset(locallib::WORKFLOW[$approval->type]['canskip'])) {
+                        $approval->canskip = true;
+                    }
+                    if (in_array($approval->type, $userapprovertypes)) {
+                        // No unactioned prerequisites found, user can approver this.
+                        $prerequisites = activity::get_prerequisites($this->data->id, $approval->type);
+                        if (empty($prerequisites)) {
+                            $approval->canapprove = true;
+                            if ($approval->status == 0) {
+                                $iswaitingforyou = true;
+                            }
+                        }
+                        
+                    }
+                }
+            }
+                
+            // Get notices.
+            $notices = activity::get_notices($this->data->id, $approvals);
+
+            foreach ($userpermissions as &$permission) {
+                $permission->uptodate = locallib::get_studentdatacheck($permission->studentusername);
+            }
+
+            if ($iscreator || $isstaffincharge || $isplanner) {
+                $usercansendmail = true;
+            }
+
+            $htmlnotes = nl2br($this->data->notes);
+
             $permissionshelper = locallib::permissions_helper($this->data->id);
 
             $messagehistory = array_values(activity::get_messagehistory($this->data->id));
