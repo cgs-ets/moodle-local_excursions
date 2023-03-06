@@ -515,7 +515,7 @@ class activity extends persistent {
                     end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
-                   AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                   AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                    AND username = ?
               ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
         $params = array($username);
@@ -537,7 +537,7 @@ class activity extends persistent {
         $sql = "SELECT id
                 FROM {" . static::TABLE . "}
                 WHERE deleted = 0
-                AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                 AND username = ?";
         $useractivities = $DB->get_records_sql($sql, array($username));
         $useractivityids = array_column($useractivities, 'id');
@@ -576,7 +576,7 @@ class activity extends persistent {
                     end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
-                   AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                   AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                    AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                    AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
               ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
@@ -662,7 +662,7 @@ class activity extends persistent {
                         end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
-                       AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                       AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                        AND status = 3
                        AND campus = 'primary'
                   ORDER BY ispastevent ASC, timestart DESC";
@@ -676,7 +676,7 @@ class activity extends persistent {
                             end as ispastevent
                         FROM {" . static::TABLE . "}
                         WHERE deleted = 0
-                            AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                            AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                             AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                             AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
                             AND campus = 'primary'
@@ -723,7 +723,7 @@ class activity extends persistent {
                         end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
-                       AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                       AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                        AND status = 3
                        AND campus = 'senior'
                   ORDER BY ispastevent ASC, timestart DESC";
@@ -736,7 +736,7 @@ class activity extends persistent {
                             end as ispastevent
                         FROM {" . static::TABLE . "}
                         WHERE deleted = 0
-                            AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                            AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                             AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                             AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
                             AND campus = 'senior'
@@ -772,7 +772,7 @@ class activity extends persistent {
                       FROM {" . static::TABLE . "}
                      WHERE id $insql
                        AND deleted = 0
-                       AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                       AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                        ";
 
             if ($status) {
@@ -837,7 +837,7 @@ class activity extends persistent {
         $sql = "SELECT id
                   FROM {" . static::TABLE. "} 
                  WHERE staffincharge = ?
-                 AND ( timemodified > " . strtotime("-3 months") . " || timeend >=  " . time() . " )
+                 AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                  ";
         $staff = $DB->get_records_sql($sql, array($username));
         $staffinchargeids = array_column($staff, 'id');
