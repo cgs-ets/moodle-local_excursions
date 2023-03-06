@@ -515,7 +515,6 @@ class activity extends persistent {
                     end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
-                   AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                    AND username = ?
               ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
         $params = array($username);
@@ -772,7 +771,6 @@ class activity extends persistent {
                       FROM {" . static::TABLE . "}
                      WHERE id $insql
                        AND deleted = 0
-                       AND ( timemodified > " . strtotime("-3 months") . " OR timeend >=  " . time() . " )
                        ";
 
             if ($status) {
