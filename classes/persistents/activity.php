@@ -503,7 +503,9 @@ class activity extends persistent {
 
     public static function get_for_user($username) {
         global $DB;
-        
+
+        $limitto6mo = strtotime("-6 months");
+
         $sql = "SELECT * 
                     ,case
                         when status = 0 OR status = 1 then 1
@@ -515,6 +517,7 @@ class activity extends persistent {
                     end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
+                   AND timemodified > {$limitto6mo}
                    AND username = ?
               ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
         $params = array($username);
@@ -532,10 +535,12 @@ class activity extends persistent {
         global $DB;
 
         $activities = array();
+        $limitto6mo = strtotime("-6 months");
 
         $sql = "SELECT id
                 FROM {" . static::TABLE . "}
                 WHERE deleted = 0
+                AND timemodified > {$limitto6mo}
                 AND username = ?";
         $useractivities = $DB->get_records_sql($sql, array($username));
         $useractivityids = array_column($useractivities, 'id');
@@ -557,6 +562,8 @@ class activity extends persistent {
     public static function get_for_auditor($username) {
         global $DB;
 
+        $limitto6mo = strtotime("-6 months");
+
         $user = \core_user::get_user_by_username($username);
         
         if ( ! has_capability('local/excursions:audit', \context_system::instance(), null, false)) {
@@ -574,6 +581,7 @@ class activity extends persistent {
                     end as ispastevent
                   FROM {" . static::TABLE . "}
                  WHERE deleted = 0
+                   AND timemodified > {$limitto6mo}
                    AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                    AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
               ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
@@ -630,6 +638,7 @@ class activity extends persistent {
         global $DB;
 
         $activities = array();
+        $limitto6mo = strtotime("-6 months");
 
         // Check if the user is a primary school staff member.
         $user = core_user::get_user_by_username($username);
@@ -659,6 +668,7 @@ class activity extends persistent {
                         end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
+                       AND timemodified > {$limitto6mo}
                        AND status = 3
                        AND campus = 'primary'
                   ORDER BY ispastevent ASC, timestart DESC";
@@ -672,6 +682,7 @@ class activity extends persistent {
                             end as ispastevent
                         FROM {" . static::TABLE . "}
                         WHERE deleted = 0
+                            AND timemodified > {$limitto6mo}
                             AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                             AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
                             AND campus = 'primary'
@@ -692,6 +703,7 @@ class activity extends persistent {
         global $DB;
 
         $activities = array();
+        $limitto6mo = strtotime("-6 months");
 
         // Check if the user is a primary school staff member.
         $user = core_user::get_user_by_username($username);
@@ -718,6 +730,7 @@ class activity extends persistent {
                         end as ispastevent
                       FROM {" . static::TABLE . "}
                      WHERE deleted = 0
+                       AND timemodified > {$limitto6mo}
                        AND status = 3
                        AND campus = 'senior'
                   ORDER BY ispastevent ASC, timestart DESC";
@@ -730,6 +743,7 @@ class activity extends persistent {
                             end as ispastevent
                         FROM {" . static::TABLE . "}
                         WHERE deleted = 0
+                            AND timemodified > {$limitto6mo}
                             AND status != " . locallib::ACTIVITY_STATUS_AUTOSAVE . "
                             AND status != " . locallib::ACTIVITY_STATUS_DRAFT . "
                             AND campus = 'senior'
@@ -789,6 +803,7 @@ class activity extends persistent {
         global $DB;
 
         $activities = array();
+        $limitto6mo = strtotime("-6 months");
 
         $approvertypes = locallib::get_approver_types($username);
         if ($approvertypes) {
@@ -797,6 +812,7 @@ class activity extends persistent {
             $sql = "SELECT id, activityid, type
                       FROM {" . static::TABLE_EXCURSIONS_APPROVALS. "} 
                      WHERE type $insql
+                       AND timemodified > {$limitto6mo}
                        AND invalidated = 0
                        AND skip = 0";
             $approvals = $DB->get_records_sql($sql, $inparams);
@@ -818,6 +834,7 @@ class activity extends persistent {
         global $DB;
 
         $activities = array();
+        $limitto6mo = strtotime("-6 months");
 
         $sql = "SELECT id, activityid
                   FROM {" . static::TABLE_EXCURSIONS_STAFF. "} 
@@ -827,7 +844,8 @@ class activity extends persistent {
 
         $sql = "SELECT id
                   FROM {" . static::TABLE. "} 
-                 WHERE staffincharge = ?";
+                 WHERE staffincharge = ?
+                 AND timemodified > {$limitto6mo}";
         $staff = $DB->get_records_sql($sql, array($username));
         $staffinchargeids = array_column($staff, 'id');
 
