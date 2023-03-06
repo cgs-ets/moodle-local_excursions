@@ -1500,17 +1500,17 @@ class activity extends persistent {
             foreach($approvers as $approver) {
                 if ($approver['contacts']) {
                     foreach ($approver['contacts'] as $email) {
-                        static::send_next_approval_email($activity, $approver['username'], $email);
+                        static::send_next_approval_email($activity, locallib::WORKFLOW[$nextapproval->type]['name'], $approver['username'], $email);
                     }
                 } else {
-                     static::send_next_approval_email($activity, $approver['username']);
+                     static::send_next_approval_email($activity, locallib::WORKFLOW[$nextapproval->type]['name'], $approver['username']);
                 }
             }
         }
     }
 
 
-    protected static function send_next_approval_email($activity, $recipient, $email = null) {
+    protected static function send_next_approval_email($activity, $step = '', $recipient, $email = null) {
         global $USER, $PAGE;
 
         $toUser = \core_user::get_user_by_username($recipient);
@@ -1525,7 +1525,7 @@ class activity extends persistent {
         $output = $PAGE->get_renderer('core');
         $activity = $activityexporter->export($output);
 
-        $subject = "Activity approval required: " . $activity->activityname;
+        $subject = "Activity approval required [" . $step . "]: " . $activity->activityname;
         $messageText = $output->render_from_template('local_excursions/email_approval_text', $activity);
         $messageHtml = $output->render_from_template('local_excursions/email_approval_html', $activity);
 

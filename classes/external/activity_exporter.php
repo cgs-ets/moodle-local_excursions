@@ -229,6 +229,11 @@ class activity_exporter extends persistent_exporter {
         }
 
         $statushelper = locallib::status_helper($this->data->status);
+        
+        $stepname = '';
+        if ($statushelper->inreview) {
+            $stepname = 'test';
+        }
 
         $iscreator = ($this->data->username == $usercontext->username);
 
@@ -415,6 +420,7 @@ class activity_exporter extends persistent_exporter {
             'numstudents' => $numstudents,
             'htmlnotes' => $htmlnotes,
             'isexcursion' => $isexcursion,
+            'stepname' => $stepname,
 	    ];
     }
 
