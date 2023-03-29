@@ -350,9 +350,9 @@ class activity_exporter extends persistent_exporter {
                         }
                     }
                     if (isset(locallib::WORKFLOW[$approval->type]['selectable'])) {
-                        $approval->selectable = true;
                         // Can this user select someone in this step?
                         if (empty($prerequisites)) {
+                            $approval->selectable = true;
                             $approval->approvers = [];
                             $approvers = locallib::WORKFLOW[$approval->type]['approvers'];
                             foreach ($approvers as $un => $approver) {
