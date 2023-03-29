@@ -321,6 +321,9 @@
   pointer-events: none;
   opacity: 0.4;
 }
+#page-local-excursions-activity .approvals .workflow tr.nominated .nominate-approver-btn {
+  display: none;
+}
 #page-local-excursions-activity .approvals .workflow tr[data-status="0"] {
   color: #856404;
   background-color: #fff3cd;

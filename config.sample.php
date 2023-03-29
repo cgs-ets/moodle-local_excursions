@@ -22,6 +22,11 @@ class local_excursions_config {
 		            'contacts' => array(
 		            	'admin.email@gmail.com',
 		            ),
+                    'notifications' => array(
+						'newcomment',
+						'activityapproved',
+						'activitychanged',
+					),
 		        ),
 		    ),
 		    'prerequisites' => null,
@@ -39,17 +44,19 @@ class local_excursions_config {
 		        array(
 		            'username' => 'admin', 
 		            'contacts' => null,
-					'notifications' => array(
-						'newcomment',
-						'activityapproved',
-						'activitychanged',
-					),
+					'notifications' => array('none'),
+		        ),
+		        array(
+		            'username' => '111111', 
+		            'contacts' => null,
+					'notifications' => array('none'),
 		        ),
 		    ),
 		    'prerequisites' => array(
 		    	'senior_admin',
 		    ),
 			'canskip' => true,
+			'selectable' => true, // The previous approver can select one of these approvers to notify.
 	    ),
 		// PRIMARY ADMIN
 	    'primary_admin' => array(

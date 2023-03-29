@@ -142,9 +142,6 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             self.deleteStudents();
         });
 
-
-
-
         // Save draft.
         self.rootel.on('click', 'input[name="savedraft"]', function(e) {
             self.form.find('[name="action"]').val('savedraft');
@@ -190,9 +187,9 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
         // Skip approval
         self.rootel.on('click', '.approval .action-skip[data-skip="0"]', function(e) {
-            e.preventDefault();
-            var button = $(this);
-            self.skipApproval(button, 1);
+          e.preventDefault();
+          var button = $(this);
+          self.skipApproval(button, 1);
         });
         
         // Reenable approval
@@ -200,6 +197,18 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             e.preventDefault();
             var button = $(this);
             self.skipApproval(button, 0);
+        });
+
+        // Nominate Approver
+        self.rootel.on('click', '.approval .nominate-approver-btn', function(e) {
+          e.preventDefault();
+          var button = $(this);
+          self.nominateApprover(button);
+        });
+        // Activity type change - excursion / incursion
+        self.rootel.on('change', '.approval .nominate-approver-select', function(e) {
+          var approval = $(this).closest('.approval');
+          approval.removeClass('nominated');
         });
 
         // Notice - Delete previous absences
@@ -901,6 +910,49 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                 Log.debug(reason);
             }
         }]);
+    };
+
+    /**
+     * Skip approval
+     *
+     * @method postComment
+     */
+    ActivityForm.prototype.nominateApprover = function (button) {
+      var self = this;
+
+      var activityid = self.form.find('input[name="edit"]').val();
+      var approval = button.closest('.approval');
+      var approvalid = approval.data('id');
+      var nominated = approval.find('.nominate-approver-select').val();
+      if (nominated == "") {
+        return;
+      }
+
+      approval.addClass('submitting');
+    
+      Ajax.call([{
+          methodname: 'local_excursions_formcontrol',
+          args: { 
+              action: 'nominate_approver',
+              data: JSON.stringify({
+                  'activityid' : activityid,
+                  'approvalid' : approvalid,
+                  'nominated' : nominated,
+              }),
+          },
+          done: function(response) {
+              var data = JSON.parse(response);
+              approval.removeClass('submitting');
+              if (data.status == 'complete') {
+                button.replaceWith('<span>Notified...</span>');
+              }
+          },
+          fail: function(reason) {
+              approval.removeClass('submitting');
+              Log.error('local_excursions/activityform: failed to submit nominated approver.');
+              Log.debug(reason);
+          }
+      }]);
     };
 
     /**

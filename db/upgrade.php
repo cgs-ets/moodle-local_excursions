@@ -113,6 +113,14 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
     }
 
+    if ($oldversion < 2022083102) {
+        $table = new xmldb_table('excursions_approvals');
+        $field = new xmldb_field('nominated', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'username');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
 
     return true;
 }

@@ -59,6 +59,7 @@ class cron_create_absences extends \core\task\scheduled_task {
         $minus7days = strtotime('-7 day', $now);
         $readableplus14days= date('Y-m-d H:i:s', $plus14days);
         $readableminus7days = date('Y-m-d H:i:s', $minus7days);
+        // Look ahead 2 weeks to find activities starting, look back 1 week to find activities ended
         $this->log_start("Fetching approved activities starting before {$readableplus14days} and finishing after {$readableminus7days}.");
         $activities = activity::get_for_absences($now, $plus14days, $minus7days);
         try {
@@ -72,6 +73,11 @@ class cron_create_absences extends \core\task\scheduled_task {
                 $this->log("Creating absences for activity " . $activity->get('id'));
                 $activitystart = date('Y-m-d H:i', $activity->get('timestart'));
                 $activityend = date('Y-m-d H:i', $activity->get('timeend'));
+
+                // TODO: If activity time has changed since last time absences were synced we need to wipe all absences before starting the process below.
+                // 1. Look for an absence record with this activity id.
+                // 2. Compare the dates.
+                // 3. If necessary, wipe all the absences.
 
                 // Get list of attending students.
                 $attending = activity::get_all_attending($activity->get('id'));

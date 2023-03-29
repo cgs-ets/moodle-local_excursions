@@ -29,12 +29,21 @@
     <table class="table">
         <tbody>
             {{#approvals}}
-                <tr class="approval {{#canapprove}}is-approver{{/canapprove}}" data-id="{{id}}" data-status="{{status}}" data-type="{{type}}" data-skip="{{skip}}">
+                <tr class="approval {{#canapprove}}is-approver{{/canapprove}} {{#selectable}}selectable{{/selectable}} {{#nominated}}nominated{{/nominated}}" data-id="{{id}}" data-status="{{status}}" data-type="{{type}}" data-skip="{{skip}}">
                     <td class="cell c-type">
                         {{#isapprover}}{{#canskip}}
-                            <a href="#" class="action-skip" data-skip="{{skip}}"><i class="fa fa-bell" aria-hidden="true"></i></a>
+                            <a href="#" title="Skip Approval" class="action-skip" data-skip="{{skip}}"><i class="fa fa-bell" aria-hidden="true"></i></a>
                         {{/canskip}}{{/isapprover}}
-                        {{description}}
+                        {{^selectable}}{{description}}{{/selectable}}
+                        {{#isapprover}}{{#selectable}}
+                          <select title="Select an approver" class="nominate-approver-select" {{#statushelper.isapproved}}disabled="true"{{/statushelper.isapproved}}>
+                            <option value="">-- Select approver --</option>
+                            {{#approvers}}
+                              <option value="{{username}}" {{#isselected}}selected{{/isselected}}>{{fullname}}</option>
+                            {{/approvers}}
+                          </select>
+                          <button title="Save and send email" class="nominate-approver-btn">Submit</button>
+                        {{/selectable}}{{/isapprover}}
                     </td>
                     <td class="cell c-photo">
                         {{#userphoto}}
@@ -51,7 +60,7 @@
                             {{/statushelper.isrejected}}
                         {{/canapprove}}
                         {{#canapprove}}{{^skip}}
-                            <input class="approve" type="checkbox" data-id="{{id}}" {{#status}}checked{{/status}}>
+                            <input title="{{^status}}Approve step{{/status}}{{#status}}Undo approval{{/status}}" class="approve" type="checkbox" data-id="{{id}}" {{#status}}checked{{/status}}>
                         {{/skip}}{{/canapprove}}
                     </td>
                 </tr>

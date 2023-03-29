@@ -926,6 +926,27 @@ class activity extends persistent {
         return $approvals;
     }
 
+    public static function get_approval($activityid, $approvalid) {
+        global $DB;
+        
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                 WHERE activityid = ?
+                   AND id = ? 
+                   AND invalidated = 0
+              ORDER BY sequence ASC";
+        $params = array($activityid, $approvalid);
+
+        $records = $DB->get_records_sql($sql, $params);
+        $approvals = array();
+        foreach ($records as $record) {
+            $record->statushelper = locallib::approval_helper($record->status);
+            $approvals[] = $record;
+        }
+
+        return $approvals;
+    }
+
     public static function get_approvals($activityid) {
         global $DB;
         
@@ -1005,23 +1026,25 @@ class activity extends persistent {
                 $approval->skip == 0 ) {
 
                 $config = get_config('local_excursions');
-                $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
-                $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
-                $sql = $config->checkabsencesql . ' :username, :leavingdate, :returningdate, :comment';
-                $params = array(
-                    'username' => '*',
-                    'leavingdate' => '1800-01-01',
-                    'returningdate' =>  '9999-01-01',
-                    'comment' => '#ID-' . $activityid,
-                );
-                $absenceevents = $externalDB->get_field_sql($sql, $params);
-                if ($absenceevents) {
-                    $notices[] = array(
-                        'text' => 'Absences exist for previous dates which have since changed in the form. New absences will be added if this activity is approved. Click the icon to delete previous absences created for this activity. Ignore this notice to retain previous absences.', 
-                        'action' => 'action-delete-absences',
-                        'description' => 'Delete previous absences',
-                        'icon' => '<i class="fa fa-trash-o" aria-hidden="true"></i>',
+                if ($config->checkabsencesql) {
+                    $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
+                    $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
+                    $sql = $config->checkabsencesql . ' :username, :leavingdate, :returningdate, :comment';
+                    $params = array(
+                        'username' => '*',
+                        'leavingdate' => '1800-01-01',
+                        'returningdate' =>  '9999-01-01',
+                        'comment' => '#ID-' . $activityid,
                     );
+                    $absenceevents = $externalDB->get_field_sql($sql, $params);
+                    if ($absenceevents) {
+                        $notices[] = array(
+                            'text' => 'Absences exist for previous dates which have since changed in the form. New absences will be added if this activity is approved. Click the icon to delete previous absences created for this activity. Ignore this notice to retain previous absences.', 
+                            'action' => 'action-delete-absences',
+                            'description' => 'Delete previous absences',
+                            'icon' => '<i class="fa fa-trash-o" aria-hidden="true"></i>',
+                        );
+                    }
                 }
                 // Don't need to do any more checking.
                 break;
@@ -1312,6 +1335,43 @@ class activity extends persistent {
     }
 
     /*
+    * Nominate Approver
+    */
+    public static function nominate_approver($activityid, $approvalid, $nominated) {
+        global $DB, $USER;
+
+        // Check if user is allowed to do this.
+        $isapprover = static::is_approver_of_activity($activityid);
+        
+        $activity = new static($activityid);
+
+        // Update the approval.
+        $sql = "UPDATE {" . static::TABLE_EXCURSIONS_APPROVALS . "}
+                   SET nominated = ?, timemodified = ?
+                 WHERE id = ?
+                   AND activityid = ?
+                   AND invalidated = 0";
+        $params = array($nominated, time(), $approvalid, $activityid);
+        $DB->execute($sql, $params);
+
+        // Send the notification.
+        $approvals = static::get_approval($activityid, $approvalid);
+        foreach ($approvals as $approval) {
+            $approver = locallib::WORKFLOW[$approval->type]['approvers'][$nominated];
+            if ($approver['contacts']) {
+                foreach ($approver['contacts'] as $email) {
+                    static::send_next_approval_email($activity, locallib::WORKFLOW[$approval->type]['name'], $nominated, $email, [$USER->email]);
+                }
+            } else {
+                static::send_next_approval_email($activity, locallib::WORKFLOW[$approval->type]['name'], $nominated, null, [$USER->email]);
+            }
+        }
+
+        // Check for approval finalisation and return new status.
+        return json_encode(['status' => 'complete']);
+    }
+
+    /*
     * Enable permissions
     */
     public static function enable_permissions($activityid, $checked) {
@@ -1498,6 +1558,10 @@ class activity extends persistent {
         foreach ($approvals as $nextapproval) {
             $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
             foreach($approvers as $approver) {
+                // Skip if approver does not want this notification.
+                if (isset($approver['notifications']) && !in_array('approvalrequired', $approver['notifications'])) {
+                    continue;
+                }
                 if ($approver['contacts']) {
                     foreach ($approver['contacts'] as $email) {
                         static::send_next_approval_email($activity, locallib::WORKFLOW[$nextapproval->type]['name'], $approver['username'], $email);
@@ -1510,7 +1574,7 @@ class activity extends persistent {
     }
 
 
-    protected static function send_next_approval_email($activity, $step = '', $recipient, $email = null) {
+    protected static function send_next_approval_email($activity, $step = '', $recipient, $email = null, $bccaddressextra = []) {
         global $USER, $PAGE;
 
         $toUser = \core_user::get_user_by_username($recipient);
@@ -1520,6 +1584,7 @@ class activity extends persistent {
         }
         $fromUser = \core_user::get_noreply_user();
         $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array_merge($fromUser->bccaddress, $bccaddressextra);
 
         $activityexporter = new activity_exporter($activity);
         $output = $PAGE->get_renderer('core');

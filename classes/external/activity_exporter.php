@@ -303,6 +303,10 @@ class activity_exporter extends persistent_exporter {
         $formattedra = [];
         $formattedattachments = [];
         $numstudents = 0;
+        $htmlnotes = '';
+        $iswaitingforyou = false;
+        $approvals = [];
+        $notices = [];
 
 
         // Minimal information for index page, if in review need to get some approval info for index page too. 
@@ -327,22 +331,47 @@ class activity_exporter extends persistent_exporter {
                 if(++$i === count($approvals)) {
                     $approval->last = true;
                 }
+
                 // Check if ready to approve.
                 if ($isapprover) {
                     // Check if skippable.
                     if (isset(locallib::WORKFLOW[$approval->type]['canskip'])) {
                         $approval->canskip = true;
                     }
+                    // Can this user approve this step?
+                    $prerequisites = activity::get_prerequisites($this->data->id, $approval->type);
                     if (in_array($approval->type, $userapprovertypes)) {
                         // No unactioned prerequisites found, user can approver this.
-                        $prerequisites = activity::get_prerequisites($this->data->id, $approval->type);
                         if (empty($prerequisites)) {
                             $approval->canapprove = true;
                             if ($approval->status == 0) {
                                 $iswaitingforyou = true;
                             }
                         }
-                        
+                    }
+                    if (isset(locallib::WORKFLOW[$approval->type]['selectable'])) {
+                        $approval->selectable = true;
+                        // Can this user select someone in this step?
+                        if (empty($prerequisites)) {
+                            $approval->approvers = [];
+                            $approvers = locallib::WORKFLOW[$approval->type]['approvers'];
+                            foreach ($approvers as $un => $approver) {
+                                $user = \core_user::get_user_by_username($un);
+                                if ($user) {
+                                    $userphoto = new \user_picture($user);
+                                    $userphoto->size = 2; // Size f2.
+                                    $userphoto = $userphoto->get_url($PAGE)->out(false); 
+                                } else {
+                                    $userphoto = new \moodle_url('/user/pix.php/0/f2.jpg');
+                                }
+                                $approval->approvers[] = array(
+                                    'username' => $user->username,
+                                    'fullname' => fullname($user),
+                                    'userphoto' => $userphoto,
+                                    'isselected' => ($user->username == $approval->nominated)
+                                );
+                            }
+                        }
                     }
                 }
             }

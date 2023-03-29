@@ -100,6 +100,11 @@ trait formcontrol {
             return activity::save_skip($data->activityid, $data->approvalid, $data->skip);
         }
 
+        if ($action == 'nominate_approver') {
+            $data = json_decode($data);
+            return activity::nominate_approver($data->activityid, $data->approvalid, $data->nominated);
+        }
+
         if ($action == 'post_comment') {
             $data = json_decode($data);
             return activity::post_comment($data->activityid, $data->comment);
