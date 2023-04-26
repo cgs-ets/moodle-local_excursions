@@ -73,6 +73,12 @@ class cron_create_classes extends \core\task\scheduled_task {
             $currentterminfo =  array_pop($currentterminfo);
 
             foreach ($activities as $activity) {
+                $attending = activity::get_all_attending($activity->get('id'));
+                if (empty($attending)) {
+                    $this->log("Skipping class roll for activity because it has no students in it: " . $activity->get('id'));
+                    continue;
+                }
+
                 $this->log("Creating class roll for activity " . $activity->get('id'));
                 $activitystart = date('Y-m-d H:i', $activity->get('timestart'));
                 $activityend = date('Y-m-d H:i', $activity->get('timeend'));
@@ -120,7 +126,6 @@ class cron_create_classes extends \core\task\scheduled_task {
                 }
 
                 // 3. Insert the attending students.
-                $attending = activity::get_all_attending($activity->get('id'));
                 foreach ($attending as $student) {
                     $this->log("Inserting class student: {$student}.", 2);
                     $sql = $config->insertclassstudentsql . ' :staffscheduleseq, :fileyear, :filesemester, :classcampus, :classcode, :studentid, :subjectclassesseq';
