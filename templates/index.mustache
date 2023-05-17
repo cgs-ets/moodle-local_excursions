@@ -27,6 +27,11 @@
 <div class="local_excursions">
     {{#isstaff}}
         <div class="header">
+            <form class="search-wrap" action="/local/excursions/search.php" method="get">
+              <label for="q">Search</label><br>
+              <input name="q" class="search">
+              <button class="btn btn-primary">Go</button>
+            </form>
             <a id="btn-activitycreate" class="btn btn-primary" href="{{activitycreateurl}}">{{# str }}activityform:create, local_excursions{{/ str }}</a>
         </div>
     {{/isstaff}}

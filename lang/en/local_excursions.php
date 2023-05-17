@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Activity planning';
+$string['searchtitle'] = 'Activity search: ';
 $string['pluginname_desc'] = 'An activity planning system for CGS.';
 
 $string['settingsheaderdb'] = 'Synergetic database connection';

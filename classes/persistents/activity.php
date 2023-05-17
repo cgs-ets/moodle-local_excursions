@@ -501,6 +501,37 @@ class activity extends persistent {
         return $changed;
     }
 
+    public static function search($text) {
+        global $DB;
+
+        $sql = "SELECT * 
+                    ,case
+                        when status = 0 OR status = 1 then 1
+                        else 0
+                    end as isdraft
+                    ,case
+                        when timeend < " . time() . " then 1
+                        else 0
+                    end as ispastevent
+                  FROM {" . static::TABLE . "}
+                 WHERE deleted = 0
+                   AND (activityname LIKE ? OR username LIKE ? OR staffinchargejson LIKE ?)
+              ORDER BY isdraft DESC, ispastevent ASC, timestart DESC";
+        $params = array();
+        $params[] = '%'.$text.'%';
+        $params[] = '%'.$text.'%';
+        $params[] = '%'.$text.'%';
+        //echo "<pre>"; var_export($sql); var_export($params); exit;
+
+        $records = $DB->get_records_sql($sql, $params);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+
+        return $activities;
+    }
+
     public static function get_for_user($username) {
         global $DB;
 
@@ -527,6 +558,7 @@ class activity extends persistent {
 
         return $activities;
     }
+
 
     public static function get_for_plannner($username) {
         global $DB;
