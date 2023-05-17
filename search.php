@@ -42,6 +42,7 @@ $PAGE->set_title(get_string('searchtitle', 'local_excursions') . $q);
 $PAGE->set_heading(get_string('searchtitle', 'local_excursions') . $q);
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
 $PAGE->requires->js_call_amd('local_excursions/index', 'init');
+$PAGE->add_body_class('show-past-activities show-inreview-activities');
 
 $output = $OUTPUT->header();
 
