@@ -915,6 +915,29 @@ class activity extends persistent {
         return $activities;
     }
 
+
+    public static function get_for_approval_reminders($rangestart, $rangeend) {
+        global $DB;
+
+        // Activies must:
+        // - be unapproved.
+        // - starting in x days ($rangestart)
+        $sql = "SELECT *
+                  FROM {" . static::TABLE . "}
+                 WHERE timestart >= {$rangestart} AND timestart <= {$rangeend}
+                   AND (
+                    status = " . locallib::ACTIVITY_STATUS_DRAFT ." OR 
+                    status = " . locallib::ACTIVITY_STATUS_INREVIEW . "
+                   )";
+        $records = $DB->get_records_sql($sql, null);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+        
+        return $activities;
+    }
+
     public static function filter_approvals_with_prerequisites($approvals) {
         foreach ($approvals as $i => $approval) {
             // Exlude if waiting for a prerequisite.
