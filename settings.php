@@ -70,4 +70,6 @@ if ($hassiteconfig) {
 
     $settings->add(new admin_setting_configtext('local_excursions/getterminfosql', get_string('getterminfosql', 'local_excursions'), '', ''));
 
+    $settings->add(new admin_setting_configtext('local_excursions/eventreviewers', 'Event reviewers', 'Comma-separated usernames', ''));
+
 }

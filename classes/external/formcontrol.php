@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use \local_excursions\persistents\activity;
 use \local_excursions\locallib;
+use \local_excursions\libs\eventlib;
 use external_function_parameters;
 use external_value;
 use context_user;
@@ -161,6 +162,12 @@ trait formcontrol {
             if (activity::delete_existing_absences($activityid)) {
                 return 'Previous absences successfully deleted';
             }
+        }
+
+        // Event Servies.
+        if ($action == 'check_conflicts') {
+            $data = json_decode($data);
+            return json_encode(eventlib::check_conflicts($data->timestart, $data->timeend));
         }
 
         return 1;

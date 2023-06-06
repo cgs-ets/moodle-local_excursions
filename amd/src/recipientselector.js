@@ -67,6 +67,9 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
         ]).then(function(s) {
             self.strings.noselectionstr = s[0];
         });
+        if (!allowmultiple) {
+          self.rootel.addClass('allow-single');
+        }
     }
 
     /**

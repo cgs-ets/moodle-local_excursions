@@ -130,6 +130,42 @@ class locallib extends local_excursions_config {
         return false;
     }
 
+    public static function is_event_reviewer() {
+        global $USER;
+
+        $config = get_config('local_excursions');
+        if (!empty($config->eventreviewers)) {
+            $reviewers = array_map(function ($r) {return trim($r);}, explode(",", $config->eventreviewers));
+            if (in_array($USER->username, $reviewers)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function get_events_pagination($current = '') {
+        if (empty($current)) {
+            $current = date('Y-m', time());
+        }
+        $broken = explode('-', $current);
+        $currurl = new \moodle_url('/local/excursions/events.php', array('nav' => $current));
+        $prevurl = new \moodle_url('/local/excursions/events.php', array('nav' => $broken[0] . '-' . ($broken[1]-1)));
+        $nexturl = new \moodle_url('/local/excursions/events.php', array('nav' => $broken[0] . '-' . ($broken[1]+1)));
+
+        $nav  = '<nav><ul class="pagination">';
+        $nav .= '<li class="page-item"><a class="page-link" href="' . $prevurl->out(false) . '"><span>&laquo;</span></a></a></li>';
+        $nav .= '<li class="page-item"><a class="page-link" href="' . $currurl->out(false) . '">' . date('M Y', time()) . '</a></li>';
+        $nav .= '<li class="page-item"><a class="page-link" href="' . $nexturl->out(false) . '"><span>&raquo;</span></a></a></li>';
+        $nav .= '</ul class="pagination"></nav>';
+
+        return (object) array(
+            'current' => $current,
+            'nav' => $nav,
+        );
+   
+    }
+
 
     public static function get_approver_types($username = null) {
         global $USER;
