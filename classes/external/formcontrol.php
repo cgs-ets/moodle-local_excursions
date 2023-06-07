@@ -170,6 +170,11 @@ trait formcontrol {
             return json_encode(eventlib::check_conflicts($data->timestart, $data->timeend));
         }
 
+        if ($action == 'check_conflicts_for_event') {
+            return json_encode(eventlib::check_conflicts_for_event($data));
+        }
+        
+
         return 1;
 
     }

@@ -184,7 +184,7 @@
         <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="nonnegotiable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="reason" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="categories" TYPE="char" LENGTH="2000" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="categoriesjson" TYPE="char" LENGTH="2000" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="owner" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="ownerjson" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="areasjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
@@ -224,6 +224,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+
 
   </TABLES>
 </XMLDB>

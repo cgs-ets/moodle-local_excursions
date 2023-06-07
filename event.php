@@ -72,6 +72,8 @@ if (!empty($formdata)) {
     if ($formdata->edit && $event === false) {
         // Editing but no event found. Major error.
         exit;
+    } else {
+        $event->creator = $USER->username;
     }
     $event->activityname = $formdata->activityname;
     $event->campus = $formdata->campus;
@@ -80,7 +82,7 @@ if (!empty($formdata)) {
     $event->timeend = $formdata->timeend;
     $event->nonnegotiable = $formdata->nonnegotiable;
     $event->notes = $formdata->notes;
-    $event->categories = $formdata->categories;
+    $event->categoriesjson = $formdata->categoriesjson;
     $event->areasjson = $formdata->areasjson;
     $event->ownerjson = $formdata->ownerjson;
     $event->owner = $USER->username;
@@ -102,15 +104,14 @@ if (!empty($formdata)) {
 } 
 else 
 {
-    /******************
+    /*********************
     * New event or Edit event
-    *******************/
+    **********************/
     $data = new \stdClass();
     $data->general = '';
     $data->edit = $edit;
     $owneruser = (object) locallib::get_recipient_user($USER);
     $data->ownerjson = json_encode([$owneruser]);
-    $data->owner = $USER->username;
     if ($edit) {
         // Load existing activity.
         $event = eventlib::get_event($edit);
@@ -118,27 +119,17 @@ else
             redirect($viewurl->out(false));
             exit;
         }
-
-        // Get existing data.
-        // Export the activity for additional stuff.
-        $event = eventlib::export($event);
         $data->activityname = $event->activityname;
         $data->campus = $event->campus;
-        if (empty($data->campus)) {
-            $data->campus = 'primary';
-            if (strpos($USER->profile['CampusRoles'], 'Senior School:Staff') !== false) {
-                $data->campus = 'senior';
-            }
-        }
-        $data->activitytype = $event->activitytype;
-        if (empty($data->activitytype)) {
-            $data->activitytype = 'oncampus';
-        }
+        $data->location = $event->location;
         $data->timestart = $event->timestart;
         $data->timeend = $event->timeend;
+        $data->nonnegotiable = $event->nonnegotiable;
+        $data->nonnegotiablereason = $event->reason;
         $data->notes = $event->notes;
+        $data->categoriesjson = $event->categoriesjson;
+        $data->areasjson = $event->areasjson;
         $data->ownerjson = $event->ownerjson;
-
     }
 
     // Set the form values.

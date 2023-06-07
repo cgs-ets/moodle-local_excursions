@@ -654,10 +654,10 @@
 #page-local-excursions-event #fitem_id_areasjson > div {
   display: none;
 }
-#page-local-excursions-event #fitem_id_categories {
+#page-local-excursions-event #fitem_id_categoriesjson {
   display: none;
 }
-#page-local-excursions-event #fitem_id_categories > div {
+#page-local-excursions-event #fitem_id_categoriesjson > div {
   display: none;
 }
 #page-local-excursions-event #fitem_id_nonnegotiablereason {
@@ -795,15 +795,6 @@
 #page-local-excursions-events .pagination {
   margin: 20px 0;
 }
-#page-local-excursions-events .conflicts {
-  display: inline-block;
-  margin: 5px 13px 5px 5px;
-}
-#page-local-excursions-events .conflicts .spinner {
-  display: block;
-  height: 20px;
-  width: 20px;
-}
 #page-local-excursions-events table.events {
   width: 100%;
   table-layout: fixed;
@@ -852,6 +843,41 @@
   padding: 5px 0;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
+}
+#page-local-excursions-events table.events .actions {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+#page-local-excursions-events table.events tr .conflict-check-results .loading {
+  display: none;
+  justify-content: start;
+  margin: 5px 13px 5px 5px;
+}
+#page-local-excursions-events table.events tr .conflict-check-results .loading .spinner {
+  margin: 0;
+  display: block;
+  margin-right: 10px;
+  height: 20px;
+  width: 20px;
+}
+#page-local-excursions-events table.events tr .conflict-check-results .btn-showconflicts {
+  display: none;
+}
+#page-local-excursions-events table.events tr .conflict-check-results .text-no-conflicts {
+  display: none;
+}
+#page-local-excursions-events table.events tr.checking-conflicts .conflict-check-results .loading {
+  display: flex;
+}
+#page-local-excursions-events table.events tr.has-conflicts {
+  background-color: #fff3cd;
+}
+#page-local-excursions-events table.events tr.has-conflicts .conflict-check-results .btn-showconflicts {
+  display: block;
+}
+#page-local-excursions-events table.events tr.no-conflicts .conflict-check-results .text-no-conflicts {
+  display: block;
 }
 /* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
 #page-local-excursions-activity {

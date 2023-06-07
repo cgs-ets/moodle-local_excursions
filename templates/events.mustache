@@ -36,7 +36,7 @@
       <th>Actions</th>
     </tr>
   {{#events}}
-    <tr>
+    <tr data-eventid={{id}}>
       <td>
         <div class="times">
           <div class="timestart">
@@ -53,20 +53,31 @@
             </div>
           </div>
         </div>
-        <div>{{duration}}</div>
+        <div>Duration: {{duration}}</div>
         {{#nonnegotiable}}
           <div><span class="badge badge-warning">Non-negotiable</span></div>
           {{reason}}
         {{/nonnegotiable}}
       </td>
       <td>{{eventname}}</td>
-      <td>{{#areas}}{{.}}<br>{{/areas}}</td>
+      <td>{{#areas}}<span class="badge badge-pill badge-light">{{.}}</span>{{/areas}}</td>
       <td>{{details}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
       <td>
-        <div class="conflicts"><div class="spinner"><div class="circle spin"></div></div></div>
-        <a class="btn btn-danger" href="#">Conflicts</a>
-        <a class="btn btn-secondary" href="{{editurl}}">Edit</a>
+        <div class="actions">
+          
+          <div class="conflict-check-results">
+            <div class="loading">
+              <div class="spinner"><div class="circle spin"></div></div>
+              <div>Checking conflicts...</div>
+            </div>
+            <a class="btn btn-danger btn-showconflicts" href="#">View conflicts</a>
+            <div class="text-no-conflicts">No conflicts found</div>
+          </div>
+
+          <a class="btn btn-secondary" href="{{editurl}}">Edit</a>
+
+        </div>
       </td>
     </tr>
   {{/events}}

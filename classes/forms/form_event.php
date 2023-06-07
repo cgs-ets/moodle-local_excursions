@@ -44,12 +44,6 @@ class form_event extends \moodleform {
         global $CFG, $OUTPUT, $USER, $DB;
 
         $mform =& $this->_form;
-        $edit = $this->_customdata['edit'];
-
-        if ($edit) {
-            $event = eventlib::get($edit);
-            $event = eventlib::export($event);
-        }
 
         /*----------------------
          *   General
@@ -118,8 +112,8 @@ class form_event extends \moodleform {
         <div class="categoriescontainer"></div>
         </div></div>';
         $mform->addElement('html', $html);
-        $mform->addElement('text', 'categories', 'CategoriesData');
-        $mform->setType('categories', PARAM_RAW);
+        $mform->addElement('text', 'categoriesjson', 'CategoriesJSON');
+        $mform->setType('categoriesjson', PARAM_RAW);
 
         /*-----------------------
         * Affected areas

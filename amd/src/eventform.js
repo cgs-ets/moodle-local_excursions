@@ -93,8 +93,8 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             data: calcategories,
             closeDepth: 1,
             onChange: function () {
-              var categories = $('input[name="categories"]');
-              categories.val(JSON.stringify(this.values));
+              var categoriesjson = $('input[name="categoriesjson"]');
+              categoriesjson.val(JSON.stringify(this.values));
             }
           });
         }
@@ -151,7 +151,10 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
               console.log(data)
               self.form.addClass('conflicts-checked');
               if (data.hasConflicts) {
-                self.modal.setBody(data.html);
+                let html = '<div class="conflicts-wrap"><div class="alert alert-warning"><strong>Review the conflicts below and consider whether your event needs to be moved before you continue.</strong></div>';
+                html += data.html;
+                html += '</div>';
+                self.modal.setBody(html);
                 self.modal.show()
               } else {
                 self.submitForm()
@@ -174,11 +177,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       self.form.submit()
     }
 
-    /**
-     * Add students
-     *
-     * @method
-     */
+
     EventForm.prototype.renderAreasFromJSON = function () {
         var self = this;
 /*
@@ -201,6 +200,10 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 */
     };
 
+    EventForm.prototype.renderCategoriesFromJSON = function () {
+      var self = this;
+
+    };
 
     return {
         init: init

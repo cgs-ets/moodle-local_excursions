@@ -34,11 +34,13 @@ class eventlib {
             return new \stdClass();
         }
 
-        $event = $DB->get_record('event', array('id' => $id));
+        $event = $DB->get_record('excursions_events', array('id' => $id));
 
         if (empty($event)) {
             return false;
         }
+
+        return $event;
     }
 
     public static function save_event($event) {
@@ -108,8 +110,9 @@ class eventlib {
         $hours = intval($dateDiff/60);
         $minutes = $dateDiff%60;
         $duration = $hours." Hours ".$minutes." Minutes";
-        //$categories = json_decode($event->categories);
+        //$categoriesjson = json_decode($event->categoriesjson);
         return array(
+            'id' => $event->id,
             'eventname' => $event->activityname,
             'timestartReadable' => date('g:ia', $event->timestart),
             'datestartReadable' => date('j M', $event->timestart),
@@ -121,20 +124,23 @@ class eventlib {
             'owner' => $owner,
             'nonnegotiable' => $event->nonnegotiable,
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),
-            //'categories' => $categories,
+            //'categoriesjson' => $categoriesjson,
         );
-}
+    }
 
-    public static function check_conflicts($timestart, $timeend) {
+    public static function check_conflicts($timestart, $timeend, $unix = false) {
         global $DB;
 
         $hasConflicts = false;
-        $html = 'No conflicts found';
+        $html = '';
         $conflicts = array();
 
-        $timestart = strtotime($timestart);
-        $timeend = strtotime($timeend);
+        if (!$unix) {
+            $timestart = strtotime($timestart);
+            $timeend = strtotime($timeend);
+        }
 
+        // Find events that intersect with this start and end time.
         $sql = "SELECT * 
                 FROM {excursions_events}
                 WHERE (timestart > ? AND timestart < ?) 
@@ -182,9 +188,7 @@ class eventlib {
 
         if (count($conflicts)) {
             $hasConflicts = true;
-            $html  = '<div class="conflicts-wrap">';
-            $html .= '<div class="alert alert-warning"><strong>Review the conflicts below and consider whether your event needs to be moved before you continue.</strong></div>';
-            $html .= "<table> <tr> <th>Title</th> <th>Start</th> <th>End</th> <th>Areas</th> <th>Owner</th> </tr>";
+            $html = "<table> <tr> <th>Title</th> <th>Start</th> <th>End</th> <th>Areas</th> <th>Owner</th> </tr>";
             foreach($conflicts as $conflict) {
                 $html .= "<tr>";
                 $html .= "<td>" . $conflict->eventname . "</td>";
@@ -195,10 +199,21 @@ class eventlib {
                 $html .= "</tr>";
             }
             $html .= '</table>';
-            $html .= '</div>';
         }
 
         return ['hasConflicts' => $hasConflicts, 'html' => $html, 'rawdata' => $conflicts];
+    }
+
+
+    public static function check_conflicts_for_event($id) {
+        global $DB;
+
+        $event = static::get_event($id);
+        if (empty($event)) {
+            return [];
+        }
+
+        return static::check_conflicts($event->timestart, $event->timeend, true);
     }
 
 }

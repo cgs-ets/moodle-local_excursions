@@ -133,7 +133,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
         $table->add_field('timeend', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('nonnegotiable', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('reason', XMLDB_TYPE_CHAR, '1000', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('categories', XMLDB_TYPE_CHAR, '2000', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('categoriesjson', XMLDB_TYPE_CHAR, '2000', null, XMLDB_NOTNULL, null, null);
         $table->add_field('owner', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
         $table->add_field('ownerjson', XMLDB_TYPE_CHAR, '1000', null, XMLDB_NOTNULL, null, null);
         $table->add_field('areasjson', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);

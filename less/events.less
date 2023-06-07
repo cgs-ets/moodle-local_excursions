@@ -28,7 +28,7 @@
     }
   }
 
-  #fitem_id_categories {
+  #fitem_id_categoriesjson {
     display: none;
     &>div{
       display: none;
@@ -174,15 +174,7 @@
   .pagination {
     margin: 20px 0;
   }
-  .conflicts {
-    display: inline-block;
-    margin: 5px 13px 5px 5px;
-    .spinner {
-      display: block;
-      height: 20px;
-      width: 20px;
-    }
-  }
+  
   table.events {
     width: 100%;
     table-layout: fixed;
@@ -228,6 +220,55 @@
         border-bottom-right-radius: 6px;
         border-bottom-left-radius: 6px;
     
+      }
+    }
+    .actions {
+      display: flex;
+      justify-content: end;
+      gap: 5px;
+    }
+    tr {
+      .conflict-check-results {
+        .loading {
+          display: none;
+          justify-content: start;
+          margin: 5px 13px 5px 5px;
+          .spinner {
+            margin: 0;
+            display: block;
+            margin-right: 10px;
+            height: 20px;
+            width: 20px;
+          }
+        }
+        .btn-showconflicts {
+          display: none;
+        }
+        .text-no-conflicts{
+          display: none;
+        }
+      }
+      &.checking-conflicts {
+        .conflict-check-results {
+          .loading {
+            display: flex;
+          }
+        }
+      }
+      &.has-conflicts {
+        background-color: #fff3cd;
+        .conflict-check-results {
+          .btn-showconflicts {
+            display: block;
+          }
+        }
+      }
+      &.no-conflicts {
+        .conflict-check-results {
+          .text-no-conflicts{
+            display: block;
+          }
+        }
       }
     }
   }
