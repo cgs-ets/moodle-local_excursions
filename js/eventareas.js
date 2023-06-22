@@ -1,48 +1,30 @@
 var eventareas = 
 [
   { 
-    "id": '-1', 
+    "id": 'Whole school', 
     "text": 'Whole school', 
     "children": [
       {
-        "id": "0",
+        "id": "Primary school",
         "text": "Primary school",
         "children": [
           {
-            "id": "0-0",
-            "text": "node-0-0",
-            "children": [
-              {
-                "id": "0-0-0",
-                "text": "node-0-0-0"
-              },
-            ]
+            "id": "Year 1",
+            "text": "Year 1",
           },
           {
-            "id": "0-1",
-            "text": "node-0-1",
-            "children": [
-              {
-                "id": "0-1-0",
-                "text": "node-0-1-0"
-              },
-            ]
+            "id": "Year 2",
+            "text": "Year 2",
           },
         ]
       },
       {
-        "id": "1",
+        "id": "Senior school",
         "text": "Senior school",
         "children": [
           {
-            "id": "1-0",
-            "text": "node-1-0",
-            "children": [
-              {
-                "id": "1-0-0",
-                "text": "node-1-0-0"
-              },
-            ]
+            "id": "ADT",
+            "text": "ADT",
           },
         ]
       },

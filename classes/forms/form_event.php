@@ -33,8 +33,6 @@ use \local_excursions\libs\eventlib;
 
 class form_event extends \moodleform {
 
-
-
     /**
      * Form definition
      *
@@ -44,6 +42,8 @@ class form_event extends \moodleform {
         global $CFG, $OUTPUT, $USER, $DB;
 
         $mform =& $this->_form;
+        $edit = $this->_customdata['edit'];
+        $recurring = $this->_customdata['recurring'];
 
         /*----------------------
          *   General
@@ -52,12 +52,24 @@ class form_event extends \moodleform {
         $mform->setExpanded('general', true, true);
 
         $typehtml = '
-            <div class="form-group row fitem"><div class="col-md-3"></div><div class="col-md-9">
-            <strong>You are creating an event</strong><br>
-            <span style="color:blue;">Click here to create an excursion or incursion <i class="fa fa-external-link" aria-hidden="true"></i></span><br>
-            </div></div>
+            <h5>You are ' . ($edit ? 'editing' : 'creating') . ' an event</h5>
+            <a href="/local/excursions/activity.php?create=1" style="color:blue;font-weight:600">Click here to create an excursion or incursion <i class="fa fa-external-link" aria-hidden="true"></i></a><br>
+            <br>
         ';
         $mform->addElement('html', $typehtml);
+
+        if ($recurring) {
+            /*----------------------
+            *   Series or event
+            *----------------------*/
+            $radioarray = array();
+            $radioarray[] = $mform->createElement('radio', 'editseries', '', 'This occurance', 'event', '');
+            $radioarray[] = $mform->createElement('radio', 'editseries', '', 'The entire series', 'series', '');
+            $mform->addElement('html', '<br><strong>This event is part of a series. What do you want to edit?</strong>');
+            $mform->addGroup($radioarray, 'editseries', '', array(' '), false);
+            $mform->setDefault('editseries', 'event');
+            $mform->addElement('html', '<div class="alert alert-warning">Editing a single occurance will detach it from the series. Editing an entire series will recreate all events in the series based on the information submitted below.</div><br>');
+        } 
 
         /*----------------------
         *   Name
@@ -89,11 +101,55 @@ class form_event extends \moodleform {
         *----------------------*/
         $mform->addElement('date_time_selector', 'timestart', get_string('activityform:timestart', 'local_excursions'));
         $mform->addElement('date_time_selector', 'timeend', get_string('activityform:timeend', 'local_excursions'));
+        $dt = new \DateTime('@' . time());
+        $dt->setTime( $dt->format("H"), 0, 0);
+        $mform->setDefault('timestart', $dt->getTimestamp());
+        $mform->setDefault('timeend', $dt->getTimestamp());
+
+        /* Is recurring */
+        $mform->addElement('advcheckbox', 'recurring', 'Recurring', '', [], [0,1]);
+        if ($recurring) {
+            $mform->hideIf('recurring', 'editseries', 'eq', 'event');
+        }
+
+        /* Recurring pattern */
+        $radioarray=array();
+        $radioarray[] = $mform->createElement('radio', 'recurringpattern', '', "Daily", "daily");
+        $radioarray[] = $mform->createElement('radio', 'recurringpattern', '', "Weekly", "weekly");
+        $mform->addGroup($radioarray, 'recurringpatternar', '', array(' '), false);
+        $mform->setDefault('recurringpattern', 'weekly');
+        $mform->hideIf('recurringpatternar', 'recurring', 'neq', 1);
+        if ($recurring) {
+            $mform->hideIf('recurringpatternar', 'editseries', 'eq', 'event');
+        }
+
+        /* Recurring DAILY pattern */
+        $radioarray=array();
+        $radioarray[] = $mform->createElement('radio', 'recurringdailypattern', '', "All days", "alldays");
+        $radioarray[] = $mform->createElement('radio', 'recurringdailypattern', '', "Week days", "weekdays");
+        $mform->addGroup($radioarray, 'recurringdailypatternar', '', array(' '), false);
+        $mform->setDefault('recurringdailypattern', 'weekdays');
+        $mform->hideIf('recurringdailypatternar', 'recurringpattern', 'neq', 'daily');
+        $mform->hideIf('recurringdailypatternar', 'recurring', 'neq', 1);
+        if ($recurring) {
+            $mform->hideIf('recurringdailypatternar', 'editseries', 'eq', 'event');
+        }
+
+        /* Recur until */
+        $mform->addElement('date_time_selector', 'recuruntil', 'Until');
+        $mform->hideIf('recuruntil', 'recurring', 'neq', 1);
+        if ($recurring) {
+            $mform->hideIf('recuruntil', 'editseries', 'eq', 'event');
+        }
+
+        /* Calculated dates */
+        $mform->addElement('html', '<div id="calculated-dates"></div>');
 
         /*----------
         * Non negotiable
         * ----------------*/
-        $mform->addElement('advcheckbox', 'nonnegotiable', 'Start and end times are non negotiable', '', [], [0,1]);
+        $mform->addElement('html', '<br>');
+        $mform->addElement('advcheckbox', 'nonnegotiable', 'The dates entered for this event are non negotiable', '', [], [0,1]);
         $mform->addElement('textarea', 'nonnegotiablereason', "Why is this event time non-negotiable?", 'wrap="virtual" rows="2" cols="30"');
         $mform->setType('notes', PARAM_TEXT);
         $mform->hideIf('nonnegotiablereason', 'nonnegotiable', 'neq', 1);

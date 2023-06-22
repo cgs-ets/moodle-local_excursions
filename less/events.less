@@ -13,6 +13,19 @@
   .mform fieldset {
       border-bottom: 0 none;
   }
+  .form-label-addon {
+    display: none !important;
+  }
+
+  #fgroup_id_recurringpatternar {
+    margin-top: -25px;
+  }
+  #fgroup_id_recurringdailypatternar {
+    margin-top: -15px;
+  }
+  #fitem_id_recuruntil {
+    margin-top: -15px;
+  }
 
   #fitem_id_ownerjson {
     display: none;
@@ -140,29 +153,6 @@
       }
     }
   }
-  #conflicts .conflicts-wrap {
-    border: 1px solid #deeaff;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 4px;
-  }
-  .conflicts-wrap {
-    table {
-      width: 100%;
-      table-layout: fixed;
-    }
-    td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      vertical-align: top;
-      word-break: break-word;
-      ul {
-        margin: 0;
-        list-style: none;
-        padding: 0;
-      }
-    }
-  }
   .conflicts-checked {
     .force-check-conflicts {
       display: none;
@@ -171,6 +161,19 @@
 }
 
 #page-local-excursions-events {
+  .header {
+		padding: 0 0 20px 0;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    .head-options {
+      display: flex;
+      justify-content: right;
+      gap: 15px;
+      align-items: center;
+    }
+	}
   .pagination {
     margin: 20px 0;
   }
@@ -263,6 +266,13 @@
           }
         }
       }
+      &.has-ignored-conflicts {
+        .conflict-check-results {
+          .btn-showconflicts {
+            display: block;
+          }
+        }
+      }
       &.no-conflicts {
         .conflict-check-results {
           .text-no-conflicts{
@@ -272,4 +282,23 @@
       }
     }
   }
+}
+
+.conflicts-wrap {
+  table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    vertical-align: top;
+    word-break: break-word;
+    ul {
+      margin: 0;
+      list-style: none;
+      padding: 0;
+    }
+  }
+
 }

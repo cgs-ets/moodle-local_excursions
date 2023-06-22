@@ -167,13 +167,27 @@ trait formcontrol {
         // Event Servies.
         if ($action == 'check_conflicts') {
             $data = json_decode($data);
-            return json_encode(eventlib::check_conflicts($data->timestart, $data->timeend));
+            $conflicts = eventlib::check_conflicts($data->eventid, $data->timestart, $data->timeend, $data->recurringsettings, false);
+            $html = eventlib::generate_conflicts_html($conflicts);
+            return json_encode(['html' => $html, 'conflicts' => $conflicts]);
         }
 
         if ($action == 'check_conflicts_for_event') {
             return json_encode(eventlib::check_conflicts_for_event($data));
         }
-        
+
+        if ($action == 'set_conflict_status') {
+            $data = json_decode($data);
+            return eventlib::set_conflict_status($data->conflictid, $data->status);
+        }
+
+        if ($action == 'expand_dates') {
+            $data = json_decode($data);
+            $timestart = strtotime($data->timestart);
+            $timeend = strtotime($data->timeend);
+            $data->recurring->recuruntil = strtotime($data->recurring->recuruntil);
+            return json_encode(eventlib::expand_dates($data->recurring, $timestart, $timeend));
+        }
 
         return 1;
 

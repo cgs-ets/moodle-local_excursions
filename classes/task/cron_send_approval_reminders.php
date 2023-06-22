@@ -55,15 +55,18 @@ class cron_send_approval_reminders extends \core\task\scheduled_task {
     public function execute() {
         global $DB, $PAGE;
 
-        $this->log_start("Fetching activities.");
+        /********************
+         * 14 Day Reminder
+         */
+
+        $this->log_start("Fetching activities for 14 day reminder.");
         $today = strtotime('today midnight');
-        $plus7days = strtotime('+7 day', $today);
-        $plus8days = strtotime('+8 day', $today);
-        $readableplus7days= date('Y-m-d H:i:s', $plus7days);
-        $readableplus8days= date('Y-m-d H:i:s', $plus8days);
-        // Look ahead 2 weeks to find activities starting, look back 1 week to find activities ended
-        $this->log_start("Fetching unapproved activities starting between {$readableplus7days} and {$readableplus8days}.");
-        $activities = activity::get_for_approval_reminders($plus7days, $plus8days);
+        $plus14days = strtotime('+14 day', $today);
+        $plus15days = strtotime('+15 day', $today);
+        $readableplus14days= date('Y-m-d H:i:s', $plus14days);
+        $readableplus15days= date('Y-m-d H:i:s', $plus15days);
+        $this->log_start("Fetching unapproved activities starting between {$readableplus14days} and {$readableplus15days}.");
+        $activities = activity::get_for_approval_reminders($plus14days, $plus15days);
 
         foreach ($activities as $activity) {
             // Export the activity.
@@ -112,9 +115,67 @@ class cron_send_approval_reminders extends \core\task\scheduled_task {
                 $this->send_reminder($data, $username, $email);
             }
             
-            // Mark as processed.
-            $this->log("Finished sending reminders for activity " . $data->id);
+            $this->log("Finished sending 14 day reminders for activity " . $data->id);
         }
+
+        /********************
+         * 7 Day Reminder
+         */
+
+        $this->log_start("Fetching activities for 7 day reminder.");
+        $today = strtotime('today midnight');
+        $plus7days = strtotime('+7 day', $today);
+        $plus8days = strtotime('+8 day', $today);
+        $readableplus7days= date('Y-m-d H:i:s', $plus7days);
+        $readableplus8days= date('Y-m-d H:i:s', $plus8days);
+        $this->log_start("Fetching unapproved activities starting between {$readableplus7days} and {$readableplus8days}.");
+        $activities = activity::get_for_approval_reminders($plus7days, $plus8days);
+
+        foreach ($activities as $activity) {
+            // Export the activity.
+            $activityexporter = new activity_exporter($activity);
+            $output = $PAGE->get_renderer('core');
+            $data = $activityexporter->export($output);
+
+
+            // Send to next approver in line.
+            $approvals = activity::get_unactioned_approvals($data->id);
+            foreach ($approvals as $nextapproval) {
+                $approvers = locallib::WORKFLOW[$nextapproval->type]['approvers'];
+                foreach($approvers as $approver) {
+                    if ( array_key_exists($approver['username'], $recipients)) {
+                        continue;
+                    }
+                    // Skip if approver does not want any notifications.
+                    if (isset($approver['notifications']) && in_array('none', $approver['notifications'])) {
+                        continue;
+                    }
+
+                    // Check email contacts.
+                    if ($approver['contacts']) {
+                        foreach ($approver['contacts'] as $email) {
+                            $recipients[$approver['username']] = $email;
+                        }
+                    } else {
+                        $recipients[$approver['username']] = null;
+                    }
+                }
+                // Break after sending to next approver in line. Comment is not sent to approvers down stream.
+                break;
+            }
+
+            // Send the reminders.
+            foreach ($recipients as $username => $email) {
+                $this->log("Sending reminder for activity " . $data->id . " to " . $username);
+                $this->send_reminder($data, $username, $email);
+            }
+            
+            $this->log("Finished sending 7 day reminders for activity " . $data->id);
+        }
+
+
+
+
 
         $this->log_finish("Finished sending reminders.");
     }

@@ -25,8 +25,8 @@
 /**
  * @module local_excursions/Events
  */
-define(['jquery', 'core/log', 'core/ajax', 'core/str' ], 
-    function($, Log, Ajax, Str) {    
+define(['jquery', 'core/log', 'core/ajax', 'core/modal_factory', 'core/modal_events' ], 
+    function($, Log, Ajax, ModalFactory, ModalEvents) {    
     'use strict';
 
     /**
@@ -55,11 +55,21 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
     function Events(rootel) {
         var self = this;
         self.rootel = rootel;
-        self.eventrows = self.rootel.find('table.events tr');
+        self.eventrows = document.querySelectorAll('table.events tr.event');
+        self.eventrows = Array.from(self.eventrows);
+        self.conflictignorechange = false;
 
-        self.eventrows = document.querySelectorAll('table.events tr');
-
-
+        ModalFactory.create({type: ModalFactory.types.DEFAULT}).then(function(modal) {
+          modal.setTitle('Conflicts found');
+          self.modal = modal;
+          self.modal.getModal().addClass('modal-xl');
+          self.modal.getModal().addClass('modal-conflicts');
+          self.modal.getRoot().on(ModalEvents.hidden, function(){
+            if (self.conflictignorechange) {
+              location.reload();// reload page
+            }
+          });
+        });
 
     }
 
@@ -71,13 +81,47 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
       var self = this;
 
       // Start checking for conflicts, row by row.
-      self.eventrows.length && self.getForNextRow(-1)
+      if (self.eventrows.length) {
+        self.getForNextRow(-1)
+      }
+
+      document.querySelectorAll('.btn-showconflicts').forEach(a => {
+        a.addEventListener('click', e => {
+          e.preventDefault()
+          //get the event conflicts from the table row data.
+          let eventid = a.dataset.eventid;
+          let tr = document.querySelector('tr[data-eventid="' + eventid + '"]');
+          if (tr) {
+            self.modal.setBody('<div class="conflicts-wrap">' + tr.dataset.conflicts + '</div>');
+            self.modal.show()
+
+            // Ignore checkbox action.
+            document.querySelectorAll('.modal-conflicts input[name="status"]').forEach(a => {
+              a.addEventListener('change', e => {
+                self.conflictignorechange = true;
+                Ajax.call([{
+                  methodname: 'local_excursions_formcontrol',
+                  args: { 
+                    action: 'set_conflict_status',
+                    data: JSON.stringify({
+                      conflictid: e.currentTarget.dataset.conflictid,
+                      status: e.currentTarget.checked
+                    })
+                  },
+                }]);
+              })
+            })
+
+          }
+        })
+      })
+      
     };
 
     Events.prototype.getForNextRow = function(i) {
       var self = this;
       var next = i+1;
-      if (self.eventrows.length >= next) {
+      if (self.eventrows.length > next) {
         self.getConflictsForRow(self.eventrows[next].dataset.eventid, next)
       }
     }
@@ -89,6 +133,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
 
       self.eventrows[i].classList.remove("conflicts-checked");
       self.eventrows[i].classList.remove("has-conflicts");
+      self.eventrows[i].classList.remove("has-ignored-conflicts");
       self.eventrows[i].classList.remove("no-conflicts");
       self.eventrows[i].dataset.conflicts = '';
       self.eventrows[i].classList.add("checking-conflicts");
@@ -103,8 +148,13 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
           let data = JSON.parse(response);
           self.eventrows[i].classList.remove("checking-conflicts");
           self.eventrows[i].classList.add("conflicts-checked");
-          if (data.hasConflicts) {
-            self.eventrows[i].classList.add("has-conflicts");
+          if (data.conflicts.length) {
+            let actionneeded = (data.conflicts.filter((c)=>c.status!=1).length > 0)
+            if (actionneeded) {
+              self.eventrows[i].classList.add("has-conflicts");
+            } else {
+              self.eventrows[i].classList.add("has-ignored-conflicts");
+            }
             self.eventrows[i].dataset.conflicts = data.html;
           } else {
             self.eventrows[i].classList.add("no-conflicts");

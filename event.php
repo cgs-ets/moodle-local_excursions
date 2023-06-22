@@ -44,21 +44,33 @@ $viewurl = new moodle_url('/local/excursions/events.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url($editurl);
-$PAGE->set_title(get_string('activitiesetup', 'local_excursions'));
-$PAGE->set_heading(get_string('activitiesetup', 'local_excursions'));
-$PAGE->navbar->add(get_string('activities', 'local_excursions'), $viewurl);
+$PAGE->set_title('Event settings');
+$PAGE->set_heading('Event settings');
 
-// Create a new empty activity.
-$activity = null;
+$event = null;
+$recurring = 0;
+if ($edit) {
+    $event = eventlib::get_event($edit);
+    if (!$event) {
+        redirect($viewurl->out(false));
+        exit;
+    }
+    $recurring = $event->recurrencemaster ? 1 : 0;
+}
 
 // Instantiate the form.
 $formactivity = new form_event(
     $editurl->out(false), 
-    array('edit' => $edit), 
+    array('edit' => $edit, 'recurring' => $recurring), 
     'post', 
     '', 
-    array('data-form' => 'excursions-event')
+    array('data-form' => 'excursions-event', 'data-eventid' => $edit)
 );
+
+// Redirect to index if cancel was clicked.
+if ($formactivity->is_cancelled()) {
+    redirect($viewurl->out());
+}
 
 $formdata = $formactivity->get_data();
 
@@ -66,32 +78,10 @@ $formdata = $formactivity->get_data();
 * Form submitted
 *******************/
 if (!empty($formdata)) {
-    //var_export($formdata); 
-    //exit;
-    $event = eventlib::get_event($formdata->edit);
-    if ($formdata->edit && $event === false) {
-        // Editing but no event found. Major error.
-        exit;
-    } else {
-        $event->creator = $USER->username;
-    }
-    $event->activityname = $formdata->activityname;
-    $event->campus = $formdata->campus;
-    $event->location = $formdata->location;
-    $event->timestart = $formdata->timestart;
-    $event->timeend = $formdata->timeend;
-    $event->nonnegotiable = $formdata->nonnegotiable;
-    $event->notes = $formdata->notes;
-    $event->categoriesjson = $formdata->categoriesjson;
-    $event->areasjson = $formdata->areasjson;
-    $event->ownerjson = $formdata->ownerjson;
-    $event->owner = $USER->username;
-    $owner = json_decode($formdata->ownerjson);
-    if ($owner) {
-        $owner = array_pop($owner);
-        $event->owner = $owner->idfield;
-    }
-    eventlib::save_event($event);
+
+    //echo "<pre>"; var_export($formdata); exit;
+
+    eventlib::save_event($formdata);
     $notice = get_string("activityform:savechangessuccess", "local_excursions");
     redirect(
         $viewurl->out(),
@@ -113,12 +103,6 @@ else
     $owneruser = (object) locallib::get_recipient_user($USER);
     $data->ownerjson = json_encode([$owneruser]);
     if ($edit) {
-        // Load existing activity.
-        $event = eventlib::get_event($edit);
-        if (!$event) {
-            redirect($viewurl->out(false));
-            exit;
-        }
         $data->activityname = $event->activityname;
         $data->campus = $event->campus;
         $data->location = $event->location;
@@ -130,6 +114,10 @@ else
         $data->categoriesjson = $event->categoriesjson;
         $data->areasjson = $event->areasjson;
         $data->ownerjson = $event->ownerjson;
+        $data->recurring = $recurring;
+        if ($recurring) {
+            list($data->recurring, $data->recurringpattern, $data->recurringdailypattern, $data->recuruntil) = array_values(json_decode($event->recurringjson, true));
+        }
     }
 
     // Set the form values.
@@ -142,8 +130,10 @@ $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursion
 // Add scripts.
 $PAGE->requires->js_call_amd('local_excursions/eventform', 'init');
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/tree.min.js'), true );
-$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/calcategories.js'), true );
-$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/eventareas.js'), true );
+$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/calcategories.js', array('nocache' => rand())), true );
+$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/eventareas.js', array('nocache' => rand())), true );
+
+
 
 // Body classes.
 $PAGE->add_body_class('limitedwidth');

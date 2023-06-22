@@ -642,6 +642,18 @@
 #page-local-excursions-event .mform fieldset {
   border-bottom: 0 none;
 }
+#page-local-excursions-event .form-label-addon {
+  display: none !important;
+}
+#page-local-excursions-event #fgroup_id_recurringpatternar {
+  margin-top: -25px;
+}
+#page-local-excursions-event #fgroup_id_recurringdailypatternar {
+  margin-top: -15px;
+}
+#page-local-excursions-event #fitem_id_recuruntil {
+  margin-top: -15px;
+}
 #page-local-excursions-event #fitem_id_ownerjson {
   display: none;
 }
@@ -768,29 +780,21 @@
 #page-local-excursions-event .recipient-selector.has-tags.allow-single .recipient-results {
   display: none;
 }
-#page-local-excursions-event #conflicts .conflicts-wrap {
-  border: 1px solid #deeaff;
-  padding: 20px;
-  margin-bottom: 25px;
-  border-radius: 4px;
-}
-#page-local-excursions-event .conflicts-wrap table {
-  width: 100%;
-  table-layout: fixed;
-}
-#page-local-excursions-event .conflicts-wrap td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  vertical-align: top;
-  word-break: break-word;
-}
-#page-local-excursions-event .conflicts-wrap td ul {
-  margin: 0;
-  list-style: none;
-  padding: 0;
-}
 #page-local-excursions-event .conflicts-checked .force-check-conflicts {
   display: none;
+}
+#page-local-excursions-events .header {
+  padding: 0 0 20px 0;
+  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+#page-local-excursions-events .header .head-options {
+  display: flex;
+  justify-content: right;
+  gap: 15px;
+  align-items: center;
 }
 #page-local-excursions-events .pagination {
   margin: 20px 0;
@@ -876,8 +880,26 @@
 #page-local-excursions-events table.events tr.has-conflicts .conflict-check-results .btn-showconflicts {
   display: block;
 }
+#page-local-excursions-events table.events tr.has-ignored-conflicts .conflict-check-results .btn-showconflicts {
+  display: block;
+}
 #page-local-excursions-events table.events tr.no-conflicts .conflict-check-results .text-no-conflicts {
   display: block;
+}
+.conflicts-wrap table {
+  width: 100%;
+  table-layout: fixed;
+}
+.conflicts-wrap td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  vertical-align: top;
+  word-break: break-word;
+}
+.conflicts-wrap td ul {
+  margin: 0;
+  list-style: none;
+  padding: 0;
 }
 /* The json field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
 #page-local-excursions-activity {

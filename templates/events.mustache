@@ -25,7 +25,13 @@
 }}
 
 <div class="local_excursions_events">
-  {{{nav}}}
+  <div class="header">
+    {{{nav}}}
+    <div class="head-options">
+      <a id="btn-createevent" class="btn btn-primary" href="/local/excursions/event.php">Create a new event</a>
+    </div>
+  </div>
+  
   <table class="events">
     <tr>
       <th>Start - end</th>
@@ -36,7 +42,7 @@
       <th>Actions</th>
     </tr>
   {{#events}}
-    <tr data-eventid={{id}}>
+    <tr class="event" data-eventid={{id}}>
       <td>
         <div class="times">
           <div class="timestart">
@@ -71,7 +77,7 @@
               <div class="spinner"><div class="circle spin"></div></div>
               <div>Checking conflicts...</div>
             </div>
-            <a class="btn btn-danger btn-showconflicts" href="#">View conflicts</a>
+            <a class="btn btn-danger btn-showconflicts" href="#" data-eventid="{{id}}">View conflicts</a>
             <div class="text-no-conflicts">No conflicts found</div>
           </div>
 

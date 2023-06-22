@@ -184,10 +184,11 @@
         <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="nonnegotiable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="reason" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="categoriesjson" TYPE="char" LENGTH="2000" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="categoriesjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="owner" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="ownerjson" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="areasjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="recurringjson" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="notes" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -195,7 +196,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk_recurrencemaster" TYPE="foreign" FIELDS="recurrencemaster" REFTABLE="excursions_recurrences" REFFIELDS="id"/>
+        <KEY NAME="fk_recurrencemaster" TYPE="foreign" FIELDS="recurrencemaster" REFTABLE="excursions_event_series" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="timestart" UNIQUE="false" FIELDS="timestart"/>
@@ -215,7 +216,7 @@
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="excursions_recurrences" COMMENT="">
+    <TABLE NAME="excursions_event_series" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="data" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
@@ -224,6 +225,20 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+
+    <TABLE NAME="excursions_event_conflicts" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="eventid1" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="eventid2" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="event2istype" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
 
 
   </TABLES>
