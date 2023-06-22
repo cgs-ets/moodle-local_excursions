@@ -51,12 +51,12 @@ class form_event extends \moodleform {
         $mform->addElement('header', 'general', '');
         $mform->setExpanded('general', true, true);
 
-        $typehtml = '
+        /*$typehtml = '
             <h5>You are ' . ($edit ? 'editing' : 'creating') . ' an event</h5>
             <a href="/local/excursions/activity.php?create=1" style="color:blue;font-weight:600">Click here to create an excursion or incursion <i class="fa fa-external-link" aria-hidden="true"></i></a><br>
             <br>
         ';
-        $mform->addElement('html', $typehtml);
+        $mform->addElement('html', $typehtml);*/
 
         if ($recurring) {
             /*----------------------
