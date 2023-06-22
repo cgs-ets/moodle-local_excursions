@@ -59,6 +59,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.eventid = self.form.data('eventid');
         self.areastree = null;
         self.categoriestree = null;
+        self.conflictCheckDone = false;
 
         ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(function(modal) {
           modal.setTitle('Conflicts found');
@@ -143,6 +144,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       });
 
       self.rootel.on('click', '#id_submitbutton', function(e) {
+        
+        if (self.conflictCheckDone) {
+          return;
+        }
+
         e.preventDefault()
 
         var timestart = self.convertFieldsToDate('timestart');
@@ -252,15 +258,14 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     EventForm.prototype.submitForm = function () {
       var self = this;
 
-      /*window.addEventListener('beforeunload', function (event) {
-        event.stopImmediatePropagation();
-      });*/
-      window.addEventListener("beforeunload", function(event) {
-        console.log("UNLOAD:1");
-      });
+      //window.addEventListener('beforeunload', function (event) {
+      //  event.stopImmediatePropagation();
+      //});
 
       self.modal.hide()
-      self.form.submit()
+      //self.form.submit()
+      self.conflictCheckDone = true;
+      $('#id_submitbutton').click()
     }
 
 
