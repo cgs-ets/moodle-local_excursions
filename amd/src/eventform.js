@@ -70,8 +70,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
           });
         });
 
-        window.addEventListener('beforeunload', function (event) {
-          event.stopImmediatePropagation();
+        //window.addEventListener('beforeunload', function (event) {
+        //  event.stopImmediatePropagation();
+        //});
+        window.addEventListener("beforeunload", function(event) {
+          console.log("UNLOAD:1");
         });
     }
 
@@ -249,8 +252,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     EventForm.prototype.submitForm = function () {
       var self = this;
 
-      window.addEventListener('beforeunload', function (event) {
+      /*window.addEventListener('beforeunload', function (event) {
         event.stopImmediatePropagation();
+      });*/
+      window.addEventListener("beforeunload", function(event) {
+        console.log("UNLOAD:1");
       });
 
       self.modal.hide()
