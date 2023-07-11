@@ -24,6 +24,8 @@ namespace local_excursions\libs;
 
 defined('MOODLE_INTERNAL') || die();
 
+use \local_excursions\persistents\activity;
+use \local_excursions\locallib;
 
 class eventlib {
 
@@ -73,6 +75,8 @@ class eventlib {
             $event->owner = $owner->idfield;
         }
 
+        // Disabled Recurring
+        /*************************
         // If editing an existing recurring event, things get weird. Ignore and clear recurring settings if they've opted to edit a single occurance.
         if (!empty($event->id) && isset($formdata->editseries) && $formdata->editseries == 'event' ) {
             $formdata->recurring = 0;
@@ -114,18 +118,79 @@ class eventlib {
                 }
                 static::create_new_series_from_data($event, $dates);
             }
+            return;
+        } 
+        **************************/
 
+        // Single event. If it was previously in a series it will be detached.
+        $event->recurrencemaster = 0;
+
+        // Simple single event.         
+        if (empty($event->id)) {
+            $event->id = $DB->insert_record('excursions_events', $event);
         } else {
-            // Single event. If it was previously in a series it will be detached.
-            $event->recurrencemaster = 0;
-            // Simple single event.            
-            if (empty($event->id)) {
-                $DB->insert_record('excursions_events', $event);
+            $DB->update_record('excursions_events', $event);
+        }
+
+        if ($formdata->entrytype == 'excursion') {            
+            // Sync with activity data.
+            if ($formdata->edit) {
+                $originalactivity = new activity($event->activityid);
+                $activity = new activity($event->activityid);
+                // Copy values from event.
+                $activity->set('activityname', $formdata->activityname);
+                $activity->set('timestart', $formdata->timestart);
+                $activity->set('timeend', $formdata->timeend);
+                $activity->set('activitytype', 'excursion');
+                if ($formdata->campus == 'oncampus') {
+                    $activity->set('activitytype', 'incursion');
+                }
+                $activity->set('location', $formdata->location);
+                $activity->set('notes', $formdata->notes);
+
+                $activity->save();
+                 // If sending for review or saving after already in review, regenerate approvals.
+                if ($activity->get('status') == locallib::ACTIVITY_STATUS_INREVIEW ||
+                    $activity->get('status') == locallib::ACTIVITY_STATUS_APPROVED) {
+                    activity::generate_approvals($originalactivity, $activity);
+                }
             } else {
+                // Create a new activity.
+                $data = new \stdClass();
+                // Copy values from event.
+                $data->activityname = $formdata->activityname;
+                $data->timestart = $formdata->timestart;
+                $data->timeend = $formdata->timeend;
+                $data->activitytype = 'excursion';
+                if ($formdata->campus == 'oncampus') {
+                    $data->activitytype = 'incursion';
+                }
+                $data->location = $formdata->location;
+                $data->notes = $formdata->notes;
+                // Other defaults
+                $data->username = $USER->username;
+                $data->permissionstype = 'system';
+                $data->status = locallib::ACTIVITY_STATUS_DRAFT;
+                $data->cost = '0';
+                // Set the staff in charge.
+                $data->staffinchargejson = $formdata->ownerjson;
+                $data->staffincharge = $USER->username;
+                $staffincharge = json_decode($formdata->ownerjson);
+                if ($staffincharge) {
+                    $staffincharge = array_pop($staffincharge);
+                    $data->staffincharge = $staffincharge->idfield;
+                }
+                // Create activity.
+                $activity = new activity(0, $data);
+                $activity->save();
+                // Insert reference into event.
+                $event->isactivity = 1;
+                $event->activityid = $activity->get('id');
                 $DB->update_record('excursions_events', $event);
             }
         }
-
+    
+        return $event->id;
        
     }
 
@@ -349,7 +414,8 @@ class eventlib {
         }
 
         // Find excursions that intersect with this start and end time.
-        $sql = "SELECT * FROM {excursions}
+        // If everything comes through as an event, no need to check activities separately.
+        /*$sql = "SELECT * FROM {excursions}
                 WHERE (timestart > ? AND timestart < ?) 
                 OR (timeend > ? AND timeend < ?)
                 OR (timestart <= ? AND timeend >= ?) 
@@ -371,7 +437,7 @@ class eventlib {
                 'status' => 0,
                 'conflictid' => 0,
             ];
-        }
+        }*/
         
         return $conflicts;
     }
@@ -430,13 +496,14 @@ class eventlib {
         $existingConflicts = $DB->get_records_sql("
             SELECT * FROM {excursions_event_conflicts}
             WHERE eventid1 = ?
-        ", [$eventid]);
+            OR eventid2 = ?
+        ", [$eventid, $eventid]);
 
         // Process the newly found conflicts.
         foreach($conflicts as &$conflict) {
             // Check if a record already exists for this conflict.
             foreach ($existingConflicts as $i => $existing) {
-                if ($existing->eventid2 == $conflict->eventid && $existing->event2istype == $conflict->eventtype) {
+                if ($existing->eventid1 == $conflict->eventid || $existing->eventid2 == $conflict->eventid) {
                     // This conflict already exists in the db.
                     $conflict->conflictid = $existing->id;
                     $conflict->status = $existing->status;
@@ -445,13 +512,16 @@ class eventlib {
             }
         }
 
-
         // Insert the new conflicts.
         $createConflicts = [];
         foreach($conflicts as &$conflict) {
             if (empty($conflict->conflictid)) {
                 // Make sure this conflict does not exist.
-                $exists = $DB->get_records_sql("SELECT id FROM {excursions_event_conflicts} WHERE eventid1 = ? AND eventid2 = ? AND event2istype = ?", [$eventid, $conflict->eventid, $conflict->eventtype]);
+                $sql = "SELECT id 
+                FROM {excursions_event_conflicts} 
+                WHERE eventid1 = ? AND eventid2 = ? 
+                OR eventid2 = ? AND eventid1 = ?";
+                $exists = $DB->get_records_sql($sql, [$eventid, $conflict->eventid, $eventid, $conflict->eventid]);
                 if (empty($exists)) {
                     $createConflicts[] = [
                         'eventid1' => $eventid,
@@ -478,15 +548,8 @@ class eventlib {
             return;
         }
 
-        $relatedconflicts = $DB->get_records_sql("
-            SELECT * FROM {excursions_event_conflicts}
-            WHERE eventid1 = $theConflict->eventid1 
-            OR eventid1 = $theConflict->eventid2
-            OR (eventid2 = $theConflict->eventid1 AND event2istype = 'event')
-            OR (eventid2 = $theConflict->eventid2 AND event2istype = 'event')
-        ");
-        list($insql, $params) = $DB->get_in_or_equal(array_column($relatedconflicts, 'id'));
-        $DB->execute("UPDATE {excursions_event_conflicts} SET status = ? WHERE id $insql", array_merge([$status],$params));
+        $theConflict->status = $status;
+        $DB->update_record('excursions_event_conflicts', $theConflict);
     }
 
 }

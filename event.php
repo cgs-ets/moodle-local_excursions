@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/filelib.php');
 use \local_excursions\forms\form_event;
 use \local_excursions\libs\eventlib;
 use \local_excursions\locallib;
+use \local_excursions\persistents\activity;
 
 $edit = optional_param('edit', 0, PARAM_INT);
 
@@ -81,7 +82,20 @@ if (!empty($formdata)) {
 
     //echo "<pre>"; var_export($formdata); exit;
 
-    eventlib::save_event($formdata);
+    $eventid = eventlib::save_event($formdata);
+    $event = $DB->get_record('excursions_events', array('id' => $eventid));
+
+    // Creating a new excursion.
+    if ($formdata->entrytype == 'excursion') {
+        // Redirect to edit.
+        $activitymanageurl = new moodle_url('/local/excursions/activity.php', array(
+            'edit' => $event->activityid,
+        ));
+        $notice = get_string("activityform:savechangessuccess", "local_excursions");
+        redirect($activitymanageurl->out(false), '<p>'.$notice.'</p>', null, \core\output\notification::NOTIFY_SUCCESS);
+        exit;
+    }
+
     $notice = get_string("activityform:savechangessuccess", "local_excursions");
     redirect(
         $viewurl->out(),

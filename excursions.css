@@ -675,6 +675,25 @@
 #page-local-excursions-event #fitem_id_nonnegotiablereason {
   margin-top: -20px;
 }
+#page-local-excursions-event #fgroup_id_entrytype .d-flex.flex-wrap.align-items-center {
+  align-items: flex-start !important;
+  gap: 4%;
+}
+#page-local-excursions-event #fgroup_id_entrytype .d-flex.flex-wrap.align-items-center label {
+  flex-direction: column;
+  padding: 10px 0;
+  flex: 48%;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  background: #f3f5f7;
+  padding: 13px;
+  border-radius: 5px;
+  text-align: center;
+}
+#page-local-excursions-event #fgroup_id_entrytype .d-flex.flex-wrap.align-items-center span {
+  display: none;
+}
 #page-local-excursions-event .recipient-selector .recipient-selection {
   display: none;
   margin-bottom: 8px;
@@ -818,7 +837,7 @@
 }
 #page-local-excursions-events table.events .times {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
 }
 #page-local-excursions-events table.events .cal-date {
   width: 75px;

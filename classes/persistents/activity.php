@@ -302,6 +302,22 @@ class activity extends persistent {
             static::generate_approvals($originalactivity, $activity);
         }
 
+        // Update the associated event.
+        $event = $DB->get_record('excursions_events', array('activityid' => $data->id));
+        if ($event) {
+            // Copy values from event.
+            $event->activityname = $activity->get('activityname');
+            $event->timestart = $activity->get('timestart');
+            $event->timeend = $activity->get('timeend');
+            $event->campus = 'oncampus';
+            if ($activity->get('activitytype') == 'excursion') {
+                $event->campus = 'offcampus';
+            }
+            $event->location = $activity->get('location');
+            $event->notes = $activity->get('notes');
+            $DB->update_record('excursions_events', $event);
+        }
+
         return $data->id;
     }
 

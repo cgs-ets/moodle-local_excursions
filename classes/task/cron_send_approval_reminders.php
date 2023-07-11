@@ -112,6 +112,7 @@ class cron_send_approval_reminders extends \core\task\scheduled_task {
             // Send the reminders.
             foreach ($recipients as $username => $email) {
                 $this->log("Sending reminder for activity " . $data->id . " to " . $username);
+                $data->numdays = '14';
                 $this->send_reminder($data, $username, $email);
             }
             
@@ -167,6 +168,7 @@ class cron_send_approval_reminders extends \core\task\scheduled_task {
             // Send the reminders.
             foreach ($recipients as $username => $email) {
                 $this->log("Sending reminder for activity " . $data->id . " to " . $username);
+                $data->numdays = '7';
                 $this->send_reminder($data, $username, $email);
             }
             

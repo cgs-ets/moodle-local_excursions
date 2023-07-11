@@ -184,6 +184,21 @@ function xmldb_local_excursions_upgrade($oldversion) {
 
     }
 
+    if ($oldversion < 2023070300) {
+        $table = new xmldb_table('excursions_events');
+        $isactivity = new xmldb_field('isactivity', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, null, 'deleted');
+        if (!$dbman->field_exists($table, $isactivity)) {
+            $dbman->add_field($table, $isactivity);
+        }
+
+        $activityid = new xmldb_field('activityid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, null, 'isactivity');
+        if (!$dbman->field_exists($table, $activityid)) {
+            $dbman->add_field($table, $activityid);
+        }
+
+        upgrade_plugin_savepoint(true, 2023070300, 'local', 'excursions');
+    }
+
 
     return true;
 }

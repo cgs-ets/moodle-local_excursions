@@ -74,7 +74,7 @@ class form_event extends \moodleform {
         /*----------------------
         *   Name
         *----------------------*/
-        $mform->addElement('text', 'activityname', "Event title", 'size="48"');
+        $mform->addElement('text', 'activityname', "Event name", 'size="48"');
         $mform->setType('activityname', PARAM_TEXT);
         $mform->addRule('activityname', get_string('required'), 'required', null, 'client');
 
@@ -106,13 +106,14 @@ class form_event extends \moodleform {
         $mform->setDefault('timestart', $dt->getTimestamp());
         $mform->setDefault('timeend', $dt->getTimestamp());
 
-        /* Is recurring */
+        /*
+        // Is recurring
         $mform->addElement('advcheckbox', 'recurring', 'Recurring', '', [], [0,1]);
         if ($recurring) {
             $mform->hideIf('recurring', 'editseries', 'eq', 'event');
         }
 
-        /* Recurring pattern */
+        //Recurring pattern
         $radioarray=array();
         $radioarray[] = $mform->createElement('radio', 'recurringpattern', '', "Daily", "daily");
         $radioarray[] = $mform->createElement('radio', 'recurringpattern', '', "Weekly", "weekly");
@@ -123,7 +124,7 @@ class form_event extends \moodleform {
             $mform->hideIf('recurringpatternar', 'editseries', 'eq', 'event');
         }
 
-        /* Recurring DAILY pattern */
+        // Recurring DAILY pattern
         $radioarray=array();
         $radioarray[] = $mform->createElement('radio', 'recurringdailypattern', '', "All days", "alldays");
         $radioarray[] = $mform->createElement('radio', 'recurringdailypattern', '', "Week days", "weekdays");
@@ -135,20 +136,21 @@ class form_event extends \moodleform {
             $mform->hideIf('recurringdailypatternar', 'editseries', 'eq', 'event');
         }
 
-        /* Recur until */
+        // Recur until
         $mform->addElement('date_time_selector', 'recuruntil', 'Until');
         $mform->hideIf('recuruntil', 'recurring', 'neq', 1);
         if ($recurring) {
             $mform->hideIf('recuruntil', 'editseries', 'eq', 'event');
         }
 
-        /* Calculated dates */
+        // Calculated dates
         $mform->addElement('html', '<div id="calculated-dates"></div>');
+         */
 
         /*----------
         * Non negotiable
         * ----------------*/
-        $mform->addElement('html', '<br>');
+        //$mform->addElement('html', '<br>');
         $mform->addElement('advcheckbox', 'nonnegotiable', 'The dates entered for this event are non negotiable', '', [], [0,1]);
         $mform->addElement('textarea', 'nonnegotiablereason', "Why is this event time non-negotiable?", 'wrap="virtual" rows="2" cols="30"');
         $mform->setType('notes', PARAM_TEXT);
@@ -202,7 +204,18 @@ class form_event extends \moodleform {
         $mform->setType('ownerjson', PARAM_RAW);
 
 
-        //$mform->addElement('html', '<div class="alert alert-danger force-check-conflicts"><p>You must check for conflicts before you can submit.</p><button class="btn btn-danger btn-checkconflicts">Check for conflicts</button></div>');
+        /*----------------------
+        *   Excursion or Event
+        *----------------------*/
+        $radioarray = array();
+        $radioarray[] = $mform->createElement('radio', 'entrytype', '', '<b>Excursion or Incursion</b> Select this option if you need access to admin/budget approval, staffing list, student list, parent permissions, or risk assessment approval.', 'excursion', '');
+        $radioarray[] = $mform->createElement('radio', 'entrytype', '', '<b>Calendar entry only</b> No further action required', 'event', '');
+        $mform->addElement('html', '<br><strong>What type of entry is this?</strong>');
+        $mform->setDefault('entrytype', 'excursion');
+        $mform->addGroup($radioarray, 'entrytype', '', array(' '), false);
+
+
+        // Submit.
         $this->add_action_buttons(true, 'Submit');
 
 
