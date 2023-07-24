@@ -63,6 +63,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
         ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(function(modal) {
           modal.setTitle('Conflicts found');
+          modal.setButtonText('cancel', 'Review entry');
           modal.setSaveButtonText('Submit anyway');
           self.modal = modal;
           self.modal.getModal().addClass('modal-xl');
@@ -183,6 +184,36 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             self.form.addClass('conflicts-checked');
             if (data.conflicts.length) {
               let html = '<div class="conflicts-wrap"><div class="alert alert-warning"><strong>Review the conflicts below and consider whether your event needs to be moved before you continue.</strong></div>';
+
+              html += '<div class="table-heading"><b class="table-heading-label">Event summary</b></div>'
+
+              html += "<table><tr><th>Title</th><th>Start</th><th>End</th><th>Areas</th><th>Owner</th></tr>"
+              var title = $('input[name="activityname"]').val();
+              var timestart = '<div>' + $('[name="timestart[hour]"]').val().padStart(2, '0') + ':' +
+                              $('[name="timestart[minute]"]').val().padStart(2, '0') + '</div><div><small>' +
+                              $('[name="timestart[day]"]').val().padStart(2, '0') + '-' +
+                              $('[name="timestart[month]"]').val().padStart(2, '0') + '-' +
+                              $('[name="timestart[year]"]').val() + '</small></div>';
+
+              var timeend = '<div>' + $('[name="timeend[hour]"]').val().padStart(2, '0') + ':' +
+                            $('[name="timeend[minute]"]').val().padStart(2, '0') + '</div><div><small>' +
+                            $('[name="timeend[day]"]').val().padStart(2, '0') + '-' +
+                            $('[name="timeend[month]"]').val().padStart(2, '0') + '-' +
+                            $('[name="timeend[year]"]').val() + '</small></div>';
+
+              var areasjson = $('input[name="areasjson"]').first();
+              var areasval = areasjson.val()
+              var areavalues = areasval ? JSON.parse(areasval) : [];
+              var lis = areavalues.map(function(a) { return "<li>" + a + "</li>"})
+              var areashtml = "<ul>" + lis.join("") + "</ul>";
+
+              var ownerjson = $('input[name="ownerjson"]').first().val();
+              var owner = JSON.parse(ownerjson)
+              var ownerhtml = '<div>' + owner.map(function(o) { return '<img class="rounded-circle" height="18" src="' + o.photourl + '"> <span>' + o.fullname + '</span>' } ) + '</div>'
+
+              html += "<tr><td>" + title + "</td><td>" + timestart + "</td><td>" + timeend + "</td><td>" + areashtml + "</td><td>" + ownerhtml + "</td></tr>"
+              html += "</table><br>"
+              html += '<div class="table-heading"><b class="table-heading-label">Conflicting events</b></div>'
               html += data.html;
               html += '</div>';
               self.modal.setBody(html);

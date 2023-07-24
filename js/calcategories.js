@@ -3,25 +3,24 @@ var calcategories =
   {
     "id": "Primary School Public",
     "text": "Primary School",
-    "children": []
+    "children": [
+      {
+        "id": "Primary School Public/ELC Public",
+        "text": "ELC",
+        "children": []
+      },
+      {
+        "id": "Primary School Public/Northside Public",
+        "text": "Northside",
+        "children": []
+      },
+      {
+        "id": "Primary School Public/Red Hill Public",
+        "text": "Red Hill",
+        "children": []
+      },
+    ]
   },
-
-  {
-    "id": "ELC Public",
-    "text": "ELC",
-    "children": []
-  },
-  {
-    "id": "Northside Public",
-    "text": "Northside",
-    "children": []
-  },
-  {
-    "id": "Red Hill Public",
-    "text": "Red Hill",
-    "children": []
-  },
-  
   {
     "id": "Senior School Public",
     "text": "Senior School",

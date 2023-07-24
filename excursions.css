@@ -802,112 +802,241 @@
 #page-local-excursions-event .conflicts-checked .force-check-conflicts {
   display: none;
 }
-#page-local-excursions-events .header {
+#page-local-excursions-events .header,
+#page-local-excursions-newindex .header,
+#page-local-excursions-newsearch .header {
   padding: 0 0 20px 0;
   text-align: right;
   display: flex;
   justify-content: space-between;
   gap: 15px;
 }
-#page-local-excursions-events .header .head-options {
+#page-local-excursions-events .header .head-options,
+#page-local-excursions-newindex .header .head-options,
+#page-local-excursions-newsearch .header .head-options {
   display: flex;
   justify-content: right;
   gap: 15px;
   align-items: center;
 }
-#page-local-excursions-events .pagination {
-  margin: 20px 0;
+#page-local-excursions-events .nav-bar,
+#page-local-excursions-newindex .nav-bar,
+#page-local-excursions-newsearch .nav-bar {
+  display: flex;
+  padding: 20px 0;
+  gap: 15px;
 }
-#page-local-excursions-events table.events {
+#page-local-excursions-events .nav-bar .pagination,
+#page-local-excursions-newindex .nav-bar .pagination,
+#page-local-excursions-newsearch .nav-bar .pagination {
+  margin: 0;
+}
+#page-local-excursions-events .nav-bar .pagination .page-select,
+#page-local-excursions-newindex .nav-bar .pagination .page-select,
+#page-local-excursions-newsearch .nav-bar .pagination .page-select {
+  border: 1px solid #dee2e6;
+  line-height: 1;
+  height: 36.75px;
+  border-left: 0;
+  border-right: 0;
+  outline: none;
+  padding: 0 6px;
+  margin: 0;
+  font-size: 16px;
+  color: #005b94;
+}
+#page-local-excursions-events .nav-bar .pagination .page-select option,
+#page-local-excursions-newindex .nav-bar .pagination .page-select option,
+#page-local-excursions-newsearch .nav-bar .pagination .page-select option {
+  color: #000;
+}
+#page-local-excursions-events .nav-bar .pagination .page-select [selected="true"],
+#page-local-excursions-newindex .nav-bar .pagination .page-select [selected="true"],
+#page-local-excursions-newsearch .nav-bar .pagination .page-select [selected="true"] {
+  background-color: #00436e;
+  color: #fff;
+}
+#page-local-excursions-events .nav-bar .filter-select,
+#page-local-excursions-newindex .nav-bar .filter-select,
+#page-local-excursions-newsearch .nav-bar .filter-select {
+  border: 1px solid #dee2e6;
+  line-height: 36px;
+  height: 36px;
+  outline: none;
+  padding: 0 6px;
+  margin: 0;
+  font-size: 16px;
+  color: #005b94;
+  border-radius: 5px;
+}
+#page-local-excursions-events .nav-bar .filter-select option,
+#page-local-excursions-newindex .nav-bar .filter-select option,
+#page-local-excursions-newsearch .nav-bar .filter-select option {
+  color: #000;
+}
+#page-local-excursions-events .nav-bar .filter-select option[selected="true"],
+#page-local-excursions-newindex .nav-bar .filter-select option[selected="true"],
+#page-local-excursions-newsearch .nav-bar .filter-select option[selected="true"] {
+  background-color: #00436e;
+  color: #fff;
+}
+#page-local-excursions-events table.events,
+#page-local-excursions-newindex table.events,
+#page-local-excursions-newsearch table.events {
   width: 100%;
   table-layout: fixed;
 }
 #page-local-excursions-events table.events td,
-#page-local-excursions-events table.events th {
+#page-local-excursions-newindex table.events td,
+#page-local-excursions-newsearch table.events td,
+#page-local-excursions-events table.events th,
+#page-local-excursions-newindex table.events th,
+#page-local-excursions-newsearch table.events th {
   border: 1px solid #ddd;
   padding: 10px;
   vertical-align: top;
   word-break: break-word;
 }
 #page-local-excursions-events table.events td ul,
-#page-local-excursions-events table.events th ul {
+#page-local-excursions-newindex table.events td ul,
+#page-local-excursions-newsearch table.events td ul,
+#page-local-excursions-events table.events th ul,
+#page-local-excursions-newindex table.events th ul,
+#page-local-excursions-newsearch table.events th ul {
   margin: 0;
   list-style: none;
   padding: 0;
 }
-#page-local-excursions-events table.events .times {
+#page-local-excursions-events table.events .th-time,
+#page-local-excursions-newindex table.events .th-time,
+#page-local-excursions-newsearch table.events .th-time {
+  width: 325px;
+}
+#page-local-excursions-events table.events .times,
+#page-local-excursions-newindex table.events .times,
+#page-local-excursions-newsearch table.events .times {
   display: flex;
   gap: 10px;
-}
-#page-local-excursions-events table.events .cal-date {
-  width: 75px;
   line-height: 1;
+  align-items: center;
 }
-#page-local-excursions-events table.events .cal-date .cal-time {
-  background: #66A8D8;
-  color: #fff;
+#page-local-excursions-events table.events .event-date,
+#page-local-excursions-newindex table.events .event-date,
+#page-local-excursions-newsearch table.events .event-date {
+  display: flex;
+}
+#page-local-excursions-events table.events .event-date .event-time,
+#page-local-excursions-newindex table.events .event-date .event-time,
+#page-local-excursions-newsearch table.events .event-date .event-time {
+  background: #EEF2F7;
+  color: #000;
   font-size: 15px;
   text-align: center;
-  width: 75px;
-  padding: 5px 0;
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
+  padding: 10px 5px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
   font-weight: 600;
   letter-spacing: 0.7px;
+  text-wrap: nowrap;
 }
-#page-local-excursions-events table.events .cal-date .cal-day {
-  background: #717171;
+#page-local-excursions-events table.events .event-date .event-day,
+#page-local-excursions-newindex table.events .event-date .event-day,
+#page-local-excursions-newsearch table.events .event-date .event-day {
+  background: #66A8D8;
   color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  margin-right: 1px;
   display: inline-block;
-  text-align: center;
-  width: 75px;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 5px 0;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
+  text-wrap: nowrap;
 }
-#page-local-excursions-events table.events .actions {
+#page-local-excursions-events table.events .event-date .event-day small,
+#page-local-excursions-newindex table.events .event-date .event-day small,
+#page-local-excursions-newsearch table.events .event-date .event-day small {
+  vertical-align: super;
+}
+#page-local-excursions-events table.events .actions,
+#page-local-excursions-newindex table.events .actions,
+#page-local-excursions-newsearch table.events .actions {
   display: flex;
   justify-content: end;
   gap: 5px;
 }
-#page-local-excursions-events table.events tr .conflict-check-results .loading {
+#page-local-excursions-events table.events tr .conflict-check-results .loading,
+#page-local-excursions-newindex table.events tr .conflict-check-results .loading,
+#page-local-excursions-newsearch table.events tr .conflict-check-results .loading {
   display: none;
   justify-content: start;
   margin: 5px 13px 5px 5px;
 }
-#page-local-excursions-events table.events tr .conflict-check-results .loading .spinner {
+#page-local-excursions-events table.events tr .conflict-check-results .loading .spinner,
+#page-local-excursions-newindex table.events tr .conflict-check-results .loading .spinner,
+#page-local-excursions-newsearch table.events tr .conflict-check-results .loading .spinner {
   margin: 0;
   display: block;
   margin-right: 10px;
   height: 20px;
   width: 20px;
 }
-#page-local-excursions-events table.events tr .conflict-check-results .btn-showconflicts {
+#page-local-excursions-events table.events tr .conflict-check-results .btn-showconflicts,
+#page-local-excursions-newindex table.events tr .conflict-check-results .btn-showconflicts,
+#page-local-excursions-newsearch table.events tr .conflict-check-results .btn-showconflicts {
   display: none;
 }
-#page-local-excursions-events table.events tr .conflict-check-results .text-no-conflicts {
+#page-local-excursions-events table.events tr .conflict-check-results .text-no-conflicts,
+#page-local-excursions-newindex table.events tr .conflict-check-results .text-no-conflicts,
+#page-local-excursions-newsearch table.events tr .conflict-check-results .text-no-conflicts {
   display: none;
 }
-#page-local-excursions-events table.events tr.checking-conflicts .conflict-check-results .loading {
+#page-local-excursions-events table.events tr.checking-conflicts .conflict-check-results .loading,
+#page-local-excursions-newindex table.events tr.checking-conflicts .conflict-check-results .loading,
+#page-local-excursions-newsearch table.events tr.checking-conflicts .conflict-check-results .loading {
   display: flex;
 }
-#page-local-excursions-events table.events tr.has-conflicts {
+#page-local-excursions-events table.events tr.has-conflicts,
+#page-local-excursions-newindex table.events tr.has-conflicts,
+#page-local-excursions-newsearch table.events tr.has-conflicts {
   background-color: #fff3cd;
 }
-#page-local-excursions-events table.events tr.has-conflicts .conflict-check-results .btn-showconflicts {
+#page-local-excursions-events table.events tr.has-conflicts .conflict-check-results .btn-showconflicts,
+#page-local-excursions-newindex table.events tr.has-conflicts .conflict-check-results .btn-showconflicts,
+#page-local-excursions-newsearch table.events tr.has-conflicts .conflict-check-results .btn-showconflicts {
   display: block;
 }
-#page-local-excursions-events table.events tr.has-ignored-conflicts .conflict-check-results .btn-showconflicts {
+#page-local-excursions-events table.events tr.has-ignored-conflicts .conflict-check-results .btn-showconflicts,
+#page-local-excursions-newindex table.events tr.has-ignored-conflicts .conflict-check-results .btn-showconflicts,
+#page-local-excursions-newsearch table.events tr.has-ignored-conflicts .conflict-check-results .btn-showconflicts {
   display: block;
 }
-#page-local-excursions-events table.events tr.no-conflicts .conflict-check-results .text-no-conflicts {
+#page-local-excursions-events table.events tr.no-conflicts .conflict-check-results .text-no-conflicts,
+#page-local-excursions-newindex table.events tr.no-conflicts .conflict-check-results .text-no-conflicts,
+#page-local-excursions-newsearch table.events tr.no-conflicts .conflict-check-results .text-no-conflicts {
   display: block;
 }
 .conflicts-wrap table {
   width: 100%;
   table-layout: fixed;
+}
+.conflicts-wrap .table-heading {
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+  height: 13px;
+}
+.conflicts-wrap .table-heading .table-heading-label {
+  display: inline-block;
+  background-color: #fff;
+  padding: 5px 14px 5px 0;
+  line-height: 13px;
+}
+.conflicts-wrap th {
+  color: #7a7a7a;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 .conflicts-wrap td {
   border: 1px solid #ddd;
@@ -1391,42 +1520,51 @@
   pointer-events: none;
 }
 #page-local-excursions-index .search-wrap,
-#page-local-excursions-search .search-wrap {
+#page-local-excursions-search .search-wrap,
+#page-local-excursions-newindex .search-wrap {
   display: flex;
   gap: 5px;
   align-items: center;
 }
 #page-local-excursions-index .search-wrap .search,
-#page-local-excursions-search .search-wrap .search {
+#page-local-excursions-search .search-wrap .search,
+#page-local-excursions-newindex .search-wrap .search {
   padding: 4px 10px;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-status.published i,
-#page-local-excursions-search .generaltable tbody tr.activity .c-status.published i {
+#page-local-excursions-search .generaltable tbody tr.activity .c-status.published i,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-status.published i {
   color: green;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-status.in-review i,
-#page-local-excursions-search .generaltable tbody tr.activity .c-status.in-review i {
+#page-local-excursions-search .generaltable tbody tr.activity .c-status.in-review i,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-status.in-review i {
   color: orange;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-name,
-#page-local-excursions-search .generaltable tbody tr.activity .c-name {
+#page-local-excursions-search .generaltable tbody tr.activity .c-name,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-name {
   max-width: 200px;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students {
   max-width: 270px;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students img,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students img {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students img,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students img {
   margin: 0px 5px 5px 0px;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students .user-permission {
   position: relative;
   display: inline-block;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission .fa,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission .fa {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission .fa,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students .user-permission .fa {
   position: absolute;
   top: 0;
   left: 0;
@@ -1439,40 +1577,41 @@
   transition: all 0.3s;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission .fa-check,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission .fa-check {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission .fa-check,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students .user-permission .fa-check {
   color: green;
   border: 1px solid green;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission .fa-times,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission .fa-times {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission .fa-times,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students .user-permission .fa-times {
   color: red;
   border: 1px solid red;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-students .user-permission:hover .fa,
-#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission:hover .fa {
+#page-local-excursions-search .generaltable tbody tr.activity .c-students .user-permission:hover .fa,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-students .user-permission:hover .fa {
   opacity: 0;
 }
 #page-local-excursions-index .generaltable tbody tr.activity .c-details,
-#page-local-excursions-search .generaltable tbody tr.activity .c-details {
+#page-local-excursions-search .generaltable tbody tr.activity .c-details,
+#page-local-excursions-newindex .generaltable tbody tr.activity .c-details {
   max-width: 400px;
 }
-#page-local-excursions-index .generaltable tbody tr.activity.past,
-#page-local-excursions-search .generaltable tbody tr.activity.past,
-#page-local-excursions-index .generaltable tbody tr.activity.past:nth-of-type(odd),
-#page-local-excursions-search .generaltable tbody tr.activity.past:nth-of-type(odd) {
-  background: rgba(0, 0, 0, 0.3);
-}
 #page-local-excursions-index .generaltable tbody tr.activity.is-autosave,
-#page-local-excursions-search .generaltable tbody tr.activity.is-autosave {
+#page-local-excursions-search .generaltable tbody tr.activity.is-autosave,
+#page-local-excursions-newindex .generaltable tbody tr.activity.is-autosave {
   background: rgba(240, 173, 78, 0.3) !important;
 }
 #page-local-excursions-index .generaltable tbody tr.activity.deleting,
-#page-local-excursions-search .generaltable tbody tr.activity.deleting {
+#page-local-excursions-search .generaltable tbody tr.activity.deleting,
+#page-local-excursions-newindex .generaltable tbody tr.activity.deleting {
   opacity: 0.4;
   pointer-events: none;
 }
 #page-local-excursions-index .header,
-#page-local-excursions-search .header {
+#page-local-excursions-search .header,
+#page-local-excursions-newindex .header {
   padding: 0 0 20px 0;
   text-align: right;
   display: flex;
@@ -1480,65 +1619,79 @@
   gap: 15px;
 }
 #page-local-excursions-index .filter-header,
-#page-local-excursions-search .filter-header {
+#page-local-excursions-search .filter-header,
+#page-local-excursions-newindex .filter-header {
   display: flex;
   margin-bottom: 10px;
   align-items: center;
 }
 #page-local-excursions-index .filter-header h5,
-#page-local-excursions-search .filter-header h5 {
+#page-local-excursions-search .filter-header h5,
+#page-local-excursions-newindex .filter-header h5 {
   line-height: 1;
   margin: 0;
 }
 #page-local-excursions-index .filter-header label,
-#page-local-excursions-search .filter-header label {
+#page-local-excursions-search .filter-header label,
+#page-local-excursions-newindex .filter-header label {
   margin: 0;
   margin-left: 20px;
 }
 #page-local-excursions-index .list-activities .activity.past,
-#page-local-excursions-search .list-activities .activity.past {
+#page-local-excursions-search .list-activities .activity.past,
+#page-local-excursions-newindex .list-activities .activity.past {
   display: none;
 }
 #page-local-excursions-index.show-past-activities .list-activities .activity.past,
-#page-local-excursions-search.show-past-activities .list-activities .activity.past {
+#page-local-excursions-search.show-past-activities .list-activities .activity.past,
+#page-local-excursions-newindex.show-past-activities .list-activities .activity.past {
   display: table-row;
 }
 #page-local-excursions-index .list-activities .activity.in-review,
-#page-local-excursions-search .list-activities .activity.in-review {
+#page-local-excursions-search .list-activities .activity.in-review,
+#page-local-excursions-newindex .list-activities .activity.in-review {
   display: none;
 }
 #page-local-excursions-index .list-activities.user-activities .activity.in-review,
-#page-local-excursions-search .list-activities.user-activities .activity.in-review {
+#page-local-excursions-search .list-activities.user-activities .activity.in-review,
+#page-local-excursions-newindex .list-activities.user-activities .activity.in-review {
   display: table-row;
 }
 #page-local-excursions-index .list-activities.accompanying-activities .activity.in-review,
-#page-local-excursions-search .list-activities.accompanying-activities .activity.in-review {
+#page-local-excursions-search .list-activities.accompanying-activities .activity.in-review,
+#page-local-excursions-newindex .list-activities.accompanying-activities .activity.in-review {
   display: table-row;
 }
 #page-local-excursions-index .list-activities.approver-activities .activity.in-review,
-#page-local-excursions-search .list-activities.approver-activities .activity.in-review {
+#page-local-excursions-search .list-activities.approver-activities .activity.in-review,
+#page-local-excursions-newindex .list-activities.approver-activities .activity.in-review {
   display: table-row;
 }
 #page-local-excursions-index.show-inreview-activities .list-activities .activity.in-review,
-#page-local-excursions-search.show-inreview-activities .list-activities .activity.in-review {
+#page-local-excursions-search.show-inreview-activities .list-activities .activity.in-review,
+#page-local-excursions-newindex.show-inreview-activities .list-activities .activity.in-review {
   display: table-row;
 }
 #page-local-excursions-index .list-activities .activity.past.in-review,
-#page-local-excursions-search .list-activities .activity.past.in-review {
+#page-local-excursions-search .list-activities .activity.past.in-review,
+#page-local-excursions-newindex .list-activities .activity.past.in-review {
   display: none;
 }
 #page-local-excursions-index.show-past-activities.show-inreview-activities .list-activities .activity.past.in-review,
-#page-local-excursions-search.show-past-activities.show-inreview-activities .list-activities .activity.past.in-review {
+#page-local-excursions-search.show-past-activities.show-inreview-activities .list-activities .activity.past.in-review,
+#page-local-excursions-newindex.show-past-activities.show-inreview-activities .list-activities .activity.past.in-review {
   display: table-row;
 }
 #page-local-excursions-index .activities-tabs,
-#page-local-excursions-search .activities-tabs {
+#page-local-excursions-search .activities-tabs,
+#page-local-excursions-newindex .activities-tabs {
   display: flex;
   margin-bottom: 20px;
   flex-flow: wrap;
 }
 #page-local-excursions-index .activities-tabs .activities-tab,
-#page-local-excursions-search .activities-tabs .activities-tab {
+#page-local-excursions-search .activities-tabs .activities-tab,
+#page-local-excursions-newindex .activities-tabs .activities-tab {
   padding: 20px;
   background: #f2f2f2;
   border: 1px solid #fff;
@@ -1548,64 +1701,79 @@
   cursor: pointer;
 }
 #page-local-excursions-index .activities-tabs .activities-tab:hover,
-#page-local-excursions-search .activities-tabs .activities-tab:hover {
+#page-local-excursions-search .activities-tabs .activities-tab:hover,
+#page-local-excursions-newindex .activities-tabs .activities-tab:hover {
   background: #eaeaea;
 }
 #page-local-excursions-index .activities-tabs .activities-tab.selected,
-#page-local-excursions-search .activities-tabs .activities-tab.selected {
+#page-local-excursions-search .activities-tabs .activities-tab.selected,
+#page-local-excursions-newindex .activities-tabs .activities-tab.selected {
   background: #005b94;
   color: #fff;
 }
 #page-local-excursions-index .list-activities,
-#page-local-excursions-search .list-activities {
+#page-local-excursions-search .list-activities,
+#page-local-excursions-newindex .list-activities {
   display: none;
 }
 #page-local-excursions-index .list-activities.selected,
-#page-local-excursions-search .list-activities.selected {
+#page-local-excursions-search .list-activities.selected,
+#page-local-excursions-newindex .list-activities.selected {
   display: block;
 }
 #page-local-excursions-index .th-id,
-#page-local-excursions-search .th-id {
+#page-local-excursions-search .th-id,
+#page-local-excursions-newindex .th-id {
   width: 50px;
 }
 #page-local-excursions-index .th-timestart,
 #page-local-excursions-search .th-timestart,
+#page-local-excursions-newindex .th-timestart,
 #page-local-excursions-index .th-timeend,
-#page-local-excursions-search .th-timeend {
+#page-local-excursions-search .th-timeend,
+#page-local-excursions-newindex .th-timeend {
   width: 80px;
   text-align: center;
   padding-left: 0;
 }
 #page-local-excursions-index .c-timestart,
 #page-local-excursions-search .c-timestart,
+#page-local-excursions-newindex .c-timestart,
 #page-local-excursions-index .c-timeend,
-#page-local-excursions-search .c-timeend {
+#page-local-excursions-search .c-timeend,
+#page-local-excursions-newindex .c-timeend {
   padding-left: 0;
   vertical-align: top;
 }
 #page-local-excursions-index .c-timecreated,
-#page-local-excursions-search .c-timecreated {
+#page-local-excursions-search .c-timecreated,
+#page-local-excursions-newindex .c-timecreated {
   font-size: 11px;
 }
 #page-local-excursions-index .c-timecreated,
 #page-local-excursions-search .c-timecreated,
+#page-local-excursions-newindex .c-timecreated,
 #page-local-excursions-index .th-timecreated,
-#page-local-excursions-search .th-timecreated {
+#page-local-excursions-search .th-timecreated,
+#page-local-excursions-newindex .th-timecreated {
   display: none;
   width: 110px;
 }
 #page-local-excursions-index .sort,
-#page-local-excursions-search .sort {
+#page-local-excursions-search .sort,
+#page-local-excursions-newindex .sort {
   display: none;
 }
 #page-local-excursions-index .cal-date,
-#page-local-excursions-search .cal-date {
+#page-local-excursions-search .cal-date,
+#page-local-excursions-newindex .cal-date {
   width: 50px;
   margin: 0 auto;
   line-height: 1;
 }
 #page-local-excursions-index .cal-date .cal-day,
-#page-local-excursions-search .cal-date .cal-day {
+#page-local-excursions-search .cal-date .cal-day,
+#page-local-excursions-newindex .cal-date .cal-day {
   background: #66A8D8;
   color: #fff;
   display: inline-block;
@@ -1617,7 +1785,8 @@
   padding: 4px 0;
 }
 #page-local-excursions-index .cal-date .cal-year,
-#page-local-excursions-search .cal-date .cal-year {
+#page-local-excursions-search .cal-date .cal-year,
+#page-local-excursions-newindex .cal-date .cal-year {
   text-align: center;
   width: 65px;
   font-size: 10px;
@@ -1628,7 +1797,8 @@
   margin-top: 4px;
 }
 #page-local-excursions-index .cal-date .cal-time,
-#page-local-excursions-search .cal-date .cal-time {
+#page-local-excursions-search .cal-date .cal-time,
+#page-local-excursions-newindex .cal-date .cal-time {
   font-size: 12px;
   font-family: monospace;
   text-align: center;
@@ -1640,20 +1810,26 @@
 }
 #page-local-excursions-index .cal-date.same-day .cal-month,
 #page-local-excursions-search .cal-date.same-day .cal-month,
+#page-local-excursions-newindex .cal-date.same-day .cal-month,
 #page-local-excursions-index .cal-date.same-day .cal-day,
 #page-local-excursions-search .cal-date.same-day .cal-day,
+#page-local-excursions-newindex .cal-date.same-day .cal-day,
 #page-local-excursions-index .cal-date.same-day .cal-year,
-#page-local-excursions-search .cal-date.same-day .cal-year {
+#page-local-excursions-search .cal-date.same-day .cal-year,
+#page-local-excursions-newindex .cal-date.same-day .cal-year {
   display: none;
 }
 #page-local-excursions-index .approver-activities .c-timecreated,
 #page-local-excursions-search .approver-activities .c-timecreated,
+#page-local-excursions-newindex .approver-activities .c-timecreated,
 #page-local-excursions-index .approver-activities .th-timecreated,
-#page-local-excursions-search .approver-activities .th-timecreated {
+#page-local-excursions-search .approver-activities .th-timecreated,
+#page-local-excursions-newindex .approver-activities .th-timecreated {
   display: table-cell;
 }
 #page-local-excursions-index .approver-activities .sort,
-#page-local-excursions-search .approver-activities .sort {
+#page-local-excursions-search .approver-activities .sort,
+#page-local-excursions-newindex .approver-activities .sort {
   display: inline;
 }
 #page-local-excursions-permissions .activity-details {

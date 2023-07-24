@@ -131,6 +131,11 @@ class index_exporter extends exporter {
                 'multiple' => false,
                 'optional' => false,
             ],
+            'activitycreateurl' => [
+                'type' => PARAM_RAW,
+                'multiple' => false,
+                'optional' => false,
+            ],
             'isstaff' => [
                 'type' => PARAM_BOOL,
                 'multiple' => false,

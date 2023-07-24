@@ -26,15 +26,16 @@
 
 <div class="local_excursions_events">
   <div class="header">
-    {{{nav}}}
     <div class="head-options">
       <a id="btn-createevent" class="btn btn-primary" href="/local/excursions/event.php">Create a new event</a>
     </div>
   </div>
+
+  <div class="nav-bar">{{{nav}}}</div>
   
   <table class="events">
     <tr>
-      <th>Start - end</th>
+      <th class="th-time">Start - end</th>
       <th>Title</th>
       <th>Areas</th>
       <th>Details</th>
@@ -45,21 +46,23 @@
     <tr class="event" data-eventid={{id}}>
       <td>
         <div class="times">
-          <div class="timestart">
-            <div class="cal-date">
-              <div class="cal-time">{{timestartReadable}}</div>
-              <div class="cal-day">{{datestartReadable}}</div>
+          
+          <div class="daystart">
+            <div class="event-date">
+              <div class="event-day">{{dayStart}}<small>{{dayStartSuffix}}</small></div>
+              <div class="event-time">{{timestartReadable}}</div>
             </div>
           </div>
-          <div>-</div>
-          <div class="timeend">
-            <div class="cal-date">
-              <div class="cal-time">{{timeendReadable}}</div>
-              <div class="cal-day">{{dateendReadable}}</div>
+          <span> - </span>
+          <div class="dayend">
+            <div class="event-date">
+              <div class="event-day">{{dayEnd}}<small>{{dayEndSuffix}}</small></div>
+              <div class="event-time">{{timeendReadable}}</div>
             </div>
           </div>
+          <div>{{duration}}</div>
+
         </div>
-        <div>Duration: {{duration}}</div>
         {{#nonnegotiable}}
           <div><span class="badge badge-warning">Non-negotiable</span></div>
           {{reason}}
@@ -88,5 +91,5 @@
     </tr>
   {{/events}}
   </table>
-  {{{nav}}}
+  <div class="nav-bar">{{{nav}}}</div>
 </div>

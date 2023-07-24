@@ -199,6 +199,50 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023070300, 'local', 'excursions');
     }
 
+    if ($oldversion < 2023070301) {
+        $table = new xmldb_table('excursions_events');
+        $status = new xmldb_field('status', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, null, 'deleted');
+        if (!$dbman->field_exists($table, $status)) {
+            $dbman->add_field($table, $status);
+        }
+
+        $timesynced = new xmldb_field('timesynced', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, null, 'timemodified');
+        if (!$dbman->field_exists($table, $timesynced)) {
+            $dbman->add_field($table, $timesynced);
+        }
+
+        upgrade_plugin_savepoint(true, 2023070301, 'local', 'excursions');
+    }
+
+    if ($oldversion < 2023070302) {
+
+        // Define table excursions_events_sync to be created.
+        $table = new xmldb_table('excursions_events_sync');
+
+        // Adding fields to table excursions_events_sync.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('eventid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('calendar', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('externalid', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('changekey', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('weblink', XMLDB_TYPE_CHAR, '400', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timesynced', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table excursions_events_sync.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('fk_eventid', XMLDB_KEY_FOREIGN, ['eventid'], 'excursions_events', ['id']);
+
+        // Conditionally launch create table for excursions_events_sync.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023070302, 'local', 'excursions');
+    }
+
+
 
     return true;
 }

@@ -26,6 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use \local_excursions\persistents\activity;
 use \local_excursions\locallib;
+use \local_excursions\external\activity_exporter;
 
 class eventlib {
 
@@ -132,9 +133,9 @@ class eventlib {
             $DB->update_record('excursions_events', $event);
         }
 
-        if ($formdata->entrytype == 'excursion') {            
+        if ($formdata->entrytype == 'excursion') {  
             // Sync with activity data.
-            if ($formdata->edit) {
+            if (!empty($event->activityid)) {
                 $originalactivity = new activity($event->activityid);
                 $activity = new activity($event->activityid);
                 // Copy values from event.
@@ -265,6 +266,204 @@ class eventlib {
         return ['dates'=> $dates, 'datesReadable'=> $datesReadable];
     }
 
+
+    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws') {
+        global $DB, $OUTPUT, $USER;
+
+        // If no month-year nav supplied, load for current month-year.
+        if (empty($current)) {
+            $current = date('Y-m', time());
+        }
+        $broken = explode('-', $current);
+        $currentstart = strtotime($broken[0] . '-' . $broken[1] . '-1 00:00');
+        $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
+
+
+        // Sanitise status.
+        $autosave = locallib::ACTIVITY_STATUS_AUTOSAVE;
+        $draft = locallib::ACTIVITY_STATUS_DRAFT;
+        $inreview = locallib::ACTIVITY_STATUS_INREVIEW;
+        $approved = locallib::ACTIVITY_STATUS_APPROVED;
+        if ($status < $draft || $status > $approved) {
+            $status = 0;
+        }
+
+        // Formulate the campus conition.
+        $campussql = '';
+        if ($campus == 'ss') {
+            $campussql = " AND campus = 'senior' ";
+        } else if ($campus == 'ps') {
+            $campussql = " AND campus = 'primary' ";
+        }
+
+        // Get activities.
+        $sql = "";
+        // If status not provided, then we want to get all approved activities + draft/inreview activities for this user only.
+        // In the case of auditors/approvers, we need to get the above + all inreview activities.
+        $auditor = has_capability('local/excursions:audit', \context_system::instance(), null, false);
+        $approver = count(locallib::get_approver_types($USER->username)) > 0;
+        if ($auditor || $approver) {
+            if ($status == locallib::ACTIVITY_STATUS_DRAFT) {
+                // Get this user's draft activities
+                $sql = "SELECT *
+                        FROM {excursions} 
+                        WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                        AND deleted = 0 
+                        AND status = $status
+                        AND username = '$USER->username'
+                        $campussql
+                        ORDER BY timestart DESC";
+            } else if ($status == locallib::ACTIVITY_STATUS_INREVIEW || $status == locallib::ACTIVITY_STATUS_APPROVED) {
+                // Get all activities with this status.
+                $sql = "SELECT *
+                        FROM {excursions} 
+                        WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                        AND deleted = 0 
+                        AND status = $status
+                        $campussql
+                        ORDER BY timestart DESC";
+            } else {
+                // Get all activities that are not draft/autosave.
+                $sql = "SELECT *
+                        FROM {excursions} 
+                        WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                        AND deleted = 0
+                        AND (status = $approved OR status = $inreview OR (status = $draft AND username = '$USER->username'))
+                        $campussql
+                        ORDER BY timestart DESC";
+            }
+        } else {
+            if ($status == locallib::ACTIVITY_STATUS_APPROVED) {
+                // Get all approved activities.
+                $sql = "SELECT *
+                        FROM {excursions} 
+                        WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                        AND deleted = 0 
+                        AND status = $status
+                        $campussql
+                        ORDER BY timestart DESC";
+            } else if ($status == locallib::ACTIVITY_STATUS_DRAFT || $status == locallib::ACTIVITY_STATUS_INREVIEW) {
+                // Get draft/inreview activities for this user only.
+                $sql = "SELECT *
+                        FROM {excursions} 
+                        WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                        AND deleted = 0 
+                        AND status = $status
+                        AND username = '$USER->username'
+                        $campussql
+                        ORDER BY timestart DESC";
+            } else {
+                // Get all approved activities + draft/inreview activities for this user only.
+                $sql = "SELECT *
+                        FROM {excursions} 
+                        WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                        AND deleted = 0 
+                        AND (status = $approved OR (
+                            (status = $draft OR status = $inreview) AND username = '$USER->username'
+                        ))
+                        $campussql
+                        ORDER BY timestart DESC";
+            }
+        }
+        
+        $activities = array();
+        $records = $DB->get_records_sql($sql, array($currentstart, $currentend, $currentstart, $currentend));
+        foreach ($records as $record) {
+            $activity = new activity($record->id, $record);
+            $activityexporter = new activity_exporter($activity, array('minimal' => true));
+            $exported = $activityexporter->export($OUTPUT);
+            $activities[] = $exported;
+        }
+
+
+        // Get calendar entries. Don't get anything if filtering by draft or review, as this is an activity workflow thing.
+
+        // Formulate the areas conition.
+        $areassql = '';
+        if ($campus == 'ss') {
+            $areassql = " AND areasjson LIKE '%Senior school%' ";
+        } else if ($campus == 'ps') {
+            $areassql = " AND areasjson LIKE '%Primary school%' ";
+        }
+
+        $events = array();
+        if ($status == 0 || $status == $approved) {
+            $sql = "SELECT * 
+                FROM {excursions_events}
+                WHERE isactivity = 0
+                AND deleted = 0
+                AND ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+                $areassql
+                ORDER BY timestart DESC
+            ";
+            $records = $DB->get_records_sql($sql, array($currentstart, $currentend, $currentstart, $currentend));
+            foreach ($records as $event) {
+                $event = (object) static::export_event($event);
+                $event->calentryonly = true;
+                $events[] = $event;
+            }
+        }
+
+
+        // Merge and sort activities and events.
+        $merged = array_merge($activities, $events);
+        usort($merged, fn($a, $b) => strcmp($a->timestart, $b->timestart));
+
+        return $merged;
+    }
+
+
+    public static function search($text) {
+        global $DB, $OUTPUT, $USER;
+
+        $draft = locallib::ACTIVITY_STATUS_DRAFT;
+        $inreview = locallib::ACTIVITY_STATUS_INREVIEW;
+        $approved = locallib::ACTIVITY_STATUS_APPROVED;
+        $sql = "SELECT * 
+                  FROM {excursions}
+                 WHERE deleted = 0
+                   AND (activityname LIKE ? OR username LIKE ? OR staffinchargejson LIKE ?)
+                   AND (status = $approved OR status = $inreview OR (status = $draft AND username = '$USER->username'))
+              ORDER BY timestart DESC";
+        $params = array();
+        $params[] = '%'.$text.'%';
+        $params[] = '%'.$text.'%';
+        $params[] = '%'.$text.'%';
+        //echo "<pre>"; var_export($sql); var_export($params); exit;
+
+        $activities = array();
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $record) {
+            $activity = new activity($record->id, $record);
+            $activityexporter = new activity_exporter($activity, array('minimal' => true));
+            $exported = $activityexporter->export($OUTPUT);
+            $activities[] = $exported;
+        }
+
+
+        $events = array();
+        $sql = "SELECT * 
+            FROM {excursions_events}
+            WHERE isactivity = 0
+            AND deleted = 0
+            AND (activityname LIKE ? OR creator LIKE ? OR ownerjson LIKE ?)
+            ORDER BY timestart DESC
+        ";
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $event) {
+            $event = (object) static::export_event($event);
+            $event->calentryonly = true;
+            $events[] = $event;
+        }
+    
+        // Merge and sort activities and events.
+        $merged = array_merge($activities, $events);
+        usort($merged, fn($a, $b) => strcmp($a->timestart, $b->timestart));
+
+        return $merged;
+
+    }
+
     
     public static function get_all_events($current = '') {
         global $DB;
@@ -328,23 +527,29 @@ class eventlib {
         $duration .= $days ? $days . 'd ' : '';
         $duration .= $hours ? $hours . 'h ' : '';
         $duration .= $minutes ? $minutes . 'm ' : '';
-        //$categoriesjson = json_decode($event->categoriesjson);
         return array(
             'id' => $event->id,
             'eventname' => $event->activityname,
+            'timestart' => $event->timestart,
+            'timeend' => $event->timeend,
             'timestartReadable' => date('g:ia', $event->timestart),
             'datestartReadable' => date('j M', $event->timestart),
             'timeendReadable' => date('g:ia', $event->timeend),
             'dateendReadable' => date('j M', $event->timeend),
+            'dayStart' => date('j', $event->timestart),
+            'dayEnd' => date('j', $event->timeend),
+            'dayStartSuffix' => date('S', $event->timestart),
+            'dayEndSuffix' => date('S', $event->timeend),
             'duration' => $duration,
             'areas' => $areas,
             'details' => $event->notes,
             'owner' => $owner,
             'nonnegotiable' => $event->nonnegotiable,
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),
-            //'categoriesjson' => $categoriesjson,
         );
     }
+
+    
 
     public static function check_conflicts($eventid, $timestart, $timeend, $recurringsettings = null, $unix = false) {
         global $DB;
@@ -355,7 +560,7 @@ class eventlib {
         }
 
         // If this event is recurring, need to check conflicts for all the dates in the series.
-        if ($recurringsettings && $recurringsettings->recurring) {
+        /*if ($recurringsettings && $recurringsettings->recurring) {
             // Check if this is an existing event in a series.
             $recurrenceid = -1;
             $event = static::get_event($eventid);
@@ -374,9 +579,9 @@ class eventlib {
                 }
             }
             return $conflicts;
-        } else {
+        } else {*/
             return static::check_conflicts_for_single($eventid, $timestart, $timeend);
-        }
+        //}
     }
 
     public static function check_conflicts_for_single($eventid, $timestart, $timeend, $recurrenceid = -1) {
@@ -453,17 +658,36 @@ class eventlib {
 
         $conflicts = static::check_conflicts_for_single($id, $event->timestart, $event->timeend);
         static::sync_conflicts($id, $conflicts);
-        $html = static::generate_conflicts_html($conflicts, true);
+        $html = static::generate_conflicts_html($conflicts, true, static::export_event($event));
  
         return ['html' => $html, 'conflicts' => $conflicts];
 
     }
 
-    public static function generate_conflicts_html($conflicts, $withActions = false) {
+    public static function generate_conflicts_html($conflicts, $withActions = false, $eventContext = null) {
         $html = '';
         // Generate the html.
         if (count($conflicts)) {
-            $html = "<table> <tr> <th>Title</th> <th>Start</th> <th>End</th> <th>Areas</th> <th>Owner</th> </tr>";
+            if ($eventContext) {
+                $eventContext = (object) $eventContext;
+                $owner = '<div><img class="rounded-circle" height="18" src="' . $eventContext->owner['photourl'] . '"> <span>' . $eventContext->owner['fullname'] . '</span></div>';
+                $areas = "<ul>" . implode("", array_map(function($area) { return "<li>" . $area . "</li>"; }, $eventContext->areas)) . "</ul>";
+                $timestart = '<div>' . $eventContext->timestartReadable . '</div><div><small>' . date('j M Y', $eventContext->timestart) . '</small></div>';
+                $timeend = '<div>' . $eventContext->timeendReadable . '</div><div><small>' . date('j M Y', $eventContext->timeend) . '</small></div>';
+                $html .= '<div class="table-heading"><b class="table-heading-label">Event summary</b></div>';
+                $html .= "<table><tr><th>Title</th><th>Start</th><th>End</th><th>Areas</th><th>Owner</th></tr>";
+                $actionshtml = '';
+                if ($withActions) {
+                    $editurl = new \moodle_url('/local/excursions/event.php', array('edit' => $eventContext->id));
+                    $actionshtml .= '<td><div class="actions">';
+                    $actionshtml .= '<a class="btn btn-secondary" target="_blank" href="' . $editurl->out(false) . '">Edit</a><br><br>';
+                    $actionshtml .= "</div></td>";
+                }
+                $html .= "<tr><td>" . $eventContext->eventname . "</td><td>" . $timestart . "</td><td>" . $timeend . "</td><td>" . $areas . "</td><td>" . $owner . "</td>" . $actionshtml . "</tr>";
+                $html .= "</table><br>";
+                $html .= '<div class="table-heading"><b class="table-heading-label">Conflicting events</b></div>';
+            }
+            $html .= "<table> <tr> <th>Title</th> <th>Start</th> <th>End</th> <th>Areas</th> <th>Owner</th> </tr>";
             foreach($conflicts as $conflict) {
                 $html .= '<tr data-eventid="' . $conflict->eventid . '" data-status="' . $conflict->status . '">';
                 $html .= "<td>" . $conflict->eventname . "</td>";

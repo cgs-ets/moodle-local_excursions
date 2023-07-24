@@ -72,4 +72,9 @@ if ($hassiteconfig) {
 
     $settings->add(new admin_setting_configtext('local_excursions/eventreviewers', 'Event reviewers', 'Comma-separated usernames', ''));
 
+    // MS Graph API credentials
+    $settings->add(new admin_setting_configtext('local_excursions/graphclientid', 'Graph API Client ID', '', ''));
+    $settings->add(new admin_setting_configtext('local_excursions/graphclientsecret', 'Graph API Client Secret', '', ''));
+    $settings->add(new admin_setting_configtext('local_excursions/graphtenantid', 'Graph API Tenant ID', '', ''));
+
 }

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "guzzlehttp/guzzle": "^7.7",
+        "microsoft/microsoft-graph": "^1.103"
+    }
+}

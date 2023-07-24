@@ -143,6 +143,35 @@ class activity_exporter extends persistent_exporter {
             'stepname' => [
                 'type' => PARAM_RAW,
             ],
+
+
+            'timestartReadable' => [
+                'type' => PARAM_RAW,
+            ],
+            'datestartReadable' => [
+                'type' => PARAM_RAW,
+            ],
+            'timeendReadable' => [
+                'type' => PARAM_RAW,
+            ],
+            'dateendReadable' => [
+                'type' => PARAM_RAW,
+            ],
+            'dayStart' => [
+                'type' => PARAM_RAW,
+            ],
+            'dayEnd' => [
+                'type' => PARAM_RAW,
+            ],
+            'dayStartSuffix' => [
+                'type' => PARAM_RAW,
+            ],
+            'dayEndSuffix' => [
+                'type' => PARAM_RAW,
+            ],
+            'duration' => [
+                'type' => PARAM_RAW,
+            ],
         ];
     }
 
@@ -431,6 +460,15 @@ class activity_exporter extends persistent_exporter {
 
         }
 
+        $dateDiff = intval(($this->data->timeend-$this->data->timestart)/60);
+        $days = intval($dateDiff/60/24);
+        $hours = intval($dateDiff/60%24);
+        $minutes = $dateDiff%60;
+        $duration = '';
+        $duration .= $days ? $days . 'd ' : '';
+        $duration .= $hours ? $hours . 'h ' : '';
+        $duration .= $minutes ? $minutes . 'm ' : '';
+
     	return [
             'manageurl' => $manageurl->out(false),
             'permissionsurl' => $permissionsurl->out(false),
@@ -462,6 +500,15 @@ class activity_exporter extends persistent_exporter {
             'htmlnotes' => $htmlnotes,
             'isexcursion' => $isexcursion,
             'stepname' => $stepname,
+            'timestartReadable' => date('g:ia', $this->data->timestart),
+            'datestartReadable' => date('j M', $this->data->timestart),
+            'timeendReadable' => date('g:ia', $this->data->timeend),
+            'dateendReadable' => date('j M', $this->data->timeend),
+            'dayStart' => date('j', $this->data->timestart),
+            'dayEnd' => date('j', $this->data->timeend),
+            'dayStartSuffix' => date('S', $this->data->timestart),
+            'dayEndSuffix' => date('S', $this->data->timeend),
+            'duration' => $duration,
 	    ];
     }
 

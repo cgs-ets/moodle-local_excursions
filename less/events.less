@@ -180,7 +180,7 @@
   }
 }
 
-#page-local-excursions-events {
+#page-local-excursions-events, #page-local-excursions-newindex, #page-local-excursions-newsearch {
   .header {
 		padding: 0 0 20px 0;
     text-align: right;
@@ -194,9 +194,55 @@
       align-items: center;
     }
 	}
-  .pagination {
-    margin: 20px 0;
+
+  .nav-bar {
+    display: flex;
+    padding: 20px 0;
+    gap: 15px;
+
+    .pagination {
+      margin: 0;
+      .page-select {
+        border: 1px solid #dee2e6;
+        line-height: 1;
+        height: 36.75px;
+        border-left: 0;
+        border-right: 0;
+        outline: none;
+        padding: 0 6px;
+        margin: 0;
+        font-size: 16px;
+        color: #005b94;
+        option {
+          color: #000;
+        }
+        [selected="true"] {
+          background-color: #00436e;
+          color: #fff;
+        }
+      }
+    }
+  
+    .filter-select {
+      border: 1px solid #dee2e6;
+      line-height: 36px;
+      height: 36px;
+      outline: none;
+      padding: 0 6px;
+      margin: 0;
+      font-size: 16px;
+      color: #005b94;
+      border-radius: 5px;
+      option {
+        color: #000;
+        &[selected="true"] {
+          background-color: #00436e;
+          color: #fff;
+        }
+      }
+    }
   }
+ 
   
   table.events {
     width: 100%;
@@ -212,37 +258,43 @@
         padding: 0;
       }
     }
+    .th-time {
+      width: 325px;
+    }
     .times {
       display: flex;
       gap: 10px;
-    }
-    .cal-date {
-      width: 75px;
       line-height: 1;
-      .cal-time {
-        background: #66A8D8;
-        color: #fff;
+      align-items: center;
+    }
+    .event-date {
+      display: flex;
+      .event-time {
+        background: #EEF2F7;
+        color: #000;
         font-size: 15px;
         text-align: center;
-        width: 75px;
-        padding: 5px 0;
-        border-top-right-radius: 6px;
-        border-top-left-radius: 6px;
+        padding: 10px 5px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
         font-weight: 600;
         letter-spacing: 0.7px;
+        text-wrap: nowrap;
       }
-      .cal-day {
-        background: #717171;
+      .event-day {
+        background: #66A8D8;
         color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 8px;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        margin-right: 1px;
         display: inline-block;
-        text-align: center;
-        width: 75px;
-        font-size: 14px;
-        font-weight: 400;
-        padding: 5px 0;
-        border-bottom-right-radius: 6px;
-        border-bottom-left-radius: 6px;
-    
+        text-wrap: nowrap;
+        small {
+          vertical-align: super;
+        }
       }
     }
     .actions {
@@ -308,6 +360,24 @@
   table {
     width: 100%;
     table-layout: fixed;
+  }
+  .table-heading {
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    height: 13px;
+    .table-heading-label {
+      display: inline-block;
+      background-color: #fff;
+      padding: 5px 14px 5px 0;
+      line-height: 13px;
+    }
+  }
+  th {
+    color: #7a7a7a;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
   }
   td {
     border: 1px solid #ddd;

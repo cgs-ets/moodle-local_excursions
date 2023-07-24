@@ -62,7 +62,7 @@ if ($edit) {
 // Instantiate the form.
 $formactivity = new form_event(
     $editurl->out(false), 
-    array('edit' => $edit, 'recurring' => $recurring), 
+    array('edit' => $edit, 'recurring' => $recurring, 'event' => $event), 
     'post', 
     '', 
     array('data-form' => 'excursions-event', 'data-eventid' => $edit)

@@ -133,6 +133,7 @@ $string['cron_create_absences'] = 'Create excursion absences in Synergetic';
 $string['cron_create_classes'] = 'Create excursion class rolls in Synergetic';
 $string['cron_send_attendance_reminders'] = 'Send attendance reminders to organisers';
 $string['cron_send_approval_reminders'] = 'Send approval reminders to organisers';
+$string['cron_sync_events'] = 'Sync events to external calendars';
 $string['messagequeued'] = 'Permissions have been queued for sending. Permissions will appear in the student list above as parents respond.';
 
 $string['activitypermissions'] = 'Activity Permissions';

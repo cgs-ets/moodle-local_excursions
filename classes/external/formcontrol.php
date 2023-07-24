@@ -164,7 +164,7 @@ trait formcontrol {
             }
         }
 
-        // Event Servies.
+        // Event Services.
         if ($action == 'check_conflicts') {
             $data = json_decode($data);
             $conflicts = eventlib::check_conflicts($data->eventid, $data->timestart, $data->timeend, $data->recurringsettings, false);

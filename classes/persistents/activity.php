@@ -49,7 +49,7 @@ class activity extends persistent {
     const TABLE_EXCURSIONS_PERMISSIONS = 'excursions_permissions';
     const TABLE_EXCURSIONS_STAFF = 'excursions_staff';
     const TABLE_EXCURSIONS_PLANNING_STAFF = 'excursions_planning_staff';
-    
+    const TABLE_EXCURSIONS_EVENTS = 'excursions_events';
 
 
     /**
@@ -2230,8 +2230,19 @@ class activity extends persistent {
             $activity->set('absencesprocessed', 0);
             $activity->set('classrollprocessed', 0);
             $activity->update();
+
+
+            // Delete corresponding event.
+            $sql = "UPDATE {" . static::TABLE_EXCURSIONS_EVENTS . "}
+                    SET deleted = 1
+                    WHERE activityid = ?
+                    AND isactivity = 1";
+            $DB->execute($sql, array($activity->get('id')));
+
             return 1;
         }
+
+        
     }
 
 }

@@ -144,19 +144,42 @@ class locallib extends local_excursions_config {
         return false;
     }
 
-    public static function get_events_pagination($current = '') {
+    public static function get_events_pagination($current = '', $pagename = 'events') {
+        $thismonth = date('Y-n', time());
         if (empty($current)) {
-            $current = date('Y-m', time());
+            $current = $thismonth;
         }
         $broken = explode('-', $current);
-        $currurl = new \moodle_url('/local/excursions/events.php', array('nav' => $current));
-        $prevurl = new \moodle_url('/local/excursions/events.php', array('nav' => $broken[0] . '-' . ($broken[1]-1)));
-        $nexturl = new \moodle_url('/local/excursions/events.php', array('nav' => $broken[0] . '-' . ($broken[1]+1)));
+        $currurl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $current));
+        $prevnav = $broken[0] . '-' . ($broken[1]-1);
+        $nextnav = $broken[0] . '-' . ($broken[1]+1);
+        $prevurl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $prevnav));
+        $nexturl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $nextnav));
+
+        $months = [];
+        for ($i = 6; $i >= 0; $i--) 
+        {
+            $monstr = strtotime( date( 'Y-m-01' )." -$i months");
+            $months[] = [date("Y-n", $monstr), date("M Y", $monstr)];
+        }
+        for ($i = 1; $i <= 6; $i++) 
+        {
+            $monstr = strtotime( date( 'Y-m-01' )." +$i months");
+            $months[] = [date("Y-n", $monstr), date("M Y", $monstr)];
+        }
 
         $nav  = '<nav><ul class="pagination">';
-        $nav .= '<li class="page-item"><a class="page-link" href="' . $prevurl->out(false) . '"><span>&laquo;</span></a></a></li>';
-        $nav .= '<li class="page-item"><a class="page-link" href="' . $currurl->out(false) . '">' . date('M Y', time()) . '</a></li>';
-        $nav .= '<li class="page-item"><a class="page-link" href="' . $nexturl->out(false) . '"><span>&raquo;</span></a></a></li>';
+        $nav .= '<li class="page-item"><a class="page-link" href="#" data-nav="' . $prevnav . '" data-url="' . $prevurl->out(false) . '"><span><i class="fa fa-chevron-left" aria-hidden="true"></i></span></a></a></li>';
+        $nav .= '<li class="page-item">
+            <select class="page-select" name="page-select">
+            ' . implode("", array_map(function($o) use ($current, $thismonth) { 
+                    $selected = ($o[0] ==  $current) ? 'selected="true" ' : '';
+                    $style = ($o[0] ==  $thismonth) ? 'style="background-color:#c9c9c9;" ' : '';
+                    return '<option ' . $selected . $style . ' value="' . $o[0] . '">' . $o[1] . '</option>';
+                }, $months)) . 
+            '</select>
+        </li>';
+        $nav .= '<li class="page-item"><a class="page-link" href="#" data-nav="' . $nextnav . '" data-url="' . $nexturl->out(false) . '"><span><i class="fa fa-chevron-right" aria-hidden="true"></i></span></a></a></li>';
         $nav .= '</ul class="pagination"></nav>';
 
         return (object) array(
@@ -164,6 +187,37 @@ class locallib extends local_excursions_config {
             'nav' => $nav,
         );
    
+    }
+
+    public static function get_events_filter_status($current = 0) {
+        $options = array(
+            [0,'Any'], 
+            [static::ACTIVITY_STATUS_DRAFT, 'Draft'],
+            [static::ACTIVITY_STATUS_INREVIEW, 'In-review'],
+            [static::ACTIVITY_STATUS_APPROVED, 'Approved'],
+        );
+        $filters  = '<select class="filter-select" name="status">';
+        $filters .= implode("", array_map(function($o) use ($current) { 
+            $selected = ($o[0] ==  $current) ? 'selected="true"' : '';
+            return '<option ' . $selected . ' value="' . $o[0] . '">' . $o[1] . '</option>';
+        }, $options));
+        $filters .= '</select>';
+        return $filters;
+    }
+
+    public static function get_events_filter_campus($current = 'ws') {
+        $options = array(
+            ['ws', 'Whole school'], 
+            ['ps', 'Primary school'],
+            ['ss', 'Senior school'],
+        );
+        $filters  = '<select class="filter-select" name="campus">';
+        $filters .= implode("", array_map(function($o) use ($current) { 
+            $selected = ($o[0] ==  $current) ? 'selected="true"' : '';
+            return '<option ' . $selected . ' value="' . $o[0] . '">' . $o[1] . '</option>';
+        }, $options));
+        $filters .= '</select>';
+        return $filters;
     }
 
 

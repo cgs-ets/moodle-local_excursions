@@ -26,6 +26,7 @@
 // Include required files and classes.
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once('lib.php');
+use \local_excursions\libs\graphlib;
 
 // Set context.
 $context = context_system::instance();
@@ -42,13 +43,65 @@ $PAGE->navbar->add($title);
 require_login();
 require_capability('moodle/site:config', $context, $USER->id); 
 
-// Build page output
-$output = '';
-//$output .= $OUTPUT->header();
 
-$cron = new \local_excursions\task\cron_create_classes();
-$cron->execute();
+echo "<pre>"; 
+$userPrincipalName = 'michael.vangelovski@cgs.act.edu.au';
 
-// Final outputs
-$output .= $OUTPUT->footer();
-echo $output;
+// Create calendar event
+$eventdata = new stdClass();
+$eventdata->subject = "Let's go for lunch 2";
+$eventdata->body = new stdClass();
+$eventdata->body->contentType = "HTML";
+$eventdata->body->content = "<b>Does</b> next month work for you?";
+$eventdata->categories = array('Blue', 'Test Category');
+$eventdata->start = new stdClass();
+$eventdata->start->dateTime = "2023-07-24T15:11:00";
+$eventdata->start->timeZone = "AUS Eastern Standard Time";
+$eventdata->end = new stdClass();
+$eventdata->end->dateTime = "2023-07-24T16:12:00";
+$eventdata->end->timeZone = "AUS Eastern Standard Time";
+$eventdata->location = new stdClass();
+$eventdata->location->displayName = "Data centre";
+$eventdata->isOnlineMeeting = false;
+$result = graphlib::createEvent($userPrincipalName, $eventdata);
+$record = new stdClass();
+$record->calendar = $userPrincipalName;
+$record->extenalid = $result->getId();
+$record->changekey = $result->getChangeKey();
+$record->weblink = $result->getWebLink();
+$record->status = 1;
+$record->timesynced = time();
+var_export($record);
+echo "<hr>";
+
+
+// Get calendar event
+$result = graphlib::getEvent($userPrincipalName, $record->extenalid);
+var_export($result);
+echo "<hr>";
+
+// Update calendar event
+$eventdata = new stdClass();
+$eventdata->subject = "A new subject name";
+$eventdata->body = new stdClass();
+$eventdata->body->contentType = "HTML";
+$eventdata->body->content = "<b>Change this</b> next month work for you?";
+$eventdata->categories = array('Red Category');
+$eventdata->start = new stdClass();
+$eventdata->start->dateTime = "2023-07-24T15:10:00";
+$eventdata->start->timeZone = "AUS Eastern Standard Time";
+$eventdata->end = new stdClass();
+$eventdata->end->dateTime = "2023-07-24T16:10:00";
+$eventdata->end->timeZone = "AUS Eastern Standard Time";
+$eventdata->location = new stdClass();
+$eventdata->location->displayName = "Admin Building";
+$result = graphlib::updateEvent($userPrincipalName, $record->extenalid, $eventdata);
+var_export($result);
+echo "<hr>";
+
+// Delete calendar event
+$result = graphlib::deleteEvent($userPrincipalName, $record->extenalid);
+var_export($result->getStatus() == 204);
+echo "<hr>";
+
+exit;
