@@ -57,25 +57,23 @@ if ($edit) {
         exit;
     }
     //$recurring = $event->recurrencemaster ? 1 : 0;
-}
-//echo "<pre>"; var_export($event); exit;
-
-// Is this user allowed to edit this event?
-$canedit = false;
-if (locallib::is_event_reviewer()) {
-    $canedit = true;
-} else if ($event->owner == $USER->username || $event->creator == $USER->username) {
-    $canedit = true;
-}
-if (!$canedit) {
-    $notice = 'You do not have permission to edit this calendar event.';
-    redirect(
-        $viewurl->out(),
-        $notice,
-        null,
-        \core\output\notification::NOTIFY_ERROR
-    );
-    exit;
+    // Is this user allowed to edit this event?
+    $canedit = false;
+    if (locallib::is_event_reviewer()) {
+        $canedit = true;
+    } else if ($event->owner == $USER->username || $event->creator == $USER->username) {
+        $canedit = true;
+    }
+    if (!$canedit) {
+        $notice = 'You do not have permission to edit this calendar event.';
+        redirect(
+            $viewurl->out(),
+            $notice,
+            null,
+            \core\output\notification::NOTIFY_ERROR
+        );
+        exit;
+    }
 }
 
 // Instantiate the form.
