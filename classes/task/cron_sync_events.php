@@ -62,7 +62,10 @@ class cron_sync_events extends \core\task\scheduled_task {
                 OR (status = 0 AND timesynclive > 0)";
         $events = $DB->get_records_sql($sql);
 
-        $config = get_config('local_excursions');            
+        $config = get_config('local_excursions');
+        if (empty($config->livecalupn)) {
+            return;
+        }           
 
         foreach ($events as $event) {
             $this->log("Processing event $event->id: `$event->activityname`");

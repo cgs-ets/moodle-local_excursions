@@ -61,7 +61,10 @@ class cron_sync_planning extends \core\task\scheduled_task {
                 WHERE timesyncplanning < timemodified";
         $events = $DB->get_records_sql($sql);
 
-        $config = get_config('local_excursions');            
+        $config = get_config('local_excursions');
+        if (empty($config->planningcalupn)) {
+            return;
+        }      
 
         foreach ($events as $event) {
             $timestart = date('j M Y g:ia', $event->timestart);

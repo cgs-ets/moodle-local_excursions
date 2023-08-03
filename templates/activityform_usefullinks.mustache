@@ -25,5 +25,6 @@
 }}
 <div class="usefullinks">
     {{#activity.eventurl}}<a class="btn btn-small btn-secondary" href="{{activity.eventurl}}"><i class="fa fa-calendar" aria-hidden="true"></i> Edit Calendar Settings</a>{{/activity.eventurl}}
-    | {{#str}}helpguide, local_excursions{{/str}} | <a href="{{activity.summaryurl}}" target="_blank">Printable summary</a>   
+    | {{#str}}helpguide, local_excursions{{/str}} 
+    <div style="display:none;">| <a href="{{activity.summaryurl}}" target="_blank">Printable summary</a></div>
 </div>
