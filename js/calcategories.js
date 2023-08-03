@@ -1,44 +1,44 @@
 var calcategories = 
 [
   {
-    "id": "Primary School Public",
-    "text": "Primary School",
+    "id": "Whole School",
+    "text": "Whole School",
     "children": [
       {
-        "id": "Primary School Public/ELC Public",
-        "text": "ELC",
-        "children": []
+        "id": "Whole School/Primary School",
+        "text": "Primary School",
+        "children": [
+          {
+            "id": "Whole School/Primary School/ELC",
+            "text": "ELC",
+          },
+          {
+            "id": "Whole School/Primary School/Northside",
+            "text": "Northside",
+          },
+          {
+            "id": "Whole School/Primary School/Red Hill",
+            "text": "Red Hill",
+          },
+          {
+            "id": "Whole School/Primary School/Kindergarten",
+            "text": "Kindergarten",
+          },
+        ]
       },
       {
-        "id": "Primary School Public/Northside Public",
-        "text": "Northside",
-        "children": []
-      },
-      {
-        "id": "Primary School Public/Red Hill Public",
-        "text": "Red Hill",
+        "id": "Senior School",
+        "text": "Senior School",
         "children": []
       },
     ]
   },
   {
-    "id": "Senior School Public",
-    "text": "Senior School",
-    "children": []
-  },
-  {
-    "id": "Whole School Public",
-    "text": "Whole School",
-    "children": []
-  },
-  {
     "id": "Website External",
     "text": "CGS Website",
-    "children": []
   },
   {
     "id": "Alumni",
     "text": "Alumni Website",
-    "children": []
   },
 ]

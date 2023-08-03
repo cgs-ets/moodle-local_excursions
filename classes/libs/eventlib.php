@@ -37,7 +37,19 @@ class eventlib {
             return new \stdClass();
         }
 
-        $event = $DB->get_record('excursions_events', array('id' => $id));
+        $event = $DB->get_record('excursions_events', array('id' => $id, 'deleted' => 0));
+
+        if (empty($event)) {
+            return false;
+        }
+
+        return $event;
+    }
+
+    public static function get_by_activityid($activityid) {
+        global $DB;
+
+        $event = $DB->get_record('excursions_events', array('deleted' => 0, 'isactivity' => 1, 'activityid' => $activityid));
 
         if (empty($event)) {
             return false;
@@ -49,16 +61,17 @@ class eventlib {
     public static function save_event($formdata) {
         global $DB, $USER;
 
+        //echo "<pre>"; var_export($formdata); exit;
+
         $event = eventlib::get_event($formdata->edit);
         if ($formdata->edit && $event === false) {
             // Editing but no event found. Major error.
             return;
-        } else {
-            $event->creator = $USER->username;
         }
+        $original = clone($event);
 
         $event->activityname = $formdata->activityname;
-        $event->campus = $formdata->campus;
+        $event->activitytype = $formdata->activitytype;
         $event->location = $formdata->location;
         $event->timestart = $formdata->timestart;
         $event->timeend = $formdata->timeend;
@@ -66,15 +79,33 @@ class eventlib {
         $event->reason = isset($formdata->nonnegotiablereason) ? $formdata->nonnegotiablereason : '';
         $event->notes = $formdata->notes;
         $event->categoriesjson = $formdata->categoriesjson;
-        $event->areasjson = $formdata->areasjson;
         $event->ownerjson = $formdata->ownerjson;
         $event->owner = $USER->username;
-        $event->recurringjson = '';
+        //$event->recurringjson = '';
+        $event->displaypublic = $formdata->displaypublic;
+        $event->timemodified = time();
         $owner = json_decode($formdata->ownerjson);
         if ($owner) {
             $owner = array_pop($owner);
             $event->owner = $owner->idfield;
         }
+        $areas = json_decode($formdata->categoriesjson);
+        $areas = array_map(function($cat) {
+            return explode('/', $cat);
+        }, $areas);
+        //$areas = array_values(array_unique(array_merge(...$areas)));
+        $areas = call_user_func_array('array_merge', $areas);
+        $areas = array_values(array_unique($areas));
+        $event->areasjson = json_encode($areas);
+
+        $campuses = [];
+        if (array_intersect($areas, ['Whole school', 'Primary school', 'Pre-School', 'Pre-Kindergarten', 'Kindergarten', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'])) {
+            $campuses[] = 'primary';
+        }
+        if (array_intersect($areas, ['Whole school', 'Senior school', 'Co-curricular', 'Academic', 'House', 'Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12'])) {
+            $campuses[] = 'senior';
+        }
+        $event->campus = implode(',', $campuses);
 
         // Disabled Recurring
         /*************************
@@ -124,12 +155,18 @@ class eventlib {
         **************************/
 
         // Single event. If it was previously in a series it will be detached.
-        $event->recurrencemaster = 0;
+        //$event->recurrencemaster = 0;
 
         // Simple single event.         
         if (empty($event->id)) {
+            $event->timecreated = time();
+            $event->creator = $USER->username;
             $event->id = $DB->insert_record('excursions_events', $event);
         } else {
+            // if dates have changed, we need to stop syncing event until it is reapproved..
+            if ($event->timestart != $original->timestart || $event->timeend != $original->timeend) {
+                $event->status = 0;
+            }
             $DB->update_record('excursions_events', $event);
         }
 
@@ -143,7 +180,7 @@ class eventlib {
                 $activity->set('timestart', $formdata->timestart);
                 $activity->set('timeend', $formdata->timeend);
                 $activity->set('activitytype', 'excursion');
-                if ($formdata->campus == 'oncampus') {
+                if ($formdata->activitytype == 'oncampus') {
                     $activity->set('activitytype', 'incursion');
                 }
                 $activity->set('location', $formdata->location);
@@ -163,7 +200,7 @@ class eventlib {
                 $data->timestart = $formdata->timestart;
                 $data->timeend = $formdata->timeend;
                 $data->activitytype = 'excursion';
-                if ($formdata->campus == 'oncampus') {
+                if ($formdata->activitytype == 'oncampus') {
                     $data->activitytype = 'incursion';
                 }
                 $data->location = $formdata->location;
@@ -195,7 +232,7 @@ class eventlib {
        
     }
 
-    public static function create_new_series_from_data($event, $dates) {
+    /*public static function create_new_series_from_data($event, $dates) {
         global $DB;
 
         // Create a series.
@@ -264,7 +301,7 @@ class eventlib {
        // }
 
         return ['dates'=> $dates, 'datesReadable'=> $datesReadable];
-    }
+    }*/
 
 
     public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws') {
@@ -381,29 +418,36 @@ class eventlib {
         // Formulate the areas conition.
         $areassql = '';
         if ($campus == 'ss') {
-            $areassql = " AND areasjson LIKE '%Senior school%' ";
+            $areassql = " AND categoriesjson LIKE '%Senior school%' ";
         } else if ($campus == 'ps') {
-            $areassql = " AND areasjson LIKE '%Primary school%' ";
+            $areassql = " AND categoriesjson LIKE '%Primary school%' ";
         }
 
+        $statussql = '';
+        if ($status == $draft || $status == $inreview) { 
+            $statussql = 'AND status = 0';
+        } else if ($status == $approved) { 
+            $statussql = 'AND status = 1';
+        }
+
+        $sql = "SELECT * 
+            FROM {excursions_events}
+            WHERE isactivity = 0
+            AND deleted = 0
+            $statussql
+            AND ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
+            $areassql
+            ORDER BY timestart DESC
+        ";
+
+        //echo "<pre>"; var_export($sql); exit;
         $events = array();
-        if ($status == 0 || $status == $approved) {
-            $sql = "SELECT * 
-                FROM {excursions_events}
-                WHERE isactivity = 0
-                AND deleted = 0
-                AND ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
-                $areassql
-                ORDER BY timestart DESC
-            ";
-            $records = $DB->get_records_sql($sql, array($currentstart, $currentend, $currentstart, $currentend));
-            foreach ($records as $event) {
-                $event = (object) static::export_event($event);
-                $event->calentryonly = true;
-                $events[] = $event;
-            }
+        $records = $DB->get_records_sql($sql, array($currentstart, $currentend, $currentstart, $currentend));
+        foreach ($records as $event) {
+            $event = (object) static::export_event($event);
+            $event->calentryonly = true;
+            $events[] = $event;
         }
-
 
         // Merge and sort activities and events.
         $merged = array_merge($activities, $events);
@@ -479,6 +523,7 @@ class eventlib {
                 FROM {excursions_events}
                 WHERE timestart >= ? 
                 AND timestart < ?
+                AND deleted = 0
                 ORDER BY timestart ASC
         ";
         $events = array();
@@ -504,6 +549,7 @@ class eventlib {
                 WHERE timestart >= ? 
                 AND timestart < ?
                 AND owner = ?
+                AND deleted = 0
                 ORDER BY timestart ASC
         ";
         $events = array();
@@ -546,12 +592,15 @@ class eventlib {
             'owner' => $owner,
             'nonnegotiable' => $event->nonnegotiable,
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),
+            'status' => $event->status,
+            'syncon' => $event->status == 1,
+            'location' => $event->location,
         );
     }
 
     
 
-    public static function check_conflicts($eventid, $timestart, $timeend, $recurringsettings = null, $unix = false) {
+    public static function check_conflicts($eventid, $timestart, $timeend, /*$recurringsettings = null,*/ $unix = false) {
         global $DB;
 
         if (!$unix) {
@@ -591,15 +640,16 @@ class eventlib {
         // Find events that intersect with this start and end time.
         $sql = "SELECT * 
                 FROM {excursions_events}
-                WHERE (timestart > ? AND timestart < ?) 
+                WHERE deleted = 0 
+                AND ((timestart > ? AND timestart < ?) 
                 OR (timeend > ? AND timeend < ?)
                 OR (timestart <= ? AND timeend >= ?) 
-                OR (timestart >= ? AND timeend <= ?) 
+                OR (timestart >= ? AND timeend <= ?))
         ";
         $raweventconflicts = $DB->get_records_sql($sql, [$timestart, $timeend, $timestart, $timeend, $timestart, $timeend, $timestart, $timeend]);
         foreach ($raweventconflicts as $event) {
             // Dont clash with self or another event in the same series.
-            if ($event->id == $eventid || $event->recurrencemaster == $recurrenceid) {
+            if ($event->id == $eventid /*|| $event->recurrencemaster == $recurrenceid*/) {
                 continue;
             }
             $owner = json_decode($event->ownerjson);
@@ -610,10 +660,12 @@ class eventlib {
             $conflicts[] =  (object) [
                 'eventid' => $event->id,
                 'eventname' => $event->activityname,
+                'location' => $event->location,
+                'nonnegotiable' => $event->nonnegotiable,
                 'eventtype' => 'event',
                 'timestart' => '<div>' . date('g:ia', $event->timestart) . '</div><div><small>' . date('j M Y', $event->timestart) . '</small></div>',
                 'timeend' => '<div>' . date('g:ia', $event->timeend) . '</div><div><small>' . date('j M Y', $event->timeend) . '</small></div>',
-                'affected' => $areas,
+                'areas' => $areas,
                 'owner' => $avatar,
             ];
         }
@@ -675,7 +727,7 @@ class eventlib {
                 $timestart = '<div>' . $eventContext->timestartReadable . '</div><div><small>' . date('j M Y', $eventContext->timestart) . '</small></div>';
                 $timeend = '<div>' . $eventContext->timeendReadable . '</div><div><small>' . date('j M Y', $eventContext->timeend) . '</small></div>';
                 $html .= '<div class="table-heading"><b class="table-heading-label">Event summary</b></div>';
-                $html .= "<table><tr><th>Title</th><th>Start</th><th>End</th><th>Areas</th><th>Owner</th></tr>";
+                $html .= "<table><tr> <th>Title</th> <th>Date</th> <th>Location</th> <th>Areas</th> <th>Owner</th> </tr>";
                 $actionshtml = '';
                 if ($withActions) {
                     $editurl = new \moodle_url('/local/excursions/event.php', array('edit' => $eventContext->id));
@@ -683,18 +735,22 @@ class eventlib {
                     $actionshtml .= '<a class="btn btn-secondary" target="_blank" href="' . $editurl->out(false) . '">Edit</a><br><br>';
                     $actionshtml .= "</div></td>";
                 }
-                $html .= "<tr><td>" . $eventContext->eventname . "</td><td>" . $timestart . "</td><td>" . $timeend . "</td><td>" . $areas . "</td><td>" . $owner . "</td>" . $actionshtml . "</tr>";
+                $html .= "<tr><td>$eventContext->eventname</td>";
+                $html .= "<td><div style=\"display:flex;gap:20px;\"><div>$timestart</div><div>$timeend</div></div></td>";
+                $html .= "<td>$eventContext->location</td>";
+                $html .= "<td>$areas</td><td>$owner</td>$actionshtml</tr>";
                 $html .= "</table><br>";
                 $html .= '<div class="table-heading"><b class="table-heading-label">Conflicting events</b></div>';
             }
-            $html .= "<table> <tr> <th>Title</th> <th>Start</th> <th>End</th> <th>Areas</th> <th>Owner</th> </tr>";
+            $html .= "<table> <tr> <th>Title</th> <th>Dates</th> <th>Location</th> <th>Areas</th> <th>Owner</th> </tr>";
             foreach($conflicts as $conflict) {
+                $nonneg =  $conflict->nonnegotiable ? '<br><small>Non-negotiable</small>' : '';
                 $html .= '<tr data-eventid="' . $conflict->eventid . '" data-status="' . $conflict->status . '">';
-                $html .= "<td>" . $conflict->eventname . "</td>";
-                $html .= "<td>" . $conflict->timestart . "</td>";
-                $html .= "<td>" . $conflict->timeend . "</td>";
-                $html .= "<td>" . $conflict->affected . "</td>";
-                $html .= "<td>" . $conflict->owner . "</td>";
+                $html .= "<td>$conflict->eventname $nonneg</td>";
+                $html .= "<td><div style=\"display:flex;gap:20px;\"><div>$conflict->timestart</div><div>$conflict->timeend</div></div></td>";
+                $html .= "<td>$conflict->location</td>";
+                $html .= "<td>$conflict->areas</td>";
+                $html .= "<td>$conflict->owner</td>";
                 if ($withActions) {
                     $editurl = new \moodle_url('/local/excursions/event.php', array('edit' => $conflict->eventid));
                     $html .= '<td><div class="actions">';
@@ -774,6 +830,52 @@ class eventlib {
 
         $theConflict->status = $status;
         $DB->update_record('excursions_event_conflicts', $theConflict);
+    }
+
+    public static function set_sync_status($eventid, $syncon = 0) {
+        global $DB;
+
+        $theEvent = $DB->get_record('excursions_events', array('id' => $eventid));
+        if (empty($theEvent)) {
+            return;
+        }
+
+        $theEvent->status = $syncon;
+        $theEvent->timemodified = time();
+        $DB->update_record('excursions_events', $theEvent);
+    }
+
+
+    public static function soft_delete($id) {
+        global $DB, $USER;
+
+        $theEvent = $DB->get_record('excursions_events', array('id' => $id));
+        if (empty($theEvent)) {
+            return;
+        }
+
+        $theEvent->deleted = 1;
+        $theEvent->timemodified = time();
+        $DB->update_record('excursions_events', $theEvent);
+
+
+        // Delete corresponding activity.
+        if ($theEvent->isactivity && $theEvent->activityid) {
+            activity::soft_delete($theEvent->activityid);
+        }
+    }
+
+    public static function get_day_cycle($datetime) {      
+        $config = get_config('local_excursions');
+        $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
+        $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
+        $sql = $config->daycycleinfosql . ' :date';
+        $params = array('date' => $datetime);
+        $daycycleinfo = $externalDB->get_record_sql($sql, $params);
+        if ($daycycleinfo->daynumber) {
+            return "Term $daycycleinfo->term Week $daycycleinfo->weeknumber Day $daycycleinfo->daynumber";
+        }
+        return "";
     }
 
 }

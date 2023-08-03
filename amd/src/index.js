@@ -23,14 +23,14 @@
  */
 
 /**
- * @module local_excursions/Index
+ * @module local_excursions/index
  */
 define(['jquery', 'core/log', 'core/ajax', 'core/str' ], 
     function($, Log, Ajax, Str) {    
     'use strict';
 
     /**
-     * Initializes the Index component.
+     * Initializes the index component.
      */
     function init() {
         Log.debug('local_excursions/index: initializing');
@@ -64,40 +64,6 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
    Index.prototype.main = function () {
         var self = this;
 
-        // Tabs.
-        self.rootel.on('click', '.activities-tab', function(e) {
-          e.preventDefault();
-
-          // Get the target.
-          var ref = $(this).data('ref');
-
-          // Remove the current selected.
-          self.rootel.find('.activities-tab').removeClass('selected');
-          self.rootel.find('.list-activities').removeClass('selected');
-
-          // Show the tab.
-          $(this).addClass('selected');
-          self.rootel.find('.list-activities.' + ref).addClass('selected');
-        });
-
-        // Show past.
-        self.rootel.on('change', 'input.show-past-activities', function(e) {
-          if ($(this).is(':checked')) {
-            self.rootel.addClass('show-past-activities');
-          } else {
-            self.rootel.removeClass('show-past-activities');
-          }
-        });
-
-        // Show inreview.
-        self.rootel.on('change', 'input.show-inreview-activities', function(e) {
-          if ($(this).is(':checked')) {
-            self.rootel.addClass('show-inreview-activities');
-          } else {
-            self.rootel.removeClass('show-inreview-activities');
-          }
-        });
-
         // Delete activity.
         self.rootel.on('click', '.delete-activity', function(e) {
             e.preventDefault();
@@ -123,7 +89,34 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
             }]);
         });  
         
-        self.rootel.find('input.show-past-activities').change();
+        
+
+        // Navigate from select.
+        self.rootel.on('change', 'select.page-select', function(e) {
+          var nav = $(this).find(":selected").val();
+          var queryParams = new URLSearchParams(window.location.search);
+          queryParams.set("nav", nav);
+          self.rootel.find('.excursions-overlay').addClass('active');
+          window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
+        });
+
+        // Nav chevrons
+        self.rootel.on('click', 'a.page-link', function(e) {
+          e.preventDefault();
+          var queryParams = new URLSearchParams(window.location.search);
+          queryParams.set("nav", $(this).data('nav'));
+          self.rootel.find('.excursions-overlay').addClass('active');
+          window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
+        });
+
+        // Filters
+        self.rootel.on('change', 'select.filter-select', function(e) {
+          var val = $(this).find(":selected").val();
+          var queryParams = new URLSearchParams(window.location.search);
+          queryParams.set($(this).attr("name"), val);
+          self.rootel.find('.excursions-overlay').addClass('active');
+          window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
+        });
 
     };
 

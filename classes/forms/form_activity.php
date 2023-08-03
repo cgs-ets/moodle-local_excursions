@@ -327,9 +327,6 @@ class form_activity extends \moodleform {
             $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
         }
 
-
-
-
         $mform->addElement('html', $OUTPUT->render_from_template('local_excursions/activityform_usefullinks', array('activity' => $activity)));
 
         // Hidden fields.

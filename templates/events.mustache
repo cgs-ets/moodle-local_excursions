@@ -25,7 +25,7 @@
 }}
 
 <div class="local_excursions_events">
-  <div class="header">
+  <div class="header" style="display: none;">
     <div class="head-options">
       <a id="btn-createevent" class="btn btn-primary" href="/local/excursions/event.php">Create a new event</a>
     </div>
@@ -37,13 +37,15 @@
     <tr>
       <th class="th-time">Start - end</th>
       <th>Title</th>
-      <th>Areas</th>
+      <th class="th-location">Location</th>
+      <th>Categories</th>
       <th>Details</th>
-      <th>Owner</th>
+      <th class="th-owner">Owner</th>
       <th>Actions</th>
+      <th style="display:none;" class="xxxxth-sync">Sync</th>
     </tr>
   {{#events}}
-    <tr class="event" data-eventid={{id}}>
+    <tr class="event" data-eventid="{{id}}" data-status="{{status}}">
       <td>
         <div class="times">
           
@@ -69,6 +71,7 @@
         {{/nonnegotiable}}
       </td>
       <td>{{eventname}}</td>
+      <td>{{location}}</td>
       <td>{{#areas}}<span class="badge badge-pill badge-light">{{.}}</span>{{/areas}}</td>
       <td>{{details}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
@@ -76,20 +79,42 @@
         <div class="actions">
           
           <div class="conflict-check-results">
-            <div class="loading">
+            <div class="loading active">
               <div class="spinner"><div class="circle spin"></div></div>
               <div>Checking conflicts...</div>
             </div>
-            <a class="btn btn-danger btn-showconflicts" href="#" data-eventid="{{id}}">View conflicts</a>
+            <a class="btn btn-danger btn-showconflicts" href="#" data-eventid="{{id}}">Conflicts</a>
             <div class="text-no-conflicts">No conflicts found</div>
           </div>
-
+          
           <a class="btn btn-secondary" href="{{editurl}}">Edit</a>
 
+          <button style="display: none;" class="btn btn-secondary dropdown-toggle" type="button" id="actions-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog" aria-hidden="true"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actions-dropdown">
+            <a class="dropdown-item" href="{{editurl}}">Edit event</a>
+            {{#syncon}}
+              <a class="dropdown-item option-disablesync" href="#" data-eventid="{{id}}">Disable calendar sync</a>
+            {{/syncon}}
+            {{^syncon}}
+              <a class="dropdown-item option-enablesync" href="#" data-eventid="{{id}}">Enable calendar sync</a>
+            {{/syncon}}
+          </div>
+
+        </div>
+      </td>
+      <td style="display:none;" >
+        <div class="sync">
+          <input type="checkbox" class="cb-syncevent" value="{{id}}" {{#syncon}}checked="true"{{/syncon}}>
         </div>
       </td>
     </tr>
   {{/events}}
   </table>
   <div class="nav-bar">{{{nav}}}</div>
+
+  
+  {{>local_excursions/loadingoverlay}}
+
 </div>

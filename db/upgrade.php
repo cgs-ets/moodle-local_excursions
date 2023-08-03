@@ -127,6 +127,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
         $table->add_field('creator', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
         $table->add_field('recurrencemaster', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('activityname', XMLDB_TYPE_CHAR, '500', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('activitytype', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
         $table->add_field('campus', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
         $table->add_field('location', XMLDB_TYPE_CHAR, '500', null, XMLDB_NOTNULL, null, null);
         $table->add_field('timestart', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
@@ -206,9 +207,9 @@ function xmldb_local_excursions_upgrade($oldversion) {
             $dbman->add_field($table, $status);
         }
 
-        $timesynced = new xmldb_field('timesynced', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, null, 'timemodified');
-        if (!$dbman->field_exists($table, $timesynced)) {
-            $dbman->add_field($table, $timesynced);
+        $timesynclive = new xmldb_field('timesynclive', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, null, 'timemodified');
+        if (!$dbman->field_exists($table, $timesynclive)) {
+            $dbman->add_field($table, $timesynclive);
         }
 
         upgrade_plugin_savepoint(true, 2023070301, 'local', 'excursions');
@@ -241,6 +242,28 @@ function xmldb_local_excursions_upgrade($oldversion) {
         // Excursions savepoint reached.
         upgrade_plugin_savepoint(true, 2023070302, 'local', 'excursions');
     }
+
+    if ($oldversion < 2023080100) {
+
+        // Define field timesyncplanning to be added to excursions_events.
+        $table = new xmldb_table('excursions_events');
+        $field1 = new xmldb_field('timesyncplanning', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'timesynclive');
+
+        // Conditionally launch add field timesyncplanning.
+        if (!$dbman->field_exists($table, $field1)) {
+            $dbman->add_field($table, $field1);
+        }
+
+        $field2 = new xmldb_field('displaypublic', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'areasjson');
+        // Conditionally launch add field displaypublic.
+        if (!$dbman->field_exists($table, $field2)) {
+            $dbman->add_field($table, $field2);
+        }
+
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023080100, 'local', 'excursions');
+    }
+
 
 
 

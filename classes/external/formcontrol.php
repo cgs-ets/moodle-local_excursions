@@ -167,7 +167,7 @@ trait formcontrol {
         // Event Services.
         if ($action == 'check_conflicts') {
             $data = json_decode($data);
-            $conflicts = eventlib::check_conflicts($data->eventid, $data->timestart, $data->timeend, $data->recurringsettings, false);
+            $conflicts = eventlib::check_conflicts($data->eventid, $data->timestart, $data->timeend,/* $data->recurringsettings*/ false);
             $html = eventlib::generate_conflicts_html($conflicts);
             return json_encode(['html' => $html, 'conflicts' => $conflicts]);
         }
@@ -181,16 +181,30 @@ trait formcontrol {
             return eventlib::set_conflict_status($data->conflictid, $data->status);
         }
 
-        if ($action == 'expand_dates') {
+        /*if ($action == 'expand_dates') {
             $data = json_decode($data);
             $timestart = strtotime($data->timestart);
             $timeend = strtotime($data->timeend);
             $data->recurring->recuruntil = strtotime($data->recurring->recuruntil);
             return json_encode(eventlib::expand_dates($data->recurring, $timestart, $timeend));
+        }*/
+
+        if ($action == 'set_event_sync_status') {
+            $data = json_decode($data);
+            return eventlib::set_sync_status($data->eventid, $data->syncon);
         }
 
+        if ($action == 'delete_event') {
+            $eventid = json_decode($data);
+            return eventlib::soft_delete($eventid);
+        }
+        
+        if ($action == 'get_day_cycle') {
+            $data = json_decode($data);
+            return json_encode(eventlib::get_day_cycle($data->datetime));
+        }
+        
         return 1;
-
     }
 
     /**

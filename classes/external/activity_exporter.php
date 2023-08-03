@@ -29,6 +29,7 @@ use core\external\persistent_exporter;
 use renderer_base;
 use local_excursions\persistents\activity;
 use local_excursions\locallib;
+use local_excursions\libs\eventlib;
 
 /**
  * Exporter of a single activity
@@ -60,6 +61,9 @@ class activity_exporter extends persistent_exporter {
                 'type' => PARAM_RAW,
             ],
             'summaryurl' => [
+                'type' => PARAM_RAW,
+            ],
+            'eventurl' => [
                 'type' => PARAM_RAW,
             ],
             'startreadabletime' => [
@@ -214,6 +218,14 @@ class activity_exporter extends persistent_exporter {
         $summaryurl = new \moodle_url('/local/excursions/summary.php', array(
             'id' => $this->data->id,
         ));
+
+        $eventurl = '';
+        $event = eventlib::get_by_activityid($this->data->id);
+        if ($event) {
+            $eventurl = new \moodle_url('/local/excursions/event.php', array(
+                'edit' => $event->id,
+            ));
+        }
 
         $startreadabletime = '';
         if ($this->data->timestart > 0) {
@@ -473,6 +485,7 @@ class activity_exporter extends persistent_exporter {
             'manageurl' => $manageurl->out(false),
             'permissionsurl' => $permissionsurl->out(false),
             'summaryurl' => $summaryurl->out(false),
+            'eventurl' => $eventurl->out(false),
             'createdreadabletime' => $createdreadabletime,
             'startreadabletime' => $startreadabletime,
             'endreadabletime' => $endreadabletime,

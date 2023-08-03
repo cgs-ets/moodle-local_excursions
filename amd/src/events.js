@@ -66,6 +66,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/modal_factory', 'core/modal_eve
           self.modal.getModal().addClass('modal-conflicts');
           self.modal.getRoot().on(ModalEvents.hidden, function(){
             if (self.conflictignorechange) {
+              self.rootel.find('.excursions-overlay').addClass('active');
               location.reload();// reload page
             }
           });
@@ -84,6 +85,33 @@ define(['jquery', 'core/log', 'core/ajax', 'core/modal_factory', 'core/modal_eve
       if (self.eventrows.length) {
         self.getForNextRow(-1)
       }
+
+      // Navigate from select.
+      self.rootel.on('change', 'select.page-select', function(e) {
+        var nav = $(this).find(":selected").val();
+        var queryParams = new URLSearchParams(window.location.search);
+        queryParams.set("nav", nav);
+        self.rootel.find('.excursions-overlay').addClass('active');
+        window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
+      });
+
+      // Nav chevrons
+      self.rootel.on('click', 'a.page-link', function(e) {
+        e.preventDefault();
+        var queryParams = new URLSearchParams(window.location.search);
+        queryParams.set("nav", $(this).data('nav'));
+        self.rootel.find('.excursions-overlay').addClass('active');
+        window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
+      });
+
+      // Filters
+      self.rootel.on('change', 'select.filter-select', function(e) {
+        var val = $(this).find(":selected").val();
+        var queryParams = new URLSearchParams(window.location.search);
+        queryParams.set($(this).attr("name"), val);
+        self.rootel.find('.excursions-overlay').addClass('active');
+        window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
+      });
 
       document.querySelectorAll('.btn-showconflicts').forEach(a => {
         a.addEventListener('click', e => {
@@ -113,6 +141,28 @@ define(['jquery', 'core/log', 'core/ajax', 'core/modal_factory', 'core/modal_eve
             })
 
           }
+        })
+      })
+
+      // Ignore checkbox action.
+      document.querySelectorAll('.cb-syncevent').forEach(input => {
+        input.addEventListener('change', e => {
+          let eventid = e.currentTarget.value
+          let syncon = e.currentTarget.checked
+          Ajax.call([{
+            methodname: 'local_excursions_formcontrol',
+            args: { 
+              action: 'set_event_sync_status',
+              data: JSON.stringify({
+                eventid: eventid,
+                syncon: syncon ? 1 : 0,
+              })
+            },
+            done: function(response) {
+              let tr = document.querySelector('tr[data-eventid="' + eventid + '"]');
+              tr.dataset.status = syncon ? 1 : 0
+            },
+          }]);
         })
       })
       

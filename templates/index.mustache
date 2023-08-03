@@ -25,175 +25,52 @@
 }}
 
 <div class="local_excursions">
+  {{#isstaff}}
+      <div class="header">
+          <form class="search-wrap" action="/local/excursions/newsearch.php" method="get">
+            <label for="q">Search</label><br>
+            <input name="q" class="search">
+            <button class="btn btn-primary">Go</button>
+          </form>
+          {{#iseventreviewer}}<a id="btn-eventreview" class="btn btn-primary" href="{{eventreviewurl}}">Review calendar events</a>{{/iseventreviewer}}
+          <a id="btn-activitycreate" class="btn btn-primary" href="{{eventcreateurl}}">{{# str }}activityform:create, local_excursions{{/ str }}</a>
+      </div>
+  {{/isstaff}}
+
+  <div class="nav-bar">
+    {{{nav}}}
+
     {{#isstaff}}
-        <div class="header">
-            <form class="search-wrap" action="/local/excursions/search.php" method="get">
-              <label for="q">Search</label><br>
-              <input name="q" class="search">
-              <button class="btn btn-primary">Go</button>
-            </form>
-            <a id="btn-activitycreate" class="btn btn-primary" href="{{activitycreateurl}}">{{# str }}activityform:create, local_excursions{{/ str }}</a>
-        </div>
+      <div class="filter-wrap">
+        <span>Status: </span>
+        {{{filters_status}}}
+      </div>
+
+      <div class="filter-wrap">
+        <span>Campus: </span>
+        {{{filters_campus}}}
+      </div>
+
+      {{#hasfilters}}
+        <a class="btn btn-secondary" href="{{baseurl}}">clear all</a>
+      {{/hasfilters}}
     {{/isstaff}}
 
-    {{#noexcursions}}{{#str}} view:noactivities, local_excursions {{/str}}{{/noexcursions}}
+  </div>
 
-    {{^noexcursions}}
-      <div class="filter-header">
-        <h5>Filter activities</h5>
-        
-        <label>
-          <input class="show-past-activities" type="checkbox" /> 
-          Show past activities
-        </label>
+  <div class="list-events">
+      <table class="table events">
+          {{>local_excursions/index_activities_head}}
+          <tbody>
+              {{#events}}
+                  {{>local_excursions/index_activity}}
+              {{/events}}
+          </tbody>
+      </table>
+  </div>
+ 
+  <div class="nav-bar">{{{nav}}}</div>
 
-        {{#isauditor}}
-          <label>
-            <input class="show-inreview-activities" type="checkbox" /> 
-            Show in-review activities
-          </label>
-        {{/isauditor}}
-
-      </div>
-    {{/noexcursions}}
-
-    
-
-    <div class="activities-tabs">
-      {{#has_parentactivities}}
-        <a class="activities-tab {{#isselected_parentactivities}}selected{{/isselected_parentactivities}}" data-ref="parent-activities">
-          Your child's activities
-        </a>
-      {{/has_parentactivities}}
-      {{#has_studentactivities}}
-        <a class="activities-tab {{#isselected_studentactivities}}selected{{/isselected_studentactivities}}" data-ref="student-activities">
-          Your activities
-        </a>
-      {{/has_studentactivities}}
-      {{#has_useractivities}}
-        <a class="activities-tab {{#isselected_useractivities}}selected{{/isselected_useractivities}}" data-ref="user-activities">
-          Planning
-        </a>
-      {{/has_useractivities}}
-      {{#has_accompanyingactivities}}
-        <a class="activities-tab {{#isselected_accompanyingactivities}}selected{{/isselected_accompanyingactivities}}" data-ref="accompanying-activities">
-          Accompanying
-        </a>
-      {{/has_accompanyingactivities}}
-      {{#has_approveractivities}}
-        <a class="activities-tab {{#isselected_approveractivities}}selected{{/isselected_approveractivities}}" data-ref="approver-activities">
-          Approver
-        </a>
-      {{/has_approveractivities}}
-      {{#has_primaryactivities}}
-        <a class="activities-tab {{#isselected_primaryactivities}}selected{{/isselected_primaryactivities}}" data-ref="primary-activities">
-          Primary School
-        </a>
-      {{/has_primaryactivities}}
-      {{#has_senioractivities}}
-        <a class="activities-tab {{#isselected_senioractivities}}selected{{/isselected_senioractivities}}" data-ref="senior-activities">
-          Senior School
-        </a>
-      {{/has_senioractivities}}
-    </div>
-
-    {{#useractivities.0}}
-    <div class="list-activities user-activities {{#isselected_useractivities}}selected{{/isselected_useractivities}}">
-        <!--<p>Activities that you created</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#useractivities}}
-                    {{>local_excursions/index_activity}}
-                {{/useractivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/useractivities.0}}
-
-    {{#accompanyingactivities.0}}
-    <div class="list-activities accompanying-activities {{#isselected_accompanyingactivities}}selected{{/isselected_accompanyingactivities}}">
-        <!--<p>Activities that you are in charge of, or accompanying.</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#accompanyingactivities}}
-                    {{>local_excursions/index_activity}}
-                {{/accompanyingactivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/accompanyingactivities.0}}
-
-    {{#approveractivities.0}}
-    <div class="list-activities approver-activities {{#isselected_approveractivities}}selected{{/isselected_approveractivities}}">
-        <!--<p>Activities where you have a role in the approval workflow.</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#approveractivities}}
-                    {{>local_excursions/index_activity}}
-                {{/approveractivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/approveractivities.0}}
-
-    {{#parentactivities.0}}
-    <div class="list-activities parent-activities {{#isselected_parentactivities}}selected{{/isselected_parentactivities}}">
-        <!--<p>Activities involving your child/ren</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#parentactivities}}
-                    {{>local_excursions/index_activity}}
-                {{/parentactivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/parentactivities.0}}
-
-    {{#studentactivities.0}}
-    <div class="list-activities student-activities {{#isselected_studentactivities}}selected{{/isselected_studentactivities}}">
-        <!--<p>Activities that you are participating in</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#studentactivities}}
-                    {{>local_excursions/index_activity}}
-                {{/studentactivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/studentactivities.0}}
-
-    {{#primaryactivities.0}}
-    <div class="list-activities primary-activities {{#isselected_primaryactivities}}selected{{/isselected_primaryactivities}}">
-        <!--<p>Activities in the Primary School</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#primaryactivities}}
-                    {{>local_excursions/index_activity}}
-                {{/primaryactivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/primaryactivities.0}}
-
-    {{#senioractivities.0}}
-    <div class="list-activities senior-activities {{#isselected_senioractivities}}selected{{/isselected_senioractivities}}">
-        <!--<p>Activities in the Senior School</p>-->
-        <table class="table generaltable">
-            {{>local_excursions/index_activities_head}}
-            <tbody>
-                {{#senioractivities}}
-                    {{>local_excursions/index_activity}}
-                {{/senioractivities}}
-            </tbody>
-        </table>
-    </div>
-    {{/senioractivities.0}}
-
+  {{>local_excursions/loadingoverlay}}
 
 </div>

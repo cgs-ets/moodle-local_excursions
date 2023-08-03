@@ -33,7 +33,7 @@ $context = context_system::instance();
 
 // Set up page parameters.
 $PAGE->set_context($context);
-$pageurl = new moodle_url('/local/announcements/debugger.php');
+$pageurl = new moodle_url('/local/excursions/debugger.php');
 $PAGE->set_url($pageurl);
 $title = get_string('pluginname', 'local_excursions');
 $PAGE->set_heading($title);
@@ -43,8 +43,17 @@ $PAGE->navbar->add($title);
 require_login();
 require_capability('moodle/site:config', $context, $USER->id); 
 
-
 echo "<pre>"; 
+
+
+$cron = new \local_excursions\task\cron_sync_planning();
+$cron->execute();
+exit;
+
+
+
+
+
 $userPrincipalName = 'michael.vangelovski@cgs.act.edu.au';
 
 // Create calendar event
@@ -63,14 +72,23 @@ $eventdata->end->timeZone = "AUS Eastern Standard Time";
 $eventdata->location = new stdClass();
 $eventdata->location->displayName = "Data centre";
 $eventdata->isOnlineMeeting = false;
-$result = graphlib::createEvent($userPrincipalName, $eventdata);
+
+try {
+    $result = graphlib::createEvent($userPrincipalName, $eventdata);
+} catch (\Exception $e) {
+    var_export('error');
+    exit;
+}
+
+
+var_export($result);
 $record = new stdClass();
 $record->calendar = $userPrincipalName;
 $record->extenalid = $result->getId();
 $record->changekey = $result->getChangeKey();
 $record->weblink = $result->getWebLink();
 $record->status = 1;
-$record->timesynced = time();
+$record->timesynclive = time();
 var_export($record);
 echo "<hr>";
 

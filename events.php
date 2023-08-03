@@ -37,8 +37,8 @@ $url = new moodle_url('/local/excursions/events.php', array('nav' => $nav));
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url($url);
-$PAGE->set_title('Events');
-$PAGE->set_heading('Events');
+$PAGE->set_title('Review events');
+$PAGE->set_heading('Review events');
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
 $PAGE->requires->js_call_amd('local_excursions/events', 'init');
@@ -48,10 +48,10 @@ $output = $OUTPUT->header();
 // Get events.
 $paginaton = locallib::get_events_pagination($nav);
 $events = [];
-if (locallib::is_event_reviewer($paginaton->current)) {
-    $events = eventlib::get_all_events();
+if (locallib::is_event_reviewer()) {
+    $events = eventlib::get_all_events($paginaton->current);
 }
-$events = eventlib::get_user_events($paginaton->current);
+//$events = eventlib::get_user_events($paginaton->current);
 $data = array(
     'events' => $events,
     'nav' => $paginaton->nav,

@@ -76,5 +76,8 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_excursions/graphclientid', 'Graph API Client ID', '', ''));
     $settings->add(new admin_setting_configtext('local_excursions/graphclientsecret', 'Graph API Client Secret', '', ''));
     $settings->add(new admin_setting_configtext('local_excursions/graphtenantid', 'Graph API Tenant ID', '', ''));
+    $settings->add(new admin_setting_configtext('local_excursions/planningcalupn', 'Planning Calendar User Principal Name', '', ''));
+    $settings->add(new admin_setting_configtext('local_excursions/livecalupn', 'Live Calendar User Principal Name', '', ''));
+    $settings->add(new admin_setting_configtext('local_excursions/daycycleinfosql', 'Get day cycle info SQL', '', ''));
 
 }

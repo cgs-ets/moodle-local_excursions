@@ -363,7 +363,7 @@ class activity extends persistent {
     }
 
 
-    private static function generate_approvals($originalactivity, $newactivity) {
+    public static function generate_approvals($originalactivity, $newactivity) {
         global $DB, $USER;
 
         // Check if changed fields cause an approval state to be invalidated.
@@ -2223,21 +2223,22 @@ class activity extends persistent {
         $isapprover = static::is_approver_of_activity($id);
         $isstaffincharge = ($activity->get('staffincharge') == $USER->username);
 
+
         // Update activity.
         if ($iscreator || $isapprover || $isstaffincharge) {
-            $activity->set('deleted', 1);
-            // Reset absences processed so that Synergetic is updated.
-            $activity->set('absencesprocessed', 0);
-            $activity->set('classrollprocessed', 0);
-            $activity->update();
-
-
             // Delete corresponding event.
             $sql = "UPDATE {" . static::TABLE_EXCURSIONS_EVENTS . "}
                     SET deleted = 1
                     WHERE activityid = ?
                     AND isactivity = 1";
-            $DB->execute($sql, array($activity->get('id')));
+            $DB->execute($sql, [$id]);
+
+            // Delete the activity.
+            $activity->set('deleted', 1);
+            // Reset absences processed so that Synergetic is updated.
+            $activity->set('absencesprocessed', 0);
+            $activity->set('classrollprocessed', 0);
+            $activity->update();
 
             return 1;
         }

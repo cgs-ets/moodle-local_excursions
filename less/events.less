@@ -17,7 +17,7 @@
     display: none !important;
   }
 
-  #fgroup_id_recurringpatternar {
+  /*#fgroup_id_recurringpatternar {
     margin-top: -25px;
   }
   #fgroup_id_recurringdailypatternar {
@@ -25,7 +25,7 @@
   }
   #fitem_id_recuruntil {
     margin-top: -15px;
-  }
+  }*/
 
   #fitem_id_ownerjson {
     display: none;
@@ -70,6 +70,15 @@
     span {
       display: none
     }
+  }
+
+  .fdescription.required {
+    display: none;
+  }
+
+  #btn-delete {
+    color: red;
+    float: right;
   }
 
   /* Recipient selector */
@@ -180,7 +189,7 @@
   }
 }
 
-#page-local-excursions-events, #page-local-excursions-newindex, #page-local-excursions-newsearch {
+#page-local-excursions-events, #page-local-excursions-index, #page-local-excursions-newsearch {
   .header {
 		padding: 0 0 20px 0;
     text-align: right;
@@ -261,6 +270,15 @@
     .th-time {
       width: 325px;
     }
+    .th-location {
+      width: 130px;
+    }
+    .th-owner {
+      width: 170px;
+    }
+    .th-sync {
+      width: 60px;
+    }
     .times {
       display: flex;
       gap: 10px;
@@ -300,14 +318,16 @@
     .actions {
       display: flex;
       justify-content: end;
-      gap: 5px;
+      gap: 10px;
+      align-items: center;
     }
     tr {
       .conflict-check-results {
         .loading {
           display: none;
           justify-content: start;
-          margin: 5px 13px 5px 5px;
+          margin: 0;
+          text-wrap: nowrap;
           .spinner {
             margin: 0;
             display: block;
@@ -351,6 +371,10 @@
             display: block;
           }
         }
+      }
+
+      &[data-status="1"] {
+        background-color: #d4edda;
       }
     }
   }

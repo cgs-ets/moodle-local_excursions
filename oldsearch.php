@@ -27,38 +27,43 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 
 use local_excursions\persistents\activity;
-use \local_excursions\libs\eventlib;
+use local_excursions\external\activity_exporter;
 use local_excursions\locallib;
 
 require_login();
 $isstaff = locallib::is_cgs_staff();
 
 $q = optional_param('q', '', PARAM_RAW);
-$indexurl = new moodle_url('/local/excursions/newindex.php');
+$indexurl = new moodle_url('/local/excursions/index.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_url('/local/excursions/newsearch.php', array('q' => $q,));
+$PAGE->set_url('/local/excursions/search.php', array('q' => $q,));
 $PAGE->set_title(get_string('searchtitle', 'local_excursions') . $q);
 $PAGE->set_heading(get_string('searchtitle', 'local_excursions') . $q);
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
-$PAGE->requires->js_call_amd('local_excursions/newindex', 'init');
+$PAGE->requires->js_call_amd('local_excursions/index', 'init');
+$PAGE->add_body_class('show-past-activities show-inreview-activities');
 
 $output = $OUTPUT->header();
 
-$events = [];
+$activities = [];
 if (!empty($q)) {
-    $events = eventlib::search($q);
+    $activities = activity::search($q);
 }
 
-
+$exported = [];
+foreach ($activities as $activity) {
+    $activityexporter = new activity_exporter($activity, array('minimal' => true));
+    $exported[] = $activityexporter->export($OUTPUT);
+}
 $data = new \stdClass();
-$data->events = $events;
+$data->activities = $exported;
 $data->q = $q;
 $data->indexurl = $indexurl;
 $data->isstaff = $isstaff;
 
 // Render the announcement list.
-$output .= $OUTPUT->render_from_template('local_excursions/newsearch', $data);
+$output .= $OUTPUT->render_from_template('local_excursions/search', $data);
 
 // Final outputs.
 $output .= $OUTPUT->footer();

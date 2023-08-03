@@ -34,7 +34,7 @@ use \local_excursions\libs\graphlib;
  * @copyright 2023 Michael Vangelovski
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class cron_sync_events extends \core\task\scheduled_task {
+class cron_sync_planning extends \core\task\scheduled_task {
 
     // Use the logging trait to get some nice, juicy, logging.
     use \core\task\logging_trait;
@@ -45,7 +45,7 @@ class cron_sync_events extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('cron_sync_events', 'local_excursions');
+        return get_string('cron_sync_planning', 'local_excursions');
     }
 
     /**
@@ -58,34 +58,17 @@ class cron_sync_events extends \core\task\scheduled_task {
         $this->log_start("Looking for events that require sync (approved and modified after last sync).");
         $sql = "SELECT *
                 FROM {excursions_events}
-                WHERE (status = 1 AND timesynclive < timemodified)
-                OR (status = 0 AND timesynclive > 0)";
+                WHERE timesyncplanning < timemodified";
         $events = $DB->get_records_sql($sql);
 
         $config = get_config('local_excursions');            
 
         foreach ($events as $event) {
-            $this->log("Processing event $event->id: `$event->activityname`");
+            $timestart = date('j M Y g:ia', $event->timestart);
+            $this->log("Processing event $event->id: `$event->activityname` starting `$timestart`");
             $error = false;
 
-            $destinationCalendars = array();
-            if (!$event->deleted && !!$event->status) {
-                /*
-                // Determine which calendars this event needs to go to based on category selection.
-                $categories = json_decode($event->areasjson);
-                $destinationCalendars = array_map(function($cat) {
-                    if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
-                        return 'cgs_calendar_ps@cgs.act.edu.au';
-                    }
-                    if (in_array($cat, ['Whole School', 'Senior School', 'Website', 'Alumni'])) {
-                        return 'cgs_calendar_ss@cgs.act.edu.au';
-                    }
-                }, $categories);
-                $destinationCalendars = array_unique($destinationCalendars);
-                $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
-                */
-                $destinationCalendars = array($config->livecalupn);
-            }
+            $destinationCalendars = array($config->planningcalupn);
 
             // Get existing sync entries.
             $sql = "SELECT *
@@ -95,7 +78,7 @@ class cron_sync_events extends \core\task\scheduled_task {
 
             foreach($externalevents as $externalevent) {
                 $search = array_search($externalevent->calendar, $destinationCalendars);
-                if ($search === false || $event->deleted || !$event->status) {
+                if ($search === false || $event->deleted) {
                     try {
                         // Event deleted or entry not in a valid destination calendar, delete.
                         $this->log("Deleting existing entry in calendar $externalevent->calendar", 2);
@@ -160,7 +143,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $record = new \stdClass();
                 $record->eventid = $event->id;
                 $record->calendar = $destCal;
-                $record->timesynclive = time();
+                $record->timesyncplanning = time();
                 $record->externalid = '';
                 $record->changekey = '';
                 $record->weblink = '';
@@ -174,23 +157,22 @@ class cron_sync_events extends \core\task\scheduled_task {
                         $record->status = 1;
                     }
                 } catch (\Exception $e) {
-                    $this->log("Failed to insert event into calendar $externalevent->calendar", 3);
+                    $this->log("Failed to insert event into calendar $destCal: " . $e->getMessage(), 3);
                     $error = true;
                 }
                 $id = $DB->insert_record('excursions_events_sync', $record);
             }
 
-            $event->timesynclive = time();
+            $event->timesyncplanning = time();
             if ($error) {
-                $event->timesynclive = -1;
-            }
-            if (!$event->status) {
-                $event->timesynclive = 0;
+                $event->timesyncplanning = -1;
             }
             $DB->update_record('excursions_events', $event);
+            $this->log("-------------------------------------------------");
 
         }
-        $this->log_finish("Finished syncing events.");  
+        $this->log_finish("Finished syncing events.");
+       
     }
 
     private function make_public_categories($categories, $public) {
@@ -201,6 +183,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 if (in_array($cat, $publiccats)) {
                     return [$cat, $cat . ' Public'];
                 }
+                return [$cat];
             }, $categories);
             $categories = call_user_func_array('array_merge', $categories);
             $categories = array_values(array_unique($categories));

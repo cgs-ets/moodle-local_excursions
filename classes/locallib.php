@@ -207,7 +207,7 @@ class locallib extends local_excursions_config {
 
     public static function get_events_filter_campus($current = 'ws') {
         $options = array(
-            ['ws', 'Whole school'], 
+            ['ws', 'Any'], 
             ['ps', 'Primary school'],
             ['ss', 'Senior school'],
         );

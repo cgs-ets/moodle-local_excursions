@@ -40,7 +40,7 @@ locallib::require_cgs_staff();
 $editurl = new moodle_url('/local/excursions/event.php', array(
     'edit' => $edit,
 ));
-$viewurl = new moodle_url('/local/excursions/events.php');
+$viewurl = new moodle_url('/local/excursions/index.php');
 
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -49,20 +49,43 @@ $PAGE->set_title('Event settings');
 $PAGE->set_heading('Event settings');
 
 $event = null;
-$recurring = 0;
+//$recurring = 0;
 if ($edit) {
     $event = eventlib::get_event($edit);
     if (!$event) {
         redirect($viewurl->out(false));
         exit;
     }
-    $recurring = $event->recurrencemaster ? 1 : 0;
+    //$recurring = $event->recurrencemaster ? 1 : 0;
+}
+//echo "<pre>"; var_export($event); exit;
+
+// Is this user allowed to edit this event?
+$canedit = false;
+if (locallib::is_event_reviewer()) {
+    $canedit = true;
+} else if ($event->owner == $USER->username || $event->creator == $USER->username) {
+    $canedit = true;
+}
+if (!$canedit) {
+    $notice = 'You do not have permission to edit this calendar event.';
+    redirect(
+        $viewurl->out(),
+        '<p>'.$notice.'</p>',
+        null,
+        \core\output\notification::NOTIFY_ERROR
+    );
+    exit;
 }
 
 // Instantiate the form.
 $formactivity = new form_event(
     $editurl->out(false), 
-    array('edit' => $edit, 'recurring' => $recurring, 'event' => $event), 
+    array(
+        'edit' => $edit, 
+        //'recurring' => $recurring, 
+        'event' => $event
+    ), 
     'post', 
     '', 
     array('data-form' => 'excursions-event', 'data-eventid' => $edit)
@@ -118,7 +141,7 @@ else
     $data->ownerjson = json_encode([$owneruser]);
     if ($edit) {
         $data->activityname = $event->activityname;
-        $data->campus = $event->campus;
+        $data->activitytype = $event->activitytype;
         $data->location = $event->location;
         $data->timestart = $event->timestart;
         $data->timeend = $event->timeend;
@@ -128,10 +151,12 @@ else
         $data->categoriesjson = $event->categoriesjson;
         $data->areasjson = $event->areasjson;
         $data->ownerjson = $event->ownerjson;
-        $data->recurring = $recurring;
-        if ($recurring) {
+        //$data->recurring = $recurring;
+        $data->displaypublic = $event->displaypublic;
+        $data->entrytype = $event->isactivity ? 'excursion' : 'event';
+        /*if ($recurring) {
             list($data->recurring, $data->recurringpattern, $data->recurringdailypattern, $data->recuruntil) = array_values(json_decode($event->recurringjson, true));
-        }
+        }*/
     }
 
     // Set the form values.
@@ -143,6 +168,7 @@ else
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
 // Add scripts.
 $PAGE->requires->js_call_amd('local_excursions/eventform', 'init');
+// https://github.com/daweilv/treejs
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/tree.min.js'), true );
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/calcategories.js', array('nocache' => rand())), true );
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/eventareas.js', array('nocache' => rand())), true );

@@ -43,7 +43,7 @@ class form_event extends \moodleform {
 
         $mform =& $this->_form;
         $edit = $this->_customdata['edit'];
-        $recurring = $this->_customdata['recurring'];
+        //$recurring = $this->_customdata['recurring'];
         $event = $this->_customdata['event'];
 
         /*----------------------
@@ -59,10 +59,7 @@ class form_event extends \moodleform {
         ';
         $mform->addElement('html', $typehtml);*/
 
-        if ($recurring) {
-            /*----------------------
-            *   Series or event
-            *----------------------*/
+        /*if ($recurring) {
             $radioarray = array();
             $radioarray[] = $mform->createElement('radio', 'editseries', '', 'This occurance', 'event', '');
             $radioarray[] = $mform->createElement('radio', 'editseries', '', 'The entire series', 'series', '');
@@ -70,7 +67,7 @@ class form_event extends \moodleform {
             $mform->addGroup($radioarray, 'editseries', '', array(' '), false);
             $mform->setDefault('editseries', 'event');
             $mform->addElement('html', '<div class="alert alert-warning">Editing a single occurance will detach it from the series. Editing an entire series will recreate all events in the series based on the information submitted below.</div><br>');
-        } 
+        }*/
 
         /*----------------------
         *   Name
@@ -84,10 +81,10 @@ class form_event extends \moodleform {
         *   On or Off campus
         *----------------------*/
         $radioarray = array();
-        $radioarray[] = $mform->createElement('radio', 'campus', '', 'On campus', 'oncampus', '');
-        $radioarray[] = $mform->createElement('radio', 'campus', '', 'Off campus', 'offcampus', '');
-        $mform->addGroup($radioarray, 'campus', get_string('activityform:campus', 'local_excursions'), array(' '), false);
-        $mform->setDefault('campus', 'oncampus');
+        $radioarray[] = $mform->createElement('radio', 'activitytype', '', 'On campus', 'oncampus', '');
+        $radioarray[] = $mform->createElement('radio', 'activitytype', '', 'Off campus', 'offcampus', '');
+        $mform->addGroup($radioarray, 'activitytype', get_string('activityform:campus', 'local_excursions'), array(' '), false);
+        $mform->setDefault('activitytype', 'oncampus');
 
         
         /*----------------------
@@ -101,7 +98,11 @@ class form_event extends \moodleform {
         *   Start and end times
         *----------------------*/
         $mform->addElement('date_time_selector', 'timestart', get_string('activityform:timestart', 'local_excursions'));
+        $mform->addElement('html', '<div id="daycycle-timestart" style="position:relative;top:-16px;"></div>');
+
         $mform->addElement('date_time_selector', 'timeend', get_string('activityform:timeend', 'local_excursions'));
+        $mform->addElement('html', '<div id="daycycle-timeend" style="position:relative;top:-16px;"></div>');
+
         $dt = new \DateTime('@' . time());
         $dt->setTime( $dt->format("H"), 0, 0);
         $mform->setDefault('timestart', $dt->getTimestamp());
@@ -151,39 +152,60 @@ class form_event extends \moodleform {
         /*----------
         * Non negotiable
         * ----------------*/
-        //$mform->addElement('html', '<br>');
         $mform->addElement('advcheckbox', 'nonnegotiable', 'The dates entered for this event are non negotiable', '', [], [0,1]);
         $mform->addElement('textarea', 'nonnegotiablereason', "Why is this event time non-negotiable?", 'wrap="virtual" rows="2" cols="30"');
         $mform->setType('notes', PARAM_TEXT);
         $mform->hideIf('nonnegotiablereason', 'nonnegotiable', 'neq', 1);
 
 
-        // Check conflicts button
-        //$mform->addElement('html', '<button style="margin-right: 10px;" class="btn btn-primary btn-checkconflicts">Check for conflicts</button>');
-        //$mform->addElement('html', '<span id="conflicts"></span><br><br>');
-
 
         /*-----------------------
         *  Categories
         *-----------------------*/
+        require_once('calcategories.php');
+        if ($edit) {
+            $currentcats = json_decode($event->categoriesjson);
+            foreach($categories['wholeschool'] as $i => $wholeschool) {
+                if (in_array($wholeschool['value'], $currentcats)) {
+                    $categories['wholeschool'][$i]['checked'] = true;
+                }
+            }
+            foreach($categories['seniorschool'] as $i => $seniorschool) {
+                if (in_array($seniorschool['value'], $currentcats)) {
+                    $categories['seniorschool'][$i]['checked'] = true;
+                }
+            }
+            foreach($categories['primaryschool'] as $i => $primaryschool) {
+                if (in_array($primaryschool['value'], $currentcats)) {
+                    $categories['primaryschool'][$i]['checked'] = true;
+                }
+            }
+        }
+        //echo "<pre>"; var_export($categories); exit;
+        $catsel = $staffselectorhtml = $OUTPUT->render_from_template('local_excursions/categories_selector', $categories);
         $html = '
-        <div class="form-group row fitem"><div class="col-md-3">Categories<br><small>For display purposes</small><br></div><div class="col-md-9">
-        <div class="categoriescontainer"></div>
+        <div class="form-group row fitem"><div class="col-md-3">Calendar categories</div><div class="col-md-9">
+        <div class="categoriescontainerx">' . $catsel . '
+        </div>
         </div></div>';
         $mform->addElement('html', $html);
         $mform->addElement('text', 'categoriesjson', 'CategoriesJSON');
         $mform->setType('categoriesjson', PARAM_RAW);
 
+
+        $mform->addElement('advcheckbox', 'displaypublic', 'Display this event on the public calendar', '', [], [0,1]);
+
+
         /*-----------------------
-        * Affected areas
+        * Groups involved
         *-----------------------*/
-        $areashtml = '
-        <div class="form-group row fitem"><div class="col-md-3">Affected areas<br><small>For planning purposes</small><br></div><div class="col-md-9">
-        <div class="areascontainer"></div>
-        </div></div>';
-        $mform->addElement('html', $areashtml);
-        $mform->addElement('text', 'areasjson', 'Owner JSON');
-        $mform->setType('areasjson', PARAM_RAW);
+        //$areashtml = '
+        //<div class="form-group row fitem"><div class="col-md-3">Involved groups<br><small>For planning purposes</small><br></div><div class="col-md-9">
+        //<div class="areascontainer"></div>
+        //</div></div>';
+        //$mform->addElement('html', $areashtml);
+        //$mform->addElement('text', 'areasjson', 'Owner JSON');
+        //$mform->setType('areasjson', PARAM_RAW);
 
         /*----------------------
         *   Notes
@@ -222,6 +244,10 @@ class form_event extends \moodleform {
 
         // Submit.
         $this->add_action_buttons(true, 'Submit');
+
+        if ($edit) {
+            $mform->addElement('html', '<a id="btn-delete" data-eventid="'. $edit .'" href="#" >Delete event</a>');
+        }
 
 
         // Hidden fields.

@@ -24,5 +24,6 @@
     View for the evidence selector component.
 }}
 <div class="usefullinks">
-    {{#str}}helpguide, local_excursions{{/str}} | <a href="{{activity.summaryurl}}" target="_blank">Printable summary</a>
+    {{#activity.eventurl}}<a href="{{activity.eventurl}}"><i class="fa fa-calendar" aria-hidden="true"></i> Edit Calendar Settings</a>{{/activity.eventurl}}
+    | {{#str}}helpguide, local_excursions{{/str}} | <a href="{{activity.summaryurl}}" target="_blank">Printable summary</a>   
 </div>

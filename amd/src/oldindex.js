@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Provides the local_excursions/newindex module
+ * Provides the local_excursions/index module
  *
  * @package   local_excursions
  * @category  output
@@ -23,27 +23,27 @@
  */
 
 /**
- * @module local_excursions/newindex
+ * @module local_excursions/Index
  */
 define(['jquery', 'core/log', 'core/ajax', 'core/str' ], 
     function($, Log, Ajax, Str) {    
     'use strict';
 
     /**
-     * Initializes the newindex component.
+     * Initializes the Index component.
      */
     function init() {
-        Log.debug('local_excursions/newindex: initializing');
+        Log.debug('local_excursions/index: initializing');
 
-        var rootel = $('#page-local-excursions-newindex');
+        var rootel = $('#page-local-excursions-index');
 
         if (!rootel.length) {
-            Log.error('local_excursions/newindex: #page-local-excursions-newindex not found!');
+            Log.error('local_excursions/index: #page-local-excursions-index not found!');
             return;
         }
 
-        var newindex = new Newindex(rootel);
-        newindex.main();
+        var index = new Index(rootel);
+        index.main();
     }
 
     /**
@@ -52,7 +52,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
      * @constructor
      * @param {jQuery} rootel
      */
-    function Newindex(rootel) {
+    function Index(rootel) {
         var self = this;
         self.rootel = rootel;
     }
@@ -61,8 +61,42 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
      * Run the Audience Selector.
      *
      */
-   Newindex.prototype.main = function () {
+   Index.prototype.main = function () {
         var self = this;
+
+        // Tabs.
+        self.rootel.on('click', '.activities-tab', function(e) {
+          e.preventDefault();
+
+          // Get the target.
+          var ref = $(this).data('ref');
+
+          // Remove the current selected.
+          self.rootel.find('.activities-tab').removeClass('selected');
+          self.rootel.find('.list-activities').removeClass('selected');
+
+          // Show the tab.
+          $(this).addClass('selected');
+          self.rootel.find('.list-activities.' + ref).addClass('selected');
+        });
+
+        // Show past.
+        self.rootel.on('change', 'input.show-past-activities', function(e) {
+          if ($(this).is(':checked')) {
+            self.rootel.addClass('show-past-activities');
+          } else {
+            self.rootel.removeClass('show-past-activities');
+          }
+        });
+
+        // Show inreview.
+        self.rootel.on('change', 'input.show-inreview-activities', function(e) {
+          if ($(this).is(':checked')) {
+            self.rootel.addClass('show-inreview-activities');
+          } else {
+            self.rootel.removeClass('show-inreview-activities');
+          }
+        });
 
         // Delete activity.
         self.rootel.on('click', '.delete-activity', function(e) {
@@ -83,40 +117,13 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
                     self.rootel.find('tr.activity[data-id="' + activityid + '"]').remove();
                 },
                 fail: function(reason) {
-                    Log.error('local_excursions/newindex: failed to delete activity.');
+                    Log.error('local_excursions/index: failed to delete activity.');
                     Log.debug(reason);
                 }
             }]);
         });  
         
-        
-
-        // Navigate from select.
-        self.rootel.on('change', 'select.page-select', function(e) {
-          var nav = $(this).find(":selected").val();
-          var queryParams = new URLSearchParams(window.location.search);
-          queryParams.set("nav", nav);
-          self.rootel.find('.loading-overlay').addClass('active');
-          window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
-        });
-
-        // Nav chevrons
-        self.rootel.on('click', 'a.page-link', function(e) {
-          e.preventDefault();
-          var queryParams = new URLSearchParams(window.location.search);
-          queryParams.set("nav", $(this).data('nav'));
-          self.rootel.find('.loading-overlay').addClass('active');
-          window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
-        });
-
-        // Filters
-        self.rootel.on('change', 'select.filter-select', function(e) {
-          var val = $(this).find(":selected").val();
-          var queryParams = new URLSearchParams(window.location.search);
-          queryParams.set($(this).attr("name"), val);
-          self.rootel.find('.loading-overlay').addClass('active');
-          window.location.href = '//' + location.host + location.pathname + "?" + queryParams.toString();
-        });
+        self.rootel.find('input.show-past-activities').change();
 
     };
 

@@ -155,9 +155,10 @@ class graphlib {
 
         // Based on: https://github.com/microsoftgraph/msgraph-sdk-php/blob/dev/tests/Functional/MailTest.php#L49
         $result = $appClient->createRequest("POST", $requestUrl)
-                         ->attachBody($eventData)
-                         ->setReturnType(Model\Event::class)
-                         ->execute();
+                        ->attachBody($eventData)
+                        ->setReturnType(Model\Event::class)
+                        ->execute();
+
         return $result;
     }
 

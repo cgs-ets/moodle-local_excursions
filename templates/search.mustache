@@ -34,21 +34,20 @@
     </form>
     <br><br>
    
-    {{^activities}}
+    {{^events}}
      No activities found...
-    {{/activities}}
+    {{/events}}
 
-    {{#activities.0}}
-      <div class="list-activities selected">
-        <table class="table generaltable">
+
+    <div class="list-events">
+        <table class="table events">
             {{>local_excursions/index_activities_head}}
             <tbody>
-                {{#activities}}
+                {{#events}}
                     {{>local_excursions/index_activity}}
-                {{/activities}}
+                {{/events}}
             </tbody>
         </table>
-      </div>
-    {{/activities.0}}
+    </div>
 
 </div>

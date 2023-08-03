@@ -100,6 +100,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       // Initialise owner.
       self.owner = RecipientSelector.init('owner', 'staff', 0);
 
+      /*
       // Set up categories tree.
       if(typeof Tree != 'undefined' && typeof calcategories != 'undefined') {
         var categoriesjson = $('input[name="categoriesjson"]').first();
@@ -107,7 +108,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         var values = categoriesval ? JSON.parse(categoriesval) : [];
         self.categoriestree = new Tree('.categoriescontainer', {
           data: calcategories,
-          closeDepth: 1,
+          closeDepth: 3,
           loaded: function() {
             this.values = values;
           },
@@ -133,16 +134,27 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
           }
         });
       }
+      */
 
-      // Cancel.
-      self.rootel.on('click', 'input[name="cancel"]', function(e) {
-          self.form.find('[name="action"]').val('cancel');
+      self.watchCategories();
+
+      var btndelete = document.getElementById('btn-delete');
+      btndelete && btndelete.addEventListener('click', e => {
+          e.preventDefault()
+          let eventid = btndelete.dataset.eventid;
+          Ajax.call([{
+            methodname: 'local_excursions_formcontrol',
+            args: { 
+              action: 'delete_event',
+              data: eventid,
+            },
+            done: function (response) {
+              document.getElementById('id_cancel').click();
+            }
+          }]);
       });
 
-      // Delete.
-      self.rootel.on('click', 'input[name="delete"]', function(e) {
-          self.form.find('[name="action"]').val('delete');
-      });
+
 
       self.rootel.on('click', '#id_submitbutton', function(e) {
         
@@ -155,12 +167,12 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         var timestart = self.convertFieldsToDate('timestart');
         var timeend = self.convertFieldsToDate('timeend');
 
-        var recurring = $('input[name="recurring"]:checked').val()
+        /*var recurring = $('input[name="recurring"]:checked').val()
         if (recurring) {
           var recurringpattern = $('input[name="recurringpattern"]:checked').val()
           var recurringdailypattern = $('input[name="recurringdailypattern"]:checked').val()
           var recuruntil =self.convertFieldsToDate('recuruntil');
-        }
+        }*/
 
         Ajax.call([{
           methodname: 'local_excursions_formcontrol',
@@ -170,12 +182,12 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                 'timestart' : timestart,
                 'timeend' : timeend,
                 'eventid' : self.eventid,
-                'recurringsettings' : recurring ? {
+                /*'recurringsettings' : recurring ? {
                   recurring: recurring, 
                   recurringpattern: recurringpattern, 
                   recurringdailypattern: recurringdailypattern, 
                   recuruntil: recuruntil
-                } : null,
+                } : null,*/
               }),
           },
           done: function(response) {
@@ -187,8 +199,9 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
               html += '<div class="table-heading"><b class="table-heading-label">Event summary</b></div>'
 
-              html += "<table><tr><th>Title</th><th>Start</th><th>End</th><th>Areas</th><th>Owner</th></tr>"
+              html += "<table><tr><th>Title</th><th>Dates</th><th>Location</th><th>Areas</th><th>Owner</th></tr>"
               var title = $('input[name="activityname"]').val();
+              var location = $('input[name="location"]').val();
               var timestart = '<div>' + $('[name="timestart[hour]"]').val().padStart(2, '0') + ':' +
                               $('[name="timestart[minute]"]').val().padStart(2, '0') + '</div><div><small>' +
                               $('[name="timestart[day]"]').val().padStart(2, '0') + '-' +
@@ -201,9 +214,14 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                             $('[name="timeend[month]"]').val().padStart(2, '0') + '-' +
                             $('[name="timeend[year]"]').val() + '</small></div>';
 
-              var areasjson = $('input[name="areasjson"]').first();
-              var areasval = areasjson.val()
+              var categoriesjson = $('input[name="categoriesjson"]').first();
+              var areasval = categoriesjson.val()
               var areavalues = areasval ? JSON.parse(areasval) : [];
+              areavalues = areavalues.map(function(area) {
+                return area.split('/')
+              })
+              areavalues = areavalues.flat(1)
+              areavalues = [...new Set(areavalues)]
               var lis = areavalues.map(function(a) { return "<li>" + a + "</li>"})
               var areashtml = "<ul>" + lis.join("") + "</ul>";
 
@@ -211,7 +229,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
               var owner = JSON.parse(ownerjson)
               var ownerhtml = '<div>' + owner.map(function(o) { return '<img class="rounded-circle" height="18" src="' + o.photourl + '"> <span>' + o.fullname + '</span>' } ) + '</div>'
 
-              html += "<tr><td>" + title + "</td><td>" + timestart + "</td><td>" + timeend + "</td><td>" + areashtml + "</td><td>" + ownerhtml + "</td></tr>"
+              html += "<tr><td>" + title + "</td>";
+              //html += "<td>" + timestart + "</td><td>" + timeend + "</td>";
+              html += "<td><div style=\"display:flex;gap:20px;\"><div>" + timestart + "</div><div>" + timeend + "</div></div></td>";
+              html += "<td>" + location + "</td>"
+              html += "<td>" + areashtml + "</td><td>" + ownerhtml + "</td></tr>"
               html += "</table><br>"
               html += '<div class="table-heading"><b class="table-heading-label">Conflicting events</b></div>'
               html += data.html;
@@ -231,13 +253,36 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         }]);
       })
 
-      self.setupCheckRecurring();
-  
-
+      //self.setupCheckRecurring();
+      self.getDayCycle(['timestart', 'timeend']);
+      self.initDatesChanged();
     }
 
+    EventForm.prototype.getDayCycle = function (inputs) {
+      var self = this;
+      for (let i = 0; i < inputs.length; i++) {
+        let datetime = self.convertFieldsToDate(inputs[i])
+        Ajax.call([{
+          methodname: 'local_excursions_formcontrol',
+          args: { 
+            action: 'get_day_cycle',
+            data: JSON.stringify({
+              datetime: datetime,
+            })
+          },
+          done: function (response) {
+            let data = JSON.parse(response);
+            $('#daycycle-' + inputs[i]).html(data)
+          }
+        }]);
+      }
+    };
 
-    EventForm.prototype.checkRecurring = function () {
+
+      
+
+
+    /*EventForm.prototype.checkRecurring = function () {
       var self = this;
       $('#calculated-dates').html('')
 
@@ -283,7 +328,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
           }
         }
       }]);
-    }
+    }*/
 
 
     EventForm.prototype.submitForm = function () {
@@ -299,8 +344,62 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       $('#id_submitbutton').click()
     }
 
+    EventForm.prototype.watchCategories = function () {
+      var self = this;
+      $('input[name="categories"]').change(function(e){
+        //var checkbox = $(this);
+        //console.log(e)
+        //console.log(checkbox)
+        console.log(e.currentTarget.checked)
 
-    EventForm.prototype.setupCheckRecurring = function () {
+        self.generateCategoriesJSON();
+
+      })
+      
+    }
+
+    EventForm.prototype.generateCategoriesJSON = function ()  {  
+        var checkboxes = document.getElementsByName("categories")
+        var selected = [] 
+        for (var i = 0; i < checkboxes.length; i++)  
+        {
+          if (checkboxes[i].checked) {
+            selected.push(checkboxes[i].value)
+          }
+        }
+        var categoriesjson = $('input[name="categoriesjson"]')
+        categoriesjson.val(JSON.stringify(selected))
+        //console.log(categoriesjson.val())
+    } 
+
+    EventForm.prototype.initDatesChanged = function () {
+      var self = this;
+
+      $('select[name="timestart[day]"]').change(function(){
+        self.getDayCycle(['timestart'])
+      })
+      $('select[name="timestart[month]"]').change(function(){
+        self.getDayCycle(['timestart'])
+      })
+      $('select[name="timestart[year]"]').change(function(){
+        self.getDayCycle(['timestart'])
+      })
+
+
+      $('select[name="timeend[day]"]').change(function(){
+        self.getDayCycle(['timeend'])
+      })
+      $('select[name="timeend[month]"]').change(function(){
+        self.getDayCycle(['timeend'])
+      })
+      $('select[name="timeend[year]"]').change(function(){
+        self.getDayCycle(['timeend'])
+      })
+
+    };
+
+
+    /*EventForm.prototype.setupCheckRecurring = function () {
       var self = this;
       $('input[name="editseries"]').change(function(){
         self.checkRecurring()
@@ -346,8 +445,6 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.checkRecurring()
       })
 
-      
-      
       $('select[name="timeend[day]"]').change(function(){
         self.checkRecurring()
       })
@@ -363,7 +460,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       $('select[name="timeend[minute]"]').change(function(){
         self.checkRecurring()
       })
-    };
+    };*/
 
     return {
         init: init

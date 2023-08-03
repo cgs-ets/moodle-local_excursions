@@ -25,20 +25,17 @@
 }}
 <thead>
     <tr>
-        <th class="th th-timecreated" scope="col">Created <a data-toggle="tooltip" title="Activity most recently created on top" class="sort" href="{{indexurl}}?sortby=created"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></a></th>
-        <th class="th th-timestart" scope="col">Start <a data-toggle="tooltip" title="Activity occuring soonest on top" class="sort" href="{{indexurl}}?sortby=start"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></a></th>
-        <th class="th th-timeend" scope="col">End</th>
-        <th class="th" scope="col">Activity name</th>
-        <th class="th" scope="col">Location</th>
-        {{^isstaff}}<th class="th" scope="col">Details</th>{{/isstaff}}
-        <th class="th" scope="col">Staff in charge</th>
+        <th class="th-time">Start - end</th>
+        <th>Title</th>
+        <th>Location</th>
+        <th>Staff in charge</th>
         {{#isstaff}}
-            <th class="th" scope="col">Status</th>
+            <th>Status</th>
         {{/isstaff}}
         {{#isparent}}
-            <th class="th" scope="col">Your students</th>
+            <th>Your students</th>
         {{/isparent}}
-        <th class="th lastcol" scope="col">
+        <th>
             {{#isparent}}{{^isstaff}}Permissions{{/isstaff}}{{/isparent}}
             {{#isstaff}}Actions{{/isstaff}}
         </th>

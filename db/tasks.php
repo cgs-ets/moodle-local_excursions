@@ -80,4 +80,22 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*'
     ),
+    array(
+        'classname' => 'local_excursions\task\cron_sync_events',
+        'blocking' => 0,
+        'minute' => '*',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*'
+    ),
+    array(
+        'classname' => 'local_excursions\task\cron_sync_planning',
+        'blocking' => 0,
+        'minute' => '*',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*'
+    ),
 );
