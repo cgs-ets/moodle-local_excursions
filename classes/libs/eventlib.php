@@ -97,6 +97,9 @@ class eventlib {
         $areas = call_user_func_array('array_merge', $areas);
         $areas = array_values(array_unique($areas));
         $event->areasjson = json_encode($areas);
+        if (!count($areas)) {
+            $event->displaypublic = 0;
+        }
 
         $campuses = [];
         if (array_intersect($areas, ['Whole school', 'Primary school', 'Pre-School', 'Pre-Kindergarten', 'Kindergarten', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'])) {

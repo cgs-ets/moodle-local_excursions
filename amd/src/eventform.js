@@ -137,6 +137,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       */
 
       self.watchCategories();
+      self.generateCategoriesJSON();
 
       var btndelete = document.getElementById('btn-delete');
       btndelete && btndelete.addEventListener('click', e => {
@@ -347,29 +348,28 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     EventForm.prototype.watchCategories = function () {
       var self = this;
       $('input[name="categories"]').change(function(e){
-        //var checkbox = $(this);
-        //console.log(e)
-        //console.log(checkbox)
-        console.log(e.currentTarget.checked)
-
         self.generateCategoriesJSON();
-
       })
       
     }
 
     EventForm.prototype.generateCategoriesJSON = function ()  {  
-        var checkboxes = document.getElementsByName("categories")
-        var selected = [] 
-        for (var i = 0; i < checkboxes.length; i++)  
-        {
-          if (checkboxes[i].checked) {
-            selected.push(checkboxes[i].value)
-          }
+      var self = this;
+      var checkboxes = document.getElementsByName("categories")
+      var selected = [] 
+      for (var i = 0; i < checkboxes.length; i++)  
+      {
+        if (checkboxes[i].checked) {
+          selected.push(checkboxes[i].value)
         }
-        var categoriesjson = $('input[name="categoriesjson"]')
-        categoriesjson.val(JSON.stringify(selected))
-        //console.log(categoriesjson.val())
+      }
+      var categoriesjson = $('input[name="categoriesjson"]')
+      categoriesjson.val(JSON.stringify(selected))
+      if (selected.length) {
+        self.rootel.find('#id_displaypublic').closest('.form-group').show();
+      } else {
+        self.rootel.find('#id_displaypublic').closest('.form-group').hide();
+      }
     } 
 
     EventForm.prototype.initDatesChanged = function () {
