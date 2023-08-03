@@ -71,7 +71,7 @@ if (!$canedit) {
     $notice = 'You do not have permission to edit this calendar event.';
     redirect(
         $viewurl->out(),
-        '<p>'.$notice.'</p>',
+        $notice,
         null,
         \core\output\notification::NOTIFY_ERROR
     );
@@ -115,14 +115,14 @@ if (!empty($formdata)) {
             'edit' => $event->activityid,
         ));
         $notice = get_string("activityform:savechangessuccess", "local_excursions");
-        redirect($activitymanageurl->out(false), '<p>'.$notice.'</p>', null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect($activitymanageurl->out(false), $notice, null, \core\output\notification::NOTIFY_SUCCESS);
         exit;
     }
 
     $notice = get_string("activityform:savechangessuccess", "local_excursions");
     redirect(
         $viewurl->out(),
-        '<p>'.$notice.'</p>',
+        $notice,
         null,
         \core\output\notification::NOTIFY_SUCCESS
     );

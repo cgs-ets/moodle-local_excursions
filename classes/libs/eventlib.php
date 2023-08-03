@@ -155,7 +155,9 @@ class eventlib {
         **************************/
 
         // Single event. If it was previously in a series it will be detached.
-        //$event->recurrencemaster = 0;
+        // TODO: Remove rucurring columns and tables from db if not needed.
+        $event->recurrencemaster = 0;
+        $event->recurringjson = '';
 
         // Simple single event.         
         if (empty($event->id)) {

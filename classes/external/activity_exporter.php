@@ -485,7 +485,7 @@ class activity_exporter extends persistent_exporter {
             'manageurl' => $manageurl->out(false),
             'permissionsurl' => $permissionsurl->out(false),
             'summaryurl' => $summaryurl->out(false),
-            'eventurl' => $eventurl->out(false),
+            'eventurl' => $eventurl ? $eventurl->out(false) : '',
             'createdreadabletime' => $createdreadabletime,
             'startreadabletime' => $startreadabletime,
             'endreadabletime' => $endreadabletime,

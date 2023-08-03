@@ -87,7 +87,7 @@ if ($create) {
     $notice = "Could not open Activity form. A required parameter was missing.";
     redirect(
         $viewurl->out(),
-        '<p>'.$notice.'</p>',
+        $notice,
         null,
         \core\output\notification::NOTIFY_ERROR
     );
@@ -242,7 +242,7 @@ if (!empty($formdata)) {
     if ($result) {
         redirect(
             $viewurl->out(),
-            '<p>'.$notice.'</p>',
+            $notice,
             null,
             \core\output\notification::NOTIFY_SUCCESS
         );
@@ -251,7 +251,7 @@ if (!empty($formdata)) {
     $notice = get_string("activityform:savefail", "local_excursions");
     redirect(
         $viewurl->out(),
-        '<p>'.$notice.'</p>',
+        $notice,
         null,
         \core\output\notification::NOTIFY_ERROR
     );
