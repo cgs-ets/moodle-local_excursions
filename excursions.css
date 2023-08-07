@@ -922,6 +922,11 @@
 #page-local-excursions-newsearch table.events .th-time {
   width: 325px;
 }
+#page-local-excursions-events table.events .th-created,
+#page-local-excursions-index table.events .th-created,
+#page-local-excursions-newsearch table.events .th-created {
+  width: 90px;
+}
 #page-local-excursions-events table.events .th-location,
 #page-local-excursions-index table.events .th-location,
 #page-local-excursions-newsearch table.events .th-location {

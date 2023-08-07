@@ -25,9 +25,9 @@
 }}
 
 <div class="local_excursions_events">
-  <div class="header" style="display: none;">
+  <div style="display: none;" class="header">
     <div class="head-options">
-      <a id="btn-createevent" class="btn btn-primary" href="/local/excursions/event.php">Create a new event</a>
+      <a id="btn-eventreview" class="btn btn-primary" href="/local/excursions/">Back to activity planning index</a>
     </div>
   </div>
 
@@ -73,7 +73,7 @@
       <td>{{eventname}}</td>
       <td>{{location}}</td>
       <td>{{#areas}}<span class="badge badge-pill badge-light">{{.}}</span>{{/areas}}</td>
-      <td>{{details}}</td>
+      <td>{{shortdetails}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
       <td>
         <div class="actions">

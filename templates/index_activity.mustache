@@ -46,6 +46,9 @@
 
         </div>
       </td>
+      {{#iseventreviewer}}
+        <td>{{createdreadabledate}}</td>
+      {{/iseventreviewer}}
       <td><strong>{{eventname}}</strong></td>
       <td>{{location}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
@@ -80,6 +83,9 @@
 
         </div>
       </td>
+      {{#iseventreviewer}}
+        <td>{{createdreadabledate}}</td>
+      {{/iseventreviewer}}
       <td class="cell c-name"><strong>{{activityname}}</strong></td>
       <td class="cell c-location">{{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}</td>
       <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>

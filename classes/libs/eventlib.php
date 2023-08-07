@@ -342,8 +342,8 @@ class eventlib {
         $sql = "";
         // If status not provided, then we want to get all approved activities + draft/inreview activities for this user only.
         // In the case of auditors/approvers, we need to get the above + all inreview activities.
-        $auditor = has_capability('local/excursions:audit', \context_system::instance(), null, false);
-        $approver = count(locallib::get_approver_types($USER->username)) > 0;
+        $auditor = false;// has_capability('local/excursions:audit', \context_system::instance(), null, false);
+        $approver = false; //count(locallib::get_approver_types($USER->username)) > 0;
         if ($auditor || $approver) {
             if ($status == locallib::ACTIVITY_STATUS_DRAFT) {
                 // Get this user's draft activities
@@ -391,7 +391,12 @@ class eventlib {
                         WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
                         AND deleted = 0 
                         AND status = $status
-                        AND username = '$USER->username'
+                        AND (
+                            username = '$USER->username' OR
+                            staffincharge = '$USER->username' OR 
+                            planningstaffjson LIKE '%$USER->username,%' OR 
+                            accompanyingstaffjson LIKE '%$USER->username,%'
+                        )
                         $campussql
                         ORDER BY timestart DESC";
             } else {
@@ -400,14 +405,20 @@ class eventlib {
                         FROM {excursions} 
                         WHERE ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
                         AND deleted = 0 
-                        AND (status = $approved OR (
-                            (status = $draft OR status = $inreview) AND username = '$USER->username'
+                        AND (status = $approved OR 
+                        (
+                            (status = $draft OR status = $inreview) AND (
+                                username = '$USER->username' OR
+                                staffincharge = '$USER->username' OR 
+                                planningstaffjson LIKE '%$USER->username,%' OR 
+                                accompanyingstaffjson LIKE '%$USER->username,%'
+                            )
                         ))
                         $campussql
                         ORDER BY timestart DESC";
             }
         }
-        
+        //echo "<pre>"; var_export($sql); exit;
         $activities = array();
         $records = $DB->get_records_sql($sql, array($currentstart, $currentend, $currentstart, $currentend));
         foreach ($records as $record) {
@@ -429,10 +440,14 @@ class eventlib {
         }
 
         $statussql = '';
+        $usersql = '';
         if ($status == $draft || $status == $inreview) { 
             $statussql = 'AND status = 0';
+            $usersql = "AND (creator = '$USER->username' OR owner = '$USER->username') ";
         } else if ($status == $approved) { 
             $statussql = 'AND status = 1';
+        } else {// Any
+            $usersql = "AND ((creator = '$USER->username' OR owner = '$USER->username') OR  status = 1)";
         }
 
         $sql = "SELECT * 
@@ -442,6 +457,7 @@ class eventlib {
             $statussql
             AND ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
             $areassql
+            $usersql
             ORDER BY timestart DESC
         ";
 
@@ -578,9 +594,11 @@ class eventlib {
         $duration .= $days ? $days . 'd ' : '';
         $duration .= $hours ? $hours . 'h ' : '';
         $duration .= $minutes ? $minutes . 'm ' : '';
+
         return array(
             'id' => $event->id,
             'eventname' => $event->activityname,
+            'createdreadabledate' => date('j M y', $event->timecreated),
             'timestart' => $event->timestart,
             'timeend' => $event->timeend,
             'timestartReadable' => date('g:ia', $event->timestart),
@@ -594,6 +612,7 @@ class eventlib {
             'duration' => $duration,
             'areas' => $areas,
             'details' => $event->notes,
+            'shortdetails' => locallib::tokenTruncate($event->notes, 120),
             'owner' => $owner,
             'nonnegotiable' => $event->nonnegotiable,
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),

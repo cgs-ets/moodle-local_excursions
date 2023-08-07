@@ -75,6 +75,9 @@ class activity_exporter extends persistent_exporter {
             'createdreadabletime' => [
                 'type' => PARAM_RAW,
             ],
+            'createdreadabledate' => [
+                'type' => PARAM_RAW,
+            ],
             'statushelper' => [
                 'type' => PARAM_RAW,
             ],
@@ -487,6 +490,7 @@ class activity_exporter extends persistent_exporter {
             'summaryurl' => $summaryurl->out(false),
             'eventurl' => $eventurl ? $eventurl->out(false) : '',
             'createdreadabletime' => $createdreadabletime,
+            'createdreadabledate' => date('j M y', $this->data->timecreated),
             'startreadabletime' => $startreadabletime,
             'endreadabletime' => $endreadabletime,
             'statushelper' => $statushelper,

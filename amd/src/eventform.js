@@ -396,6 +396,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.getDayCycle(['timeend'])
       })
 
+      $('.yui3-calendar-day').on('click', function(){
+        alert('dad kljsakdjask jdask');
+        self.getDayCycle(['timestart', 'timeend'])
+      })
+
     };
 
 
