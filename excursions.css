@@ -657,6 +657,12 @@
 #page-local-excursions-event .form-label-addon {
   display: none !important;
 }
+#page-local-excursions-event #id_timestart_calendar {
+  display: none;
+}
+#page-local-excursions-event #id_timeend_calendar {
+  display: none;
+}
 #page-local-excursions-event #fitem_id_ownerjson {
   display: none;
 }
