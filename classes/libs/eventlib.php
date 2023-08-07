@@ -342,8 +342,8 @@ class eventlib {
         $sql = "";
         // If status not provided, then we want to get all approved activities + draft/inreview activities for this user only.
         // In the case of auditors/approvers, we need to get the above + all inreview activities.
-        $auditor = false;// has_capability('local/excursions:audit', \context_system::instance(), null, false);
-        $approver = false; //count(locallib::get_approver_types($USER->username)) > 0;
+        $auditor = has_capability('local/excursions:audit', \context_system::instance(), null, false);
+        $approver = count(locallib::get_approver_types($USER->username)) > 0;
         if ($auditor || $approver) {
             if ($status == locallib::ACTIVITY_STATUS_DRAFT) {
                 // Get this user's draft activities
