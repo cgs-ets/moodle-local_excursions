@@ -415,6 +415,7 @@ class eventlib {
                             accompanyingstaffjson LIKE '%$USER->username,%'
                         )
                         $campussql
+                        $usersql
                         ORDER BY timestart DESC";
             } else {
                 // Get all approved activities + draft/inreview activities for this user only.
