@@ -220,6 +220,20 @@ class locallib extends local_excursions_config {
         return $filters;
     }
 
+    public static function get_events_filter_user($current = '') {
+        global $USER;
+        $options = array(
+            ['', 'Any'], 
+            ['self', $USER->firstname . ' ' . $USER->lastname],
+        );
+        $filters  = '<select class="filter-select" name="user">';
+        $filters .= implode("", array_map(function($o) use ($current) { 
+            $selected = ($o[0] ==  $current) ? 'selected="true"' : '';
+            return '<option ' . $selected . ' value="' . $o[0] . '">' . $o[1] . '</option>';
+        }, $options));
+        $filters .= '</select>';
+        return $filters;
+    }
 
     public static function get_approver_types($username = null) {
         global $USER;

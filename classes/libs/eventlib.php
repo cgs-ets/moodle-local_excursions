@@ -309,7 +309,7 @@ class eventlib {
     }*/
 
 
-    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws') {
+    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws', $user = '') {
         global $DB, $OUTPUT, $USER;
 
         // If no month-year nav supplied, load for current month-year.
@@ -330,7 +330,20 @@ class eventlib {
             $status = 0;
         }
 
-        // Formulate the campus conition.
+        // Formulate the user condition.
+        $usersql = '';
+        if ($user == 'self') {
+            $usersql = " 
+            AND (
+                username = '$USER->username' OR
+                staffincharge = '$USER->username' OR 
+                planningstaffjson LIKE '%$USER->username,%' OR 
+                accompanyingstaffjson LIKE '%$USER->username,%'
+            )
+            ";
+        }
+
+        // Formulate the campus condition.
         $campussql = '';
         if ($campus == 'ss') {
             $campussql = " AND campus = 'senior' ";
@@ -363,6 +376,7 @@ class eventlib {
                         AND deleted = 0 
                         AND status = $status
                         $campussql
+                        $usersql
                         ORDER BY timestart DESC";
             } else {
                 // Get all activities that are not draft/autosave.
@@ -372,9 +386,11 @@ class eventlib {
                         AND deleted = 0
                         AND (status = $approved OR status = $inreview OR (status = $draft AND username = '$USER->username'))
                         $campussql
+                        $usersql
                         ORDER BY timestart DESC";
             }
         } else {
+            // Normal staff member.
             if ($status == locallib::ACTIVITY_STATUS_APPROVED) {
                 // Get all approved activities.
                 $sql = "SELECT *
@@ -383,6 +399,7 @@ class eventlib {
                         AND deleted = 0 
                         AND status = $status
                         $campussql
+                        $usersql
                         ORDER BY timestart DESC";
             } else if ($status == locallib::ACTIVITY_STATUS_DRAFT || $status == locallib::ACTIVITY_STATUS_INREVIEW) {
                 // Get draft/inreview activities for this user only.
@@ -441,14 +458,19 @@ class eventlib {
 
         $statussql = '';
         $usersql = '';
-        if ($status == $draft || $status == $inreview) { 
-            $statussql = 'AND status = 0';
+        if ($user == 'self') {
             $usersql = "AND (creator = '$USER->username' OR owner = '$USER->username') ";
-        } else if ($status == $approved) { 
-            $statussql = 'AND status = 1';
-        } else {// Any
-            $usersql = "AND ((creator = '$USER->username' OR owner = '$USER->username') OR  status = 1)";
+        } else {
+            if ($status == $draft || $status == $inreview) { 
+                $statussql = 'AND status = 0';
+                $usersql = "AND (creator = '$USER->username' OR owner = '$USER->username') ";
+            } else if ($status == $approved) { 
+                $statussql = 'AND status = 1';
+            } else {// Any
+                $usersql = "AND ((creator = '$USER->username' OR owner = '$USER->username') OR  status = 1)";
+            }
         }
+        
 
         $sql = "SELECT * 
             FROM {excursions_events}

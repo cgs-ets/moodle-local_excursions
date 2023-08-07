@@ -36,11 +36,13 @@ $isstaff = locallib::is_cgs_staff();
 $nav = optional_param('nav', '', PARAM_RAW);
 $status = optional_param('status', '', PARAM_RAW);
 $campus = optional_param('campus', 'ws', PARAM_RAW);
+$user = optional_param('user', '', PARAM_RAW);
 $baseindexurl = new moodle_url('/local/excursions/index.php', array());
 $indexurl = new moodle_url('/local/excursions/index.php', array(
 	'nav' => $nav,
 	'status' => $status,
 	'campus' => $campus,
+	'user' => $user,
 ));
 
 $context = context_system::instance();
@@ -57,10 +59,11 @@ $output = $OUTPUT->header();
 $paginaton = locallib::get_events_pagination($nav, 'index');
 $filters_status = locallib::get_events_filter_status($status);
 $filters_campus = locallib::get_events_filter_campus($campus);
+$filters_user = locallib::get_events_filter_user($user);
 $events = array();
 $isparent = false;
 if ($isstaff) {
-    $events = eventlib::get_all_events_activities($paginaton->current, $status, $campus);
+    $events = eventlib::get_all_events_activities($paginaton->current, $status, $campus, $user);
 } else {
     $parentactivities = activity::get_for_parent($USER->username);
     $isparent = count($parentactivities);
@@ -80,7 +83,8 @@ $data = array(
     'nav' => $paginaton->nav,
     'filters_status' => $filters_status,
     'filters_campus' => $filters_campus,
-    'hasfilters' => $status || $campus != 'ws',
+    'filters_user' => $filters_user,
+    'hasfilters' => $status || $campus != 'ws' || $user,
     'baseurl' => $baseindexurl->out(),
     'eventcreateurl' => $eventcreateurl->out(),
     'eventreviewurl' => $eventreviewurl->out(),
