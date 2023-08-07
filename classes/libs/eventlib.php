@@ -487,10 +487,11 @@ class eventlib {
         $sql = "SELECT * 
                   FROM {excursions}
                  WHERE deleted = 0
-                   AND (activityname LIKE ? OR username LIKE ? OR staffinchargejson LIKE ?)
+                   AND (activityname LIKE ? OR username LIKE ? OR staffinchargejson LIKE ? OR planningstaffjson LIKE ?)
                    AND (status = $approved OR status = $inreview OR (status = $draft AND username = '$USER->username'))
               ORDER BY timestart DESC";
         $params = array();
+        $params[] = '%'.$text.'%';
         $params[] = '%'.$text.'%';
         $params[] = '%'.$text.'%';
         $params[] = '%'.$text.'%';

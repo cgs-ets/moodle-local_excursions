@@ -37,7 +37,7 @@ $q = optional_param('q', '', PARAM_RAW);
 $indexurl = new moodle_url('/local/excursions/index.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_url('/local/excursions/newsearch.php', array('q' => $q,));
+$PAGE->set_url('/local/excursions/search.php', array('q' => $q,));
 $PAGE->set_title(get_string('searchtitle', 'local_excursions') . $q);
 $PAGE->set_heading(get_string('searchtitle', 'local_excursions') . $q);
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
@@ -58,7 +58,7 @@ $data->indexurl = $indexurl;
 $data->isstaff = $isstaff;
 
 // Render the announcement list.
-$output .= $OUTPUT->render_from_template('local_excursions/newsearch', $data);
+$output .= $OUTPUT->render_from_template('local_excursions/search', $data);
 
 // Final outputs.
 $output .= $OUTPUT->footer();
