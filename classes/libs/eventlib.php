@@ -432,6 +432,7 @@ class eventlib {
                             )
                         ))
                         $campussql
+                        $usersql
                         ORDER BY timestart DESC";
             }
         }
