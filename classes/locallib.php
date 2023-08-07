@@ -152,20 +152,36 @@ class locallib extends local_excursions_config {
         $broken = explode('-', $current);
         $currurl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $current));
         $prevnav = $broken[0] . '-' . ($broken[1]-1);
+        if ($broken[1] == 1) {
+            $prevnav = $broken[0]-1 . '-' . 12;
+        }
         $nextnav = $broken[0] . '-' . ($broken[1]+1);
+        if ($broken[1] == 12) {
+            $nextnav = $broken[0]+1 . '-' . 1;
+        }
         $prevurl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $prevnav));
         $nexturl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $nextnav));
 
         $months = [];
-        for ($i = 6; $i >= 0; $i--) 
+        $downtomonth = $thismonth;
+        $i = 0;
+        while ($i <= 6 || $downtomonth > $prevnav) 
         {
             $monstr = strtotime( date( 'Y-m-01' )." -$i months");
-            $months[] = [date("Y-n", $monstr), date("M Y", $monstr)];
+            $downtomonth = date("Y-n", $monstr);
+            $months[] = [$downtomonth, date("M Y", $monstr)];
+            $i++;
         }
-        for ($i = 1; $i <= 6; $i++) 
+        $months = array_reverse($months);
+
+        $uptomonth = $thismonth;
+        $i = 1; 
+        while ($i <= 16 || $uptomonth < $nextnav) 
         {
             $monstr = strtotime( date( 'Y-m-01' )." +$i months");
-            $months[] = [date("Y-n", $monstr), date("M Y", $monstr)];
+            $uptomonth = date("Y-n", $monstr);
+            $months[] = [$uptomonth, date("M Y", $monstr)];
+            $i++;
         }
 
         $nav  = '<nav><ul class="pagination">';
