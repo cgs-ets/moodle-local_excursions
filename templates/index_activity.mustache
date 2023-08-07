@@ -29,6 +29,8 @@
       <td>
         <div class="times">
 
+      
+
           <div class="daystart">
             <div class="event-date">
               <div class="event-day">{{dayStart}}<small>{{dayStartSuffix}}</small></div>
@@ -43,6 +45,9 @@
             </div>
           </div>
           <div><small>{{duration}}</small></div>
+  
+
+
 
         </div>
       </td>
@@ -64,24 +69,28 @@
   <tr data-id="{{id}}" class="activity {{#statushelper.isautosave}}is-autosave{{/statushelper.isautosave}}{{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}
       {{#ispast}}past{{/ispast}}">
       <td class="cell">
-        <div class="times">
-
-          <div class="daystart">
-            <div class="event-date">
-              <div class="event-day">{{dayStart}}<small>{{dayStartSuffix}}</small></div>
-              <div class="event-time">{{timestartReadable}}</div>
+        {{#isstaff}}
+          <div class="times">
+            <div class="daystart">
+              <div class="event-date">
+                <div class="event-day">{{dayStart}}<small>{{dayStartSuffix}}</small></div>
+                <div class="event-time">{{timestartReadable}}</div>
+              </div>
             </div>
-          </div>
-          <span> - </span>
-          <div class="dayend">
-            <div class="event-date">
-              <div class="event-day">{{dayEnd}}<small>{{dayEndSuffix}}</small></div>
-              <div class="event-time">{{timeendReadable}}</div>
+            <span> - </span>
+            <div class="dayend">
+              <div class="event-date">
+                <div class="event-day">{{dayEnd}}<small>{{dayEndSuffix}}</small></div>
+                <div class="event-time">{{timeendReadable}}</div>
+              </div>
             </div>
-          </div>
-          <div><small>{{duration}}</small></div>
-
+            <div><small>{{duration}}</small></div>
         </div>
+        {{/isstaff}}
+        {{^isstaff}}
+          <div class="badge badge-secondary">{{timestartFullReadable}}</div> - <div class="badge badge-secondary">{{timeendFullReadable}}</div>
+          <br><div class="badge">{{duration}}</div>
+        {{/isstaff}}
       </td>
       {{#iseventreviewer}}
         <td>{{createdreadabledate}}</td>

@@ -38,9 +38,9 @@
   {{/isstaff}}
 
   <div class="nav-bar">
-    {{{nav}}}
-
     {{#isstaff}}
+        {{{nav}}}
+
       <div class="filter-wrap">
         <span>Status: </span>
         {{{filters_status}}}
@@ -69,7 +69,7 @@
       </table>
   </div>
  
-  <div class="nav-bar">{{{nav}}}</div>
+  {{#isstaff}}<div class="nav-bar">{{{nav}}}</div>{{/isstaff}}
 
   {{>local_excursions/loadingoverlay}}
 

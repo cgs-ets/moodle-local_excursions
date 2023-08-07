@@ -28,6 +28,7 @@ require_once(__DIR__.'/lib.php');
 use local_excursions\persistents\activity;
 use \local_excursions\libs\eventlib;
 use local_excursions\locallib;
+use \local_excursions\external\activity_exporter;
 
 require_login();
 $isstaff = locallib::is_cgs_staff();
@@ -57,12 +58,19 @@ $paginaton = locallib::get_events_pagination($nav, 'index');
 $filters_status = locallib::get_events_filter_status($status);
 $filters_campus = locallib::get_events_filter_campus($campus);
 $events = array();
+$isparent = false;
 if ($isstaff) {
     $events = eventlib::get_all_events_activities($paginaton->current, $status, $campus);
 } else {
     $parentactivities = activity::get_for_parent($USER->username);
+    $isparent = count($parentactivities);
     $studentactivities = activity::get_for_student($USER->username);
-    $events = array_merge($parentactivities, $studentactivities);
+    $activities = array_merge($parentactivities, $studentactivities);
+    $events = [];
+    foreach ($activities as $activity) {
+        $activityexporter = new activity_exporter($activity, array('minimal' => true));
+        $events[] = $activityexporter->export($OUTPUT);
+    }
 }
 //echo "<pre>"; var_export($events); exit;
 $eventcreateurl = new \moodle_url('/local/excursions/event.php', array());
@@ -77,6 +85,7 @@ $data = array(
     'eventcreateurl' => $eventcreateurl->out(),
     'eventreviewurl' => $eventreviewurl->out(),
     'isstaff' => $isstaff,
+    'isparent' => $isparent,
     'iseventreviewer' => locallib::is_event_reviewer(),
 );
 

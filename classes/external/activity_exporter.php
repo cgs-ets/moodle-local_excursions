@@ -150,7 +150,10 @@ class activity_exporter extends persistent_exporter {
             'stepname' => [
                 'type' => PARAM_RAW,
             ],
-
+ 
+            'timestartFullReadable' => [
+                'type' => PARAM_RAW,
+            ],
 
             'timestartReadable' => [
                 'type' => PARAM_RAW,
@@ -159,6 +162,9 @@ class activity_exporter extends persistent_exporter {
                 'type' => PARAM_RAW,
             ],
             'timeendReadable' => [
+                'type' => PARAM_RAW,
+            ], 
+            'timeendFullReadable' => [
                 'type' => PARAM_RAW,
             ],
             'dateendReadable' => [
@@ -517,8 +523,10 @@ class activity_exporter extends persistent_exporter {
             'htmlnotes' => $htmlnotes,
             'isexcursion' => $isexcursion,
             'stepname' => $stepname,
+            'timestartFullReadable' => date('j M Y, g:ia', $this->data->timestart),
             'timestartReadable' => date('g:ia', $this->data->timestart),
             'datestartReadable' => date('j M', $this->data->timestart),
+            'timeendFullReadable' => date('j M Y, g:ia', $this->data->timeend),
             'timeendReadable' => date('g:ia', $this->data->timeend),
             'dateendReadable' => date('j M', $this->data->timeend),
             'dayStart' => date('j', $this->data->timestart),
