@@ -45,14 +45,20 @@ $PAGE->requires->js_call_amd('local_excursions/index', 'init');
 
 $output = $OUTPUT->header();
 
-$events = [];
-if (!empty($q)) {
-    $events = eventlib::search($q);
-}
-
+$isspecial = locallib::is_event_reviewer() || (count(locallib::get_approver_types($USER->username)) > 0);
 
 $data = new \stdClass();
-$data->events = $events;
+$data->events = [];
+$data->iseventreviewer = $isspecial;
+
+if (!empty($q)) {
+    if ($q == 'showeverything' && $isspecial) {
+        $data->events = eventlib::everything();
+    } else {
+        $data->events = eventlib::search($q);
+    }
+}
+
 $data->q = $q;
 $data->indexurl = $indexurl;
 $data->isstaff = $isstaff;

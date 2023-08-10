@@ -32,7 +32,9 @@
             <input name="q" class="search">
             <button class="btn btn-primary">Go</button>
           </form>
-          {{#iseventreviewer}}<a id="btn-eventreview" class="btn btn-primary" href="{{eventreviewurl}}">Review calendar events</a>{{/iseventreviewer}}
+          {{#iseventreviewer}}<a id="btn-eventreview" class="btn btn-secondary" href="{{eventreviewurl}}">Review calendar events</a>{{/iseventreviewer}}
+          {{#iseventreviewer}}<a class="btn btn-secondary" href="/local/excursions/search.php?q=showeverything">Load everything</a>{{/iseventreviewer}}
+
           <a id="btn-activitycreate" class="btn btn-primary" href="{{eventcreateurl}}">{{# str }}activityform:create, local_excursions{{/ str }}</a>
       </div>
   {{/isstaff}}
@@ -59,6 +61,7 @@
       {{#hasfilters}}
         <a class="btn btn-secondary" href="{{baseurl}}">clear all</a>
       {{/hasfilters}}
+
     {{/isstaff}}
 
   </div>

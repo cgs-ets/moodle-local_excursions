@@ -308,10 +308,7 @@ class eventlib {
         return ['dates'=> $dates, 'datesReadable'=> $datesReadable];
     }*/
 
-
     public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws', $user = '') {
-        global $DB, $OUTPUT, $USER;
-
         // If no month-year nav supplied, load for current month-year.
         if (empty($current)) {
             $current = date('Y-m', time());
@@ -319,7 +316,12 @@ class eventlib {
         $broken = explode('-', $current);
         $currentstart = strtotime($broken[0] . '-' . $broken[1] . '-1 00:00');
         $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
+        return static::get_for_date_range($currentstart, $currentend, $status, $campus, $user);
+    }
 
+
+    public static function get_for_date_range($currentstart, $currentend, $status = 0, $campus = 'ws', $user = '') {
+        global $DB, $OUTPUT, $USER;
 
         // Sanitise status.
         $autosave = locallib::ACTIVITY_STATUS_AUTOSAVE;
@@ -578,6 +580,12 @@ class eventlib {
             $events[] = static::export_event($event);
         }
         return $events;
+    }
+
+    public static function everything() {
+        $currentstart = strtotime('2000-1-1 00:00');
+        $currentend = strtotime('3000-1-1 00:00');
+        return static::get_for_date_range($currentstart, $currentend);
     }
 
     public static function get_user_events($current = '') {
