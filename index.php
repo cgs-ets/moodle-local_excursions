@@ -78,6 +78,7 @@ if ($isstaff) {
 //echo "<pre>"; var_export($events); exit;
 $eventcreateurl = new \moodle_url('/local/excursions/event.php', array());
 $eventreviewurl = new \moodle_url('/local/excursions/events.php', array());
+$isapprover = count(locallib::get_approver_types($USER->username)) > 0;
 $data = array(
     'events' => $events,
     'nav' => $paginaton->nav,
@@ -90,7 +91,7 @@ $data = array(
     'eventreviewurl' => $eventreviewurl->out(),
     'isstaff' => $isstaff,
     'isparent' => $isparent,
-    'iseventreviewer' => locallib::is_event_reviewer(),
+    'iseventreviewer' => locallib::is_event_reviewer() || $isapprover,
 );
 
 //echo "<pre>"; var_export($data); exit;
