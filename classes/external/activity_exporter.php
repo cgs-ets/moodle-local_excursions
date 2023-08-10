@@ -185,6 +185,9 @@ class activity_exporter extends persistent_exporter {
             'duration' => [
                 'type' => PARAM_RAW,
             ],
+            'monyear' => [
+                'type' => PARAM_RAW,
+            ],
         ];
     }
 
@@ -279,6 +282,11 @@ class activity_exporter extends persistent_exporter {
         $createdreadabletime = '';
         if ($this->data->timecreated > 0) {
             $createdreadabletime = date('j M Y, g:ia', $this->data->timecreated);
+        }
+
+        $monyear = '';
+        if ($this->data->timestart > 0) {
+            $monyear = date('M Y', $this->data->timestart);
         }
 
         $statushelper = locallib::status_helper($this->data->status);
@@ -534,6 +542,7 @@ class activity_exporter extends persistent_exporter {
             'dayStartSuffix' => date('S', $this->data->timestart),
             'dayEndSuffix' => date('S', $this->data->timeend),
             'duration' => $duration,
+            'monyear' => $monyear,
 	    ];
     }
 

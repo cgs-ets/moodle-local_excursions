@@ -56,6 +56,7 @@ $data->events = $events;
 $data->q = $q;
 $data->indexurl = $indexurl;
 $data->isstaff = $isstaff;
+$data->issearch = true;
 
 // Render the announcement list.
 $output .= $OUTPUT->render_from_template('local_excursions/search', $data);

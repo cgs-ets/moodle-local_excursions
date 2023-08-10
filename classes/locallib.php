@@ -145,42 +145,43 @@ class locallib extends local_excursions_config {
     }
 
     public static function get_events_pagination($current = '', $pagename = 'events') {
-        $thismonth = date('Y-n', time());
+        $thismonth = date('Y-m', time());
         if (empty($current)) {
             $current = $thismonth;
         }
         $broken = explode('-', $current);
         $currurl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $current));
-        $prevnav = $broken[0] . '-' . ($broken[1]-1);
+        $prevnav = $broken[0] . '-' . str_pad(($broken[1]-1), 2, '0', STR_PAD_LEFT);
         if ($broken[1] == 1) {
             $prevnav = $broken[0]-1 . '-' . 12;
         }
         $nextnav = $broken[0] . '-' . ($broken[1]+1);
         if ($broken[1] == 12) {
-            $nextnav = $broken[0]+1 . '-' . 1;
+            $nextnav = $broken[0]+1 . '-0' . 1;
         }
         $prevurl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $prevnav));
         $nexturl = new \moodle_url("/local/excursions/$pagename.php", array('nav' => $nextnav));
+        //echo "<pre>";var_export([$prevnav, $nextnav]);exit; 
 
         $months = [];
-        $downtomonth = $thismonth;
+        $imonth = $thismonth;
         $i = 0;
-        while ($i <= 6 || $downtomonth > $prevnav) 
+        while ($i <= 6 || $imonth > $prevnav) 
         {
             $monstr = strtotime( date( 'Y-m-01' )." -$i months");
-            $downtomonth = date("Y-n", $monstr);
-            $months[] = [$downtomonth, date("M Y", $monstr)];
+            $imonth = date("Y-m", $monstr);
+            $months[] = [$imonth, date("M Y", $monstr)];
             $i++;
         }
         $months = array_reverse($months);
 
-        $uptomonth = $thismonth;
+        $imonth = $thismonth;
         $i = 1; 
-        while ($i <= 16 || $uptomonth < $nextnav) 
+        while ($i <= 16 || $imonth < $nextnav) 
         {
             $monstr = strtotime( date( 'Y-m-01' )." +$i months");
-            $uptomonth = date("Y-n", $monstr);
-            $months[] = [$uptomonth, date("M Y", $monstr)];
+            $imonth = date("Y-m", $monstr);
+            $months[] = [$imonth, date("M Y", $monstr)];
             $i++;
         }
 

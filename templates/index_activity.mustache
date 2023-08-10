@@ -28,9 +28,6 @@
   <tr class="event" data-eventid={{id}}>
       <td>
         <div class="times">
-
-      
-
           <div class="daystart">
             <div class="event-date">
               <div class="event-day">{{dayStart}}<small>{{dayStartSuffix}}</small></div>
@@ -45,11 +42,8 @@
             </div>
           </div>
           <div><small>{{duration}}</small></div>
-  
-
-
-
         </div>
+        {{#issearch}}{{monyear}}{{/issearch}}
       </td>
       {{#iseventreviewer}}
         <td>{{createdreadabledate}}</td>
@@ -86,6 +80,7 @@
             </div>
             <div><small>{{duration}}</small></div>
         </div>
+        {{#issearch}}{{monyear}}{{/issearch}}
         {{/isstaff}}
         {{^isstaff}}
           <div class="badge badge-secondary">{{timestartFullReadable}}</div> - <div class="badge badge-secondary">{{timeendFullReadable}}</div>
