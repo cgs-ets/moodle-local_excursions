@@ -369,7 +369,7 @@ class eventlib {
                         AND status = $status
                         AND username = '$USER->username'
                         $campussql
-                        ORDER BY timestart DESC";
+                        ORDER BY timestart ASC";
             } else if ($status == locallib::ACTIVITY_STATUS_INREVIEW || $status == locallib::ACTIVITY_STATUS_APPROVED) {
                 // Get all activities with this status.
                 $sql = "SELECT *
@@ -379,7 +379,7 @@ class eventlib {
                         AND status = $status
                         $campussql
                         $usersql
-                        ORDER BY timestart DESC";
+                        ORDER BY timestart ASC";
             } else {
                 // Get all activities that are not draft/autosave.
                 $sql = "SELECT *
@@ -389,7 +389,7 @@ class eventlib {
                         AND (status = $approved OR status = $inreview OR (status = $draft AND username = '$USER->username'))
                         $campussql
                         $usersql
-                        ORDER BY timestart DESC";
+                        ORDER BY timestart ASC";
             }
         } else {
             // Normal staff member.
@@ -402,7 +402,7 @@ class eventlib {
                         AND status = $status
                         $campussql
                         $usersql
-                        ORDER BY timestart DESC";
+                        ORDER BY timestart ASC";
             } else if ($status == locallib::ACTIVITY_STATUS_DRAFT || $status == locallib::ACTIVITY_STATUS_INREVIEW) {
                 // Get draft/inreview activities for this user only.
                 $sql = "SELECT *
@@ -418,7 +418,7 @@ class eventlib {
                         )
                         $campussql
                         $usersql
-                        ORDER BY timestart DESC";
+                        ORDER BY timestart ASC";
             } else {
                 // Get all approved activities + draft/inreview activities for this user only.
                 $sql = "SELECT *
@@ -436,7 +436,7 @@ class eventlib {
                         ))
                         $campussql
                         $usersql
-                        ORDER BY timestart DESC";
+                        ORDER BY timestart ASC";
             }
         }
         //echo "<pre>"; var_export($sql); exit;
@@ -484,7 +484,7 @@ class eventlib {
             AND ((timestart >= ? AND timestart < ?) OR (timeend >= ? AND timeend < ?))
             $areassql
             $usersql
-            ORDER BY timestart DESC
+            ORDER BY timestart ASC
         ";
 
         //echo "<pre>"; var_export($sql); exit;
