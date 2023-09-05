@@ -315,7 +315,12 @@ class eventlib {
         }
         $broken = explode('-', $current);
         $currentstart = strtotime($broken[0] . '-' . $broken[1] . '-1 00:00');
-        $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
+        if ($broken[1] == 12) {
+            $currentend = strtotime($broken[0]+1 . '-1-1 00:00');
+        } else {
+            $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
+        }
+
         return static::get_for_date_range($currentstart, $currentend, $status, $campus, $user);
     }
 
