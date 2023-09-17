@@ -2227,8 +2227,9 @@ class activity extends persistent {
         // Update activity.
         if ($iscreator || $isapprover || $isstaffincharge) {
             // Delete corresponding event.
+            $modified = time();
             $sql = "UPDATE {" . static::TABLE_EXCURSIONS_EVENTS . "}
-                    SET deleted = 1
+                    SET deleted = 1, timemodified = " . $modified . "
                     WHERE activityid = ?
                     AND isactivity = 1";
             $DB->execute($sql, [$id]);

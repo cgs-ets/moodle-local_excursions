@@ -88,9 +88,9 @@ class cron_sync_planning extends \core\task\scheduled_task {
                         $result = graphlib::deleteEvent($externalevent->calendar, $externalevent->externalid);
                     } catch (\Exception $e) {
                         $this->log("Failed to delete event in calendar $externalevent->calendar: " . $e->getMessage(), 3);
-                        $this->log("Cleaning event $externalevent->eventid from sync table", 3);
-                        $DB->delete_records('excursions_events_sync', array('id' => $externalevent->id));
                     }
+                    $this->log("Removing event $externalevent->eventid from sync table", 3);
+                    $DB->delete_records('excursions_events_sync', array('id' => $externalevent->id));
                 } else {
                     $destCal = $destinationCalendars[$search];
                     // Entry in a valid destination calendar, update entry.
@@ -122,10 +122,13 @@ class cron_sync_planning extends \core\task\scheduled_task {
                 }
             }
 
+            if ($event->deleted) {
+                continue;
+            }
+
             // Create entries in remaining calendars.
             foreach($destinationCalendars as $destCal) {
                 $this->log("Creating new entry in calendar $destCal", 2);
-
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;
