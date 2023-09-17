@@ -122,55 +122,53 @@ class cron_sync_planning extends \core\task\scheduled_task {
                 }
             }
 
-            if ($event->deleted) {
-                continue;
-            }
-
-            // Create entries in remaining calendars.
-            foreach($destinationCalendars as $destCal) {
-                $this->log("Creating new entry in calendar $destCal", 2);
-                // Create calendar event
-                $eventdata = new \stdClass();
-                $eventdata->subject = $event->activityname;
-                $eventdata->body = new \stdClass();
-                $eventdata->body->contentType = "HTML";
-                $eventdata->body->content = $event->notes;
-                $eventdata->categories = $this->make_public_categories(json_decode($event->areasjson), $event->displaypublic);
-                $eventdata->start = new \stdClass();
-                $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
-                $eventdata->start->timeZone = "AUS Eastern Standard Time";
-                $eventdata->end = new \stdClass();
-                $eventdata->end->dateTime = date('Y-m-d\TH:i:s', $event->timeend);
-                $eventdata->end->timeZone = "AUS Eastern Standard Time";
-                $eventdata->location = new \stdClass();
-                $eventdata->location->displayName = $event->location;
-                $eventdata->isOnlineMeeting = false;
-                if (strpos($eventdata->start->dateTime, 'T00:00:00') !== false &&
-                    strpos($eventdata->end->dateTime, 'T00:00:00') !== false) {
-                    $eventdata->isAllDay = true;
-                }
-
-                $record = new \stdClass();
-                $record->eventid = $event->id;
-                $record->calendar = $destCal;
-                $record->timesyncplanning = time();
-                $record->externalid = '';
-                $record->changekey = '';
-                $record->weblink = '';
-                $record->status = 0;
-                try {
-                    $result = graphlib::createEvent($destCal, $eventdata);
-                    if ($result) {
-                        $record->externalid = $result->getId();
-                        $record->changekey = $result->getChangeKey();
-                        $record->weblink = $result->getWebLink();
-                        $record->status = 1;
+            if (!$event->deleted) {
+                // Create entries in remaining calendars.
+                foreach($destinationCalendars as $destCal) {
+                    $this->log("Creating new entry in calendar $destCal", 2);
+                    // Create calendar event
+                    $eventdata = new \stdClass();
+                    $eventdata->subject = $event->activityname;
+                    $eventdata->body = new \stdClass();
+                    $eventdata->body->contentType = "HTML";
+                    $eventdata->body->content = $event->notes;
+                    $eventdata->categories = $this->make_public_categories(json_decode($event->areasjson), $event->displaypublic);
+                    $eventdata->start = new \stdClass();
+                    $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
+                    $eventdata->start->timeZone = "AUS Eastern Standard Time";
+                    $eventdata->end = new \stdClass();
+                    $eventdata->end->dateTime = date('Y-m-d\TH:i:s', $event->timeend);
+                    $eventdata->end->timeZone = "AUS Eastern Standard Time";
+                    $eventdata->location = new \stdClass();
+                    $eventdata->location->displayName = $event->location;
+                    $eventdata->isOnlineMeeting = false;
+                    if (strpos($eventdata->start->dateTime, 'T00:00:00') !== false &&
+                        strpos($eventdata->end->dateTime, 'T00:00:00') !== false) {
+                        $eventdata->isAllDay = true;
                     }
-                } catch (\Exception $e) {
-                    $this->log("Failed to insert event into calendar $destCal: " . $e->getMessage(), 3);
-                    $error = true;
+
+                    $record = new \stdClass();
+                    $record->eventid = $event->id;
+                    $record->calendar = $destCal;
+                    $record->timesyncplanning = time();
+                    $record->externalid = '';
+                    $record->changekey = '';
+                    $record->weblink = '';
+                    $record->status = 0;
+                    try {
+                        $result = graphlib::createEvent($destCal, $eventdata);
+                        if ($result) {
+                            $record->externalid = $result->getId();
+                            $record->changekey = $result->getChangeKey();
+                            $record->weblink = $result->getWebLink();
+                            $record->status = 1;
+                        }
+                    } catch (\Exception $e) {
+                        $this->log("Failed to insert event into calendar $destCal: " . $e->getMessage(), 3);
+                        $error = true;
+                    }
+                    $id = $DB->insert_record('excursions_events_sync', $record);
                 }
-                $id = $DB->insert_record('excursions_events_sync', $record);
             }
 
             $event->timesyncplanning = time();
@@ -179,10 +177,8 @@ class cron_sync_planning extends \core\task\scheduled_task {
             }
             $DB->update_record('excursions_events', $event);
             $this->log("-------------------------------------------------");
-
         }
         $this->log_finish("Finished syncing events.");
-       
     }
 
     private function make_public_categories($categories, $public) {
