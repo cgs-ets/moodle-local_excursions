@@ -264,6 +264,17 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023080100, 'local', 'excursions');
     }
 
+    if ($oldversion < 2023091800) {
+        $table = new xmldb_table('excursions_events');
+
+        $activitytype = new xmldb_field('activitytype', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, null, 'activityname');
+        if (!$dbman->field_exists($table, $activitytype)) {
+            $dbman->add_field($table, $activitytype);
+        }
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023091800, 'local', 'excursions');
+    }
+
 
 
 

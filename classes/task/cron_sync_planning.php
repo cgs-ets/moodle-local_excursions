@@ -142,6 +142,10 @@ class cron_sync_planning extends \core\task\scheduled_task {
                 $eventdata->location = new \stdClass();
                 $eventdata->location->displayName = $event->location;
                 $eventdata->isOnlineMeeting = false;
+                if (strpos($eventdata->start->dateTime, 'T00:00:00') !== false &&
+                    strpos($eventdata->end->dateTime, 'T23:59:00') !== false) {
+                    $eventdata->isAllDay = true;
+                }
 
                 $record = new \stdClass();
                 $record->eventid = $event->id;

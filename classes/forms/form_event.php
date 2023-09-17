@@ -85,6 +85,7 @@ class form_event extends \moodleform {
         $radioarray[] = $mform->createElement('radio', 'activitytype', '', 'Off campus', 'offcampus', '');
         $mform->addGroup($radioarray, 'activitytype', get_string('activityform:campus', 'local_excursions'), array(' '), false);
         $mform->setDefault('activitytype', 'oncampus');
+        $mform->addRule('activitytype', get_string('required'), 'required', null, 'client');
 
         
         /*----------------------
