@@ -299,10 +299,10 @@ class form_activity extends \moodleform {
             /*----------------------
              *   Resources
              *----------------------*/
-            if ($activity->statushelper->isapproved) {
+            //if ($activity->statushelper->isapproved) {
                 $resourceshtml = $OUTPUT->render_from_template('local_excursions/activityform_resources', array());
                 $mform->addElement('html', $resourceshtml);
-            }
+            //}
 
         // Buttons.
         if ($activity->usercanedit) {
