@@ -38,11 +38,12 @@
       <th class="th-time">Start - end</th>
       <th>Title</th>
       <th class="th-location">Location</th>
-      <th>Categories</th>
+      <th class="th-categories">Categories</th>
       <th>Details</th>
       <th class="th-owner">Owner</th>
+      <th class="th-type">Type</th>
       <th>Actions</th>
-      <th style="display:none;" class="xxxxth-sync">Sync</th>
+      <th class="th-sync">Sync</th>
     </tr>
   {{#events}}
     <tr class="event" data-eventid="{{id}}" data-status="{{status}}">
@@ -75,6 +76,7 @@
       <td>{{#areas}}<span class="badge badge-pill badge-light">{{.}}</span>{{/areas}}</td>
       <td>{{shortdetails}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
+      <td>{{#isactivity}}Excursion{{/isactivity}}{{^isactivity}}Cal entry{{/isactivity}} </td>
       <td>
         <div class="actions">
           
@@ -104,9 +106,9 @@
 
         </div>
       </td>
-      <td style="display:none;" >
+      <td>
         <div class="sync">
-          <input type="checkbox" class="cb-syncevent" value="{{id}}" {{#syncon}}checked="true"{{/syncon}}>
+          <input {{#isactivity}}disabled="true"{{/isactivity}} type="checkbox" class="cb-syncevent" value="{{id}}" {{#syncon}}checked="true"{{/syncon}}>
         </div>
       </td>
     </tr>

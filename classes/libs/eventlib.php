@@ -633,6 +633,12 @@ class eventlib {
         $duration .= $hours ? $hours . 'h ' : '';
         $duration .= $minutes ? $minutes . 'm ' : '';
 
+        $approved = !!$event->status;
+        if ($event->isactivity) {
+            $activity = new activity($event->activityid);
+            $approved = locallib::status_helper($activity->get('status'))->isapproved;
+        }
+
         return array(
             'id' => $event->id,
             'eventname' => $event->activityname,
@@ -656,8 +662,9 @@ class eventlib {
             'nonnegotiable' => $event->nonnegotiable,
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),
             'status' => $event->status,
-            'syncon' => $event->status == 1,
+            'syncon' => $approved,
             'location' => $event->location,
+            'isactivity' => $event->isactivity,
         );
     }
 
