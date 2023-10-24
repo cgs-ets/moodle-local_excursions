@@ -102,7 +102,6 @@ $formdata = $formactivity->get_data();
 if (!empty($formdata)) {
 
     //echo "<pre>"; var_export($formdata); exit;
-
     $eventid = eventlib::save_event($formdata);
     $event = $DB->get_record('excursions_events', array('id' => $eventid));
 
@@ -145,6 +144,8 @@ else
         $data->timeend = $event->timeend;
         $data->nonnegotiable = $event->nonnegotiable;
         $data->nonnegotiablereason = $event->reason;
+        $data->assessment = $event->assessment;
+        $data->courseselect = $event->courseid;
         $data->notes = $event->notes;
         $data->categoriesjson = $event->categoriesjson;
         $data->areasjson = $event->areasjson;

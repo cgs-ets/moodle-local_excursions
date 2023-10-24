@@ -684,6 +684,9 @@
 #page-local-excursions-event #fitem_id_nonnegotiablereason {
   margin-top: -20px;
 }
+#page-local-excursions-event #fitem_id_courseselect {
+  margin-top: -20px;
+}
 #page-local-excursions-event #fgroup_id_entrytype .d-flex.flex-wrap.align-items-center {
   align-items: flex-start !important;
   gap: 4%;

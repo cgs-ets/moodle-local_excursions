@@ -197,16 +197,26 @@ class form_event extends \moodleform {
         $mform->addElement('advcheckbox', 'displaypublic', 'Display this event on the public calendar', '', [], [0,1]);
 
 
-        /*-----------------------
-        * Groups involved
-        *-----------------------*/
-        //$areashtml = '
-        //<div class="form-group row fitem"><div class="col-md-3">Involved groups<br><small>For planning purposes</small><br></div><div class="col-md-9">
-        //<div class="areascontainer"></div>
-        //</div></div>';
-        //$mform->addElement('html', $areashtml);
-        //$mform->addElement('text', 'areasjson', 'Owner JSON');
-        //$mform->setType('areasjson', PARAM_RAW);
+        /*----------
+        * Is event an assessment?
+        * ----------------*/
+        $mform->addElement('advcheckbox', 'assessment', 'This is an assessment', '', [], [0,1]);
+        // Get courses under Senior Academic
+        $cat = $DB->get_record('course_categories', array('idnumber' => 'SEN-ACADEMIC'));
+        if (!$cat) {
+            $this->log("Category 'SEN-ACADEMIC' not found");
+            return;
+        }
+        $cat = \core_course_category::get($cat->id);
+        $coursesinfo = $cat->get_courses(['recursive'=>true]);
+        $courses = array();
+        foreach($coursesinfo as $courseinfo) {
+            $courses[$courseinfo->id] = $courseinfo->fullname;
+        }
+        sort($courses);
+        $mform->addElement('select', 'courseselect', 'Course', $courses);
+        $mform->setType('courseselect', PARAM_RAW);
+        $mform->hideIf('courseselect', 'assessment', 'neq', 1);
 
         /*----------------------
         *   Notes

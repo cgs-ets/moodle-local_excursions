@@ -81,7 +81,8 @@ class eventlib {
         $event->categoriesjson = $formdata->categoriesjson;
         $event->ownerjson = $formdata->ownerjson;
         $event->owner = $USER->username;
-        //$event->recurringjson = '';
+        $event->assessment = $formdata->assessment;
+        $event->courseid = $formdata->courseselect;
         $event->displaypublic = $formdata->displaypublic;
         $event->timemodified = time();
         $owner = json_decode($formdata->ownerjson);

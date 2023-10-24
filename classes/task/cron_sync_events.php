@@ -55,11 +55,14 @@ class cron_sync_events extends \core\task\scheduled_task {
         global $DB;
 
         // Get events that have been changed since last sync.
-        $this->log_start("Looking for events that require sync (approved and modified after last sync).");
+        $this->log_start("Looking for events that require sync (modified after last sync).");
+        //$sql = "SELECT *
+        //        FROM {excursions_events}
+        //        WHERE (status = 1 AND timesynclive < timemodified)
+        //        OR (status = 0 AND timesynclive > 0)";
         $sql = "SELECT *
                 FROM {excursions_events}
-                WHERE (status = 1 AND timesynclive < timemodified)
-                OR (status = 0 AND timesynclive > 0)";
+                WHERE timesynclive < timemodified";
         $events = $DB->get_records_sql($sql);
 
         $config = get_config('local_excursions');

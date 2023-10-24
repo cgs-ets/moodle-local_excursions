@@ -275,6 +275,26 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023091800, 'local', 'excursions');
     }
 
+    if ($oldversion < 2023091801) {
+
+        // Define field assessment to be added to excursions_events.
+        $table = new xmldb_table('excursions_events');
+        $assessment = new xmldb_field('assessment', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'timesyncplanning');
+        $courseid = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'assessment');
+
+        // Conditionally launch add field assessment.
+        if (!$dbman->field_exists($table, $assessment)) {
+            $dbman->add_field($table, $assessment);
+        }
+
+        // Conditionally launch add field courseid.
+        if (!$dbman->field_exists($table, $courseid)) {
+            $dbman->add_field($table, $courseid);
+        }
+
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023091801, 'local', 'excursions');
+    }
 
 
 
