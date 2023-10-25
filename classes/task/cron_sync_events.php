@@ -26,6 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 use \local_excursions\libs\eventlib;
 use \local_excursions\libs\graphlib;
+use \local_excursions\persistents\activity;
+use \local_excursions\locallib;
 
 /**
  * The main scheduled task for notifications.
@@ -65,10 +67,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 WHERE timesynclive < timemodified";
         $events = $DB->get_records_sql($sql);
 
-        $config = get_config('local_excursions');
-        if (empty($config->livecalupn)) {
-            return;
-        }           
+        $config = get_config('local_excursions');    
 
         foreach ($events as $event) {
             $this->log("Processing event $event->id: `$event->activityname`");
@@ -83,21 +82,26 @@ class cron_sync_events extends \core\task\scheduled_task {
 
             $destinationCalendars = array();
             if (!$event->deleted && !!$event->status) {
-                /*
-                // Determine which calendars this event needs to go to based on category selection.
-                $categories = json_decode($event->areasjson);
-                $destinationCalendars = array_map(function($cat) {
-                    if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
-                        return 'cgs_calendar_ps@cgs.act.edu.au';
+                if (!empty($config->livecalupn)) {
+                    $destinationCalendars = array($config->livecalupn);
+                } else {
+                    // Determine which calendars this event needs to go to based on category selection.
+                    $categories = json_decode($event->areasjson);
+                    $destinationCalendars = array_map(function($cat) {
+                        if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
+                            return 'cgs_calendar_ps@cgs.act.edu.au';
+                        }
+                        if (in_array($cat, ['Whole School', 'Senior School', 'Website', 'Alumni'])) {
+                            return 'cgs_calendar_ss@cgs.act.edu.au';
+                        }
+                    }, $categories);
+                    $destinationCalendars = array_unique($destinationCalendars);
+                    // If not already in something based on cats above, add it to SS.
+                    if (empty($destinationCalendars)) {
+                        $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
-                    if (in_array($cat, ['Whole School', 'Senior School', 'Website', 'Alumni'])) {
-                        return 'cgs_calendar_ss@cgs.act.edu.au';
-                    }
-                }, $categories);
-                $destinationCalendars = array_unique($destinationCalendars);
-                $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
-                */
-                $destinationCalendars = array($config->livecalupn);
+                    $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
+                }
             }
 
             // Get existing sync entries.
@@ -129,7 +133,13 @@ class cron_sync_events extends \core\task\scheduled_task {
                     $eventdata->body = new \stdClass();
                     $eventdata->body->contentType = "HTML";
                     $eventdata->body->content = $event->notes;
-                    $eventdata->categories = $approved && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+
+                    $eventdata->categories = $categories;
+                    // Public will only be added to SS cal for approved events.
+                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $approved && $event->displaypublic) {
+                        $eventdata->categories = $this->make_public_categories($categories);
+                    }
+   
                     $eventdata->start = new \stdClass();
                     $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
                     $eventdata->start->timeZone = "AUS Eastern Standard Time";

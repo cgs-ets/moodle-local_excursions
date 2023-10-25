@@ -218,6 +218,8 @@ class form_event extends \moodleform {
         $mform->setType('courseselect', PARAM_RAW);
         $mform->hideIf('courseselect', 'assessment', 'neq', 1);
 
+        //$modinfo = get_fast_modinfo($courseobj)
+
         /*----------------------
         *   Notes
         *----------------------*/
