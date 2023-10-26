@@ -104,6 +104,10 @@ class cron_sync_events extends \core\task\scheduled_task {
                 }
             }
 
+                        // TODO!!!! THIs NEEDS TO LOOK AT dest CALENDARs only!!!
+var_export($destinationCalendars); 
+                        exit;
+
             // Get existing sync entries.
             $sql = "SELECT *
                 FROM {excursions_events_sync}

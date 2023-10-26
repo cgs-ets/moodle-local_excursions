@@ -85,8 +85,9 @@ class cron_sync_planning extends \core\task\scheduled_task {
             // Get existing sync entries.
             $sql = "SELECT *
                 FROM {excursions_events_sync}
-                WHERE eventid = ?";
-            $externalevents = $DB->get_records_sql($sql, [$event->id]);
+                WHERE eventid = ?
+                AND calendar = ?";
+            $externalevents = $DB->get_records_sql($sql, [$event->id, $config->planningcalupn]);
 
             foreach($externalevents as $externalevent) {
                 $search = array_search($externalevent->calendar, $destinationCalendars);
