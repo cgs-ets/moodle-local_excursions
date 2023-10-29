@@ -87,11 +87,6 @@ $categories = array(
             'value' => 'Senior School/Academic',
         ],
         [
-            'id' => 'Co-curricular',
-            'title' => 'Co-curricular',
-            'value' => 'Senior School/Co-curricular',
-        ],
-        [
             'id' => 'House',
             'title' => 'House',
             'value' => 'Senior School/House',
@@ -125,6 +120,13 @@ $categories = array(
             'id' => 'Year12',
             'title' => 'Year 12',
             'value' => 'Senior School/Year 12',
+        ],
+    ],
+    'cocurricular' => [
+        [
+            'id' => 'cocurricular',
+            'title' => 'Co-curricular',
+            'value' => 'Co-curricular',
         ],
     ],
 );

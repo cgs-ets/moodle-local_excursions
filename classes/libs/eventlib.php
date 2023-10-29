@@ -82,7 +82,7 @@ class eventlib {
         $event->ownerjson = $formdata->ownerjson;
         $event->owner = $USER->username;
         $event->assessment = $formdata->assessment;
-        $event->courseid = $formdata->courseselect;
+        $event->courseid = isset($formdata->courseselect) ? $formdata->courseselect : 0;
         $event->displaypublic = $formdata->displaypublic;
         $event->timemodified = time();
         $owner = json_decode($formdata->ownerjson);
@@ -106,7 +106,7 @@ class eventlib {
         if (array_intersect($areas, ['Whole school', 'Primary school', 'Pre-School', 'Pre-Kindergarten', 'Kindergarten', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'])) {
             $campuses[] = 'primary';
         }
-        if (array_intersect($areas, ['Whole school', 'Senior school', 'Co-curricular', 'Academic', 'House', 'Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12'])) {
+        if (array_intersect($areas, ['Whole school', 'Senior school', 'Academic', 'House', 'Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12'])) {
             $campuses[] = 'senior';
         }
         $event->campus = implode(',', $campuses);

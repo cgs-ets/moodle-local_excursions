@@ -257,6 +257,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       //self.setupCheckRecurring();
       self.getDayCycle(['timestart', 'timeend']);
       self.initDatesChanged();
+      self.initCategorySelect();
     }
 
     EventForm.prototype.getDayCycle = function (inputs) {
@@ -399,6 +400,29 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       //$('.yui3-calendar-day').on('click', function(){
       //  self.getDayCycle(['timestart', 'timeend'])
       //})
+
+    };
+
+    EventForm.prototype.initCategorySelect = function () {
+      
+      $('.category-group input').change(function(){
+        // If checked, make sure parent is select too.
+        if (this.checked) {
+          var first = $(this).parent().children(":first")
+          if (!first.checked) {
+            first.prop( "checked", true );
+          }
+        } else {
+          // If any children are still checked, make sure parent is selected too.
+          var checkedchildren = $(this).parent().children(":not(:first):checked")
+          if (checkedchildren.length) {
+            var first = $(this).parent().children(":first")
+            if (!first.checked) {
+              first.prop( "checked", true );
+            }
+          }
+        }
+      })
 
     };
 
