@@ -69,6 +69,11 @@ class cron_sync_events extends \core\task\scheduled_task {
 
         $config = get_config('local_excursions');    
 
+
+        // TODO
+        $events = [array_values($events)[count($events)-1]];
+
+
         foreach ($events as $event) {
             $this->log("Processing event $event->id: `$event->activityname`");
             $error = false;
@@ -81,17 +86,17 @@ class cron_sync_events extends \core\task\scheduled_task {
             }
 
             $destinationCalendars = array();
-            if (!$event->deleted && !!$event->status) {
-                if (!empty($config->livecalupn)) {
-                    $destinationCalendars = array($config->livecalupn);
-                } else {
+            if (!$event->deleted && $approved) {
+                //if (!empty($config->livecalupn)) {
+                //    $destinationCalendars = array($config->livecalupn);
+                //} else {
                     // Determine which calendars this event needs to go to based on category selection.
                     $categories = json_decode($event->areasjson);
                     $destinationCalendars = array_map(function($cat) {
                         if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
                             return 'cgs_calendar_ps@cgs.act.edu.au';
                         }
-                        if (in_array($cat, ['Whole School', 'Senior School', 'Website', 'Alumni'])) {
+                        if (in_array($cat, ['Whole School', 'Senior School', 'Co-curricular', 'Website', 'Alumni'])) {
                             return 'cgs_calendar_ss@cgs.act.edu.au';
                         }
                     }, $categories);
@@ -101,12 +106,8 @@ class cron_sync_events extends \core\task\scheduled_task {
                         $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
                     $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
-                }
+               // }
             }
-
-                        // TODO!!!! THIs NEEDS TO LOOK AT dest CALENDARs only!!!
-var_export($destinationCalendars); 
-                        exit;
 
             // Get existing sync entries.
             $sql = "SELECT *
@@ -116,7 +117,7 @@ var_export($destinationCalendars);
 
             foreach($externalevents as $externalevent) {
                 $search = array_search($externalevent->calendar, $destinationCalendars);
-                if ($search === false || $event->deleted || !$event->status) {
+                if ($search === false || $event->deleted || !$approved) {
                     try {
                         // Event deleted or entry not in a valid destination calendar, delete.
                         $this->log("Deleting existing entry in calendar $externalevent->calendar", 2);
@@ -222,7 +223,7 @@ var_export($destinationCalendars);
             if ($error) {
                 $event->timesynclive = -1;
             }
-            if (!$event->status) {
+            if (!$approved) {
                 $event->timesynclive = 0;
             }
             $DB->update_record('excursions_events', $event);
@@ -242,6 +243,11 @@ var_export($destinationCalendars);
         $categories = call_user_func_array('array_merge', $categories);
         $categories = array_values(array_unique($categories));
         return $categories;
+    }
+
+    
+    public function can_run(): bool {
+        return true;
     }
 
 }

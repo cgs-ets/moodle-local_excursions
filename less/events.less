@@ -47,12 +47,33 @@
     }
   }
 
-  #fitem_id_categoriesjson {
+  /*#fitem_id_categoriesjson {
     display: none;
     &>div{
       display: none;
     }
+  }*/
+
+  #fitem_id_categoriesjson {
+    display: none;
   }
+  #fitem_id_categoriesjson>div{
+      display: none;
+  }
+  #fitem_id_categoriesjson.has-danger {
+      display: block;
+      height: 22px;
+      overflow: hidden;
+  }
+  #fitem_id_categoriesjson.has-danger:before {
+      content: "You must select at least one category";
+      color: red;
+      width: 100%;
+      height: 22px;
+      margin-left: 15px;
+  }
+
+
 
   #fitem_id_nonnegotiablereason {
     margin-top: -20px;

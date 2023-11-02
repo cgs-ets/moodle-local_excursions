@@ -289,6 +289,10 @@ class form_event extends \moodleform {
             $errors['timeend'] = 'End time must be greater than start time';
         }
 
+        if ($data['categoriesjson'] == '' || $data['categoriesjson'] == '[]') {
+            $errors['categoriesjson'] = 'You must select at least one category';
+        }
+
         return $errors;
     }
 
