@@ -58,62 +58,53 @@ class cron_sync_events extends \core\task\scheduled_task {
 
         // Get events that have been changed since last sync.
         $this->log_start("Looking for events that require sync (modified after last sync).");
-        //$sql = "SELECT *
-        //        FROM {excursions_events}
-        //        WHERE (status = 1 AND timesynclive < timemodified)
-        //        OR (status = 0 AND timesynclive > 0)";
         $sql = "SELECT *
                 FROM {excursions_events}
                 WHERE timesynclive < timemodified";
-        $events = $DB->get_records_sql($sql);
-
-        $config = get_config('local_excursions');    
-
-
-        // TODO
-        $events = [array_values($events)[count($events)-1]];
-
-
+        $events = array_values($DB->get_records_sql($sql, [], 0, 10));
         foreach ($events as $event) {
-            $this->log("Processing event $event->id: `$event->activityname`");
+            $sdt = date('Y-m-d H:i', $event->timestart);
+            $this->log("Processing event $event->id: '$event->activityname', starting '$sdt'");
             $error = false;
 
             // Is this entry/event approved?
-            $approved = !!$event->status;
+            $approved = (int) !!$event->status;
             if ($event->isactivity) {
                 $activity = new activity($event->activityid);
-                $approved = locallib::status_helper($activity->get('status'))->isapproved;
+                $approved = (int) locallib::status_helper($activity->get('status'))->isapproved;
             }
 
             $destinationCalendars = array();
             if (!$event->deleted && $approved) {
-                //if (!empty($config->livecalupn)) {
-                //    $destinationCalendars = array($config->livecalupn);
-                //} else {
-                    // Determine which calendars this event needs to go to based on category selection.
-                    $categories = json_decode($event->areasjson);
-                    $destinationCalendars = array_map(function($cat) {
-                        if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
-                            return 'cgs_calendar_ps@cgs.act.edu.au';
-                        }
-                        if (in_array($cat, ['Whole School', 'Senior School', 'Co-curricular', 'Website', 'Alumni'])) {
-                            return 'cgs_calendar_ss@cgs.act.edu.au';
-                        }
-                    }, $categories);
-                    $destinationCalendars = array_unique($destinationCalendars);
-                    // If not already in something based on cats above, add it to SS.
-                    if (empty($destinationCalendars)) {
+                // Determine which calendars this event needs to go to based on category selection.
+                $categories = json_decode($event->areasjson);
+                $destinationCalendars = [];
+                foreach ($categories as $cat) {
+                    if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
+                        $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
+                    }
+                    if (in_array($cat, ['Whole School', 'Senior School', 'Co-curricular', 'Website', 'Alumni'])) {
                         $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
-                    $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
-               // }
+                }
+                $destinationCalendars = array_unique($destinationCalendars);
+                $destinationCalendars = array_filter($destinationCalendars);
+                // If not already in something based on cats above, add it to SS.
+                if (empty($destinationCalendars)) {
+                    $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
+                }
+                $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
+            } else {
+                $this->log("Event is deleted ($event->deleted) or unapproved ($approved)", 2);
             }
 
             // Get existing sync entries.
             $sql = "SELECT *
                 FROM {excursions_events_sync}
-                WHERE eventid = ?";
-            $externalevents = $DB->get_records_sql($sql, [$event->id]);
+                WHERE eventid = ?
+                AND (calendar = ? OR calendar = ?)";
+            $params = array($event->id, 'cgs_calendar_ss@cgs.act.edu.au', 'cgs_calendar_ps@cgs.act.edu.au');
+            $externalevents = $DB->get_records_sql($sql, $params);
 
             foreach($externalevents as $externalevent) {
                 $search = array_search($externalevent->calendar, $destinationCalendars);
@@ -132,19 +123,19 @@ class cron_sync_events extends \core\task\scheduled_task {
                     // Entry in a valid destination calendar, update entry.
                     $this->log("Updating existing entry in calendar $destCal", 2);
                     $categories = json_decode($event->areasjson);
+                    // Public will only be added to SS cal for approved events.
+                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $approved && $event->displaypublic) {
+                        $categories = $this->make_public_categories($categories);
+                    }
                     // Update calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;
                     $eventdata->body = new \stdClass();
                     $eventdata->body->contentType = "HTML";
                     $eventdata->body->content = $event->notes;
-
-                    $eventdata->categories = $categories;
-                    // Public will only be added to SS cal for approved events.
-                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $approved && $event->displaypublic) {
-                        $eventdata->categories = $this->make_public_categories($categories);
+                    if (!empty($categories)) {
+                        $eventdata->categories = $categories;
                     }
-   
                     $eventdata->start = new \stdClass();
                     $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
                     $eventdata->start->timeZone = "AUS Eastern Standard Time";
@@ -174,13 +165,16 @@ class cron_sync_events extends \core\task\scheduled_task {
             foreach($destinationCalendars as $destCal) {
                 $this->log("Creating new entry in calendar $destCal", 2);
                 $categories = json_decode($event->areasjson);
+                $categories = $approved && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;
                 $eventdata->body = new \stdClass();
                 $eventdata->body->contentType = "HTML";
                 $eventdata->body->content = $event->notes;
-                $eventdata->categories = $approved && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+                if (!empty($categories)) {
+                    $eventdata->categories = $categories;
+                }
                 $eventdata->start = new \stdClass();
                 $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
                 $eventdata->start->timeZone = "AUS Eastern Standard Time";
@@ -213,7 +207,8 @@ class cron_sync_events extends \core\task\scheduled_task {
                         $record->status = 1;
                     }
                 } catch (\Exception $e) {
-                    $this->log("Failed to insert event into calendar $externalevent->calendar", 3);
+                    $this->log("Failed to insert event into calendar $externalevent->calendar: " . $e->getMessage(), 3);
+                    $this->log(json_encode($eventdata), 3);
                     $error = true;
                 }
                 $id = $DB->insert_record('excursions_events_sync', $record);
