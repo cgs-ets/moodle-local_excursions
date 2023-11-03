@@ -60,7 +60,8 @@ class cron_sync_events extends \core\task\scheduled_task {
         $this->log_start("Looking for events that require sync (modified after last sync).");
         $sql = "SELECT *
                 FROM {excursions_events}
-                WHERE timesynclive < timemodified";
+                WHERE timesynclive < timemodified
+                AND timestart > 1704068052"; //1 Jan 2024.
         $events = array_values($DB->get_records_sql($sql));
         foreach ($events as $event) {
             $sdt = date('Y-m-d H:i', $event->timestart);
