@@ -61,7 +61,7 @@ class cron_sync_events extends \core\task\scheduled_task {
         $sql = "SELECT *
                 FROM {excursions_events}
                 WHERE timesynclive < timemodified";
-        $events = array_values($DB->get_records_sql($sql, [], 0, 10));
+        $events = array_values($DB->get_records_sql($sql));
         foreach ($events as $event) {
             $sdt = date('Y-m-d H:i', $event->timestart);
             $this->log("Processing event $event->id: '$event->activityname', starting '$sdt'");
