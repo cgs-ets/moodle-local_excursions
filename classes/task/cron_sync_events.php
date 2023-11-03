@@ -55,7 +55,7 @@ class cron_sync_events extends \core\task\scheduled_task {
      */
     public function execute() {
         global $DB;
-
+        $config = get_config('local_excursions');
         // Get events that have been changed since last sync.
         $this->log_start("Looking for events that require sync (modified after last sync).");
         $sql = "SELECT *
@@ -75,37 +75,52 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $approved = (int) locallib::status_helper($activity->get('status'))->isapproved;
             }
 
-            $destinationCalendars = array();
-            if (!$event->deleted && $approved) {
-                // Determine which calendars this event needs to go to based on category selection.
-                $categories = json_decode($event->areasjson);
-                $destinationCalendars = [];
-                foreach ($categories as $cat) {
-                    if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
-                        $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
+            if (!empty($config->livecalupn)) {
+                $destinationCalendars = array($config->livecalupn);
+            } else {
+                $destinationCalendars = array();
+                if (!$event->deleted && $approved) {
+                    // Determine which calendars this event needs to go to based on category selection.
+                    $categories = json_decode($event->areasjson);
+                    $destinationCalendars = [];
+                    foreach ($categories as $cat) {
+                        if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
+                            $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
+                        }
+                        if (in_array($cat, ['Whole School', 'Senior School', 'Co-curricular', 'Website', 'Alumni'])) {
+                            $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
+                        }
                     }
-                    if (in_array($cat, ['Whole School', 'Senior School', 'Co-curricular', 'Website', 'Alumni'])) {
+                    $destinationCalendars = array_unique($destinationCalendars);
+                    $destinationCalendars = array_filter($destinationCalendars);
+                    // If not already in something based on cats above, add it to SS.
+                    if (empty($destinationCalendars)) {
                         $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
+                    $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
+                } else {
+                    $this->log("Event is deleted ($event->deleted) or unapproved ($approved)", 2);
                 }
-                $destinationCalendars = array_unique($destinationCalendars);
-                $destinationCalendars = array_filter($destinationCalendars);
-                // If not already in something based on cats above, add it to SS.
-                if (empty($destinationCalendars)) {
-                    $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
-                }
-                $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
-            } else {
-                $this->log("Event is deleted ($event->deleted) or unapproved ($approved)", 2);
             }
 
+
             // Get existing sync entries.
-            $sql = "SELECT *
-                FROM {excursions_events_sync}
-                WHERE eventid = ?
-                AND (calendar = ? OR calendar = ?)";
-            $params = array($event->id, 'cgs_calendar_ss@cgs.act.edu.au', 'cgs_calendar_ps@cgs.act.edu.au');
-            $externalevents = $DB->get_records_sql($sql, $params);
+            $externalevents = array();
+            if (!empty($config->livecalupn)) {
+                $sql = "SELECT *
+                    FROM {excursions_events_sync}
+                    WHERE eventid = ?
+                    AND calendar = ?";
+                $params = array($event->id, $config->livecalupn);
+                $externalevents = $DB->get_records_sql($sql, $params);
+            } else {
+                $sql = "SELECT *
+                    FROM {excursions_events_sync}
+                    WHERE eventid = ?
+                    AND (calendar = ? OR calendar = ?)";
+                $params = array($event->id, 'cgs_calendar_ss@cgs.act.edu.au', 'cgs_calendar_ps@cgs.act.edu.au');
+                $externalevents = $DB->get_records_sql($sql, $params);
+            }
 
             foreach($externalevents as $externalevent) {
                 $search = array_search($externalevent->calendar, $destinationCalendars);
