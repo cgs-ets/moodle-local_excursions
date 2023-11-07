@@ -90,10 +90,10 @@ class cron_sync_planning extends \core\task\scheduled_task {
             $externalevents = $DB->get_records_sql($sql, [$event->id, $config->planningcalupn]);
 
             foreach($externalevents as $externalevent) {
-                $search = array_search($externalevent->calendar, $destinationCalendars);
-                if ($search === false || $event->deleted) {
+                $calIx = array_search($externalevent->calendar, $destinationCalendars);
+                if ($calIx === false || $event->deleted) {
+                    // The event was deleted, or entry not in a valid destination calendar, delete.
                     try {
-                        // Event deleted or entry not in a valid destination calendar, delete.
                         $this->log("Deleting existing entry in calendar $externalevent->calendar", 2);
                         $result = graphlib::deleteEvent($externalevent->calendar, $externalevent->externalid);
                     } catch (\Exception $e) {
@@ -102,17 +102,23 @@ class cron_sync_planning extends \core\task\scheduled_task {
                     $this->log("Removing event $externalevent->eventid from sync table", 3);
                     $DB->delete_records('excursions_events_sync', array('id' => $externalevent->id));
                 } else {
-                    $destCal = $destinationCalendars[$search];
+                    $destCal = $destinationCalendars[$calIx];
                     // Entry in a valid destination calendar, update entry.
                     $this->log("Updating existing entry in calendar $destCal", 2);
                     $categories = json_decode($event->areasjson);
+                    // Public categories.
+                    if ($event->displaypublic) {
+                        $categories = $this->make_public_categories($categories);
+                    }
                     // Update calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;
                     $eventdata->body = new \stdClass();
                     $eventdata->body->contentType = "HTML";
                     $eventdata->body->content = $event->notes;
-                    $eventdata->categories = $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+                    if (!empty($categories)) {
+                        $eventdata->categories = $categories;
+                    }
                     $eventdata->start = new \stdClass();
                     $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
                     $eventdata->start->timeZone = "AUS Eastern Standard Time";
@@ -128,7 +134,7 @@ class cron_sync_planning extends \core\task\scheduled_task {
                     }
                     try {
                         $result = graphlib::updateEvent($destCal, $externalevent->externalid, $eventdata);
-                        unset($destinationCalendars[$search]);
+                        unset($destinationCalendars[$calIx]);
                     } catch (\Exception $e) {
                         $this->log("Failed to update event in calendar $externalevent->calendar: " . $e->getMessage(), 3);
                         $this->log("Cleaning event $externalevent->eventid from sync table", 3);
@@ -143,13 +149,16 @@ class cron_sync_planning extends \core\task\scheduled_task {
                 foreach($destinationCalendars as $destCal) {
                     $this->log("Creating new entry in calendar $destCal", 2);
                     $categories = json_decode($event->areasjson);
+                    $categories = $event->displaypublic ? $this->make_public_categories($categories) : $categories;
                     // Create calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;
                     $eventdata->body = new \stdClass();
                     $eventdata->body->contentType = "HTML";
                     $eventdata->body->content = $event->notes;
-                    $eventdata->categories = $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+                    if (!empty($categories)) {
+                        $eventdata->categories = $categories;
+                    }
                     $eventdata->start = new \stdClass();
                     $eventdata->start->dateTime = date('Y-m-d\TH:i:s', $event->timestart); 
                     $eventdata->start->timeZone = "AUS Eastern Standard Time";
