@@ -138,6 +138,14 @@ class cron_send_approval_reminders extends \core\task\scheduled_task {
             $output = $PAGE->get_renderer('core');
             $data = $activityexporter->export($output);
 
+            // Add staff in charge to list of recipients.
+            $recipients = array();
+            $recipients[$data->staffincharge] = null;
+
+            // Send to activity creator.
+            if ( ! array_key_exists($data->username, $recipients)) {
+                $recipients[$data->username] = null;
+            }
 
             // Send to next approver in line.
             $approvals = activity::get_unactioned_approvals($data->id);
