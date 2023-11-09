@@ -83,6 +83,7 @@ class eventlib {
         $event->owner = $USER->username;
         $event->assessment = $formdata->assessment;
         $event->courseid = isset($formdata->courseselect) ? $formdata->courseselect : 0;
+        $event->assessmenturl = isset($formdata->assessmenturl) ? $formdata->assessmenturl : 0;
         $event->displaypublic = $formdata->displaypublic;
         $event->timemodified = time();
         $owner = json_decode($formdata->ownerjson);

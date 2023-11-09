@@ -146,6 +146,7 @@ else
         $data->nonnegotiablereason = $event->reason;
         $data->assessment = $event->assessment;
         $data->courseselect = $event->courseid;
+        $data->assessmenturl = $event->assessmenturl;
         $data->notes = $event->notes;
         $data->categoriesjson = $event->categoriesjson;
         $data->areasjson = $event->areasjson;
