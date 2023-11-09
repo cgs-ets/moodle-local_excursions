@@ -26,19 +26,19 @@
 <thead>
     <tr>
         <th class="th-time">Start - end</th>
-        {{#iseventreviewer}}<th class="th-created">Created</th>{{/iseventreviewer}}
-        <th>Title</th>
-        <th>Location</th>
-        <th>Staff in charge</th>
+        <th class="th-title">Title</th>
+        <th class="th-location">Location</th>
+        <th class="th-staff">Staff in charge</th>
         {{#isstaff}}
-            <th>Status</th>
+            <th class="th-status">Status</th>
         {{/isstaff}}
         {{#isparent}}
             <th>Your students</th>
         {{/isparent}}
-        <th>
+        <th class="th-actions">
             {{#isparent}}{{^isstaff}}Permissions{{/isstaff}}{{/isparent}}
             {{#isstaff}}Actions{{/isstaff}}
         </th>
+        {{#iseventreviewer}}<th class="th-created">Created</th>{{/iseventreviewer}}
     </tr>
 </thead>

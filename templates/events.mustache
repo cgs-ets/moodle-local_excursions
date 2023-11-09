@@ -49,7 +49,6 @@
     <tr class="event" data-eventid="{{id}}" data-status="{{status}}">
       <td>
         <div class="times">
-          
           <div class="daystart">
             <div class="event-date">
               <div class="event-day">{{dayStart}}<small>{{dayStartSuffix}}</small></div>
@@ -63,9 +62,8 @@
               <div class="event-time">{{timeendReadable}}</div>
             </div>
           </div>
-          <div>{{duration}}</div>
-
         </div>
+        <div>{{duration}}</div>
         {{#nonnegotiable}}
           <div><span class="badge badge-warning">Non-negotiable</span></div>
           {{reason}}

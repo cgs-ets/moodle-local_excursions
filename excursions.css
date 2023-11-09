@@ -925,7 +925,7 @@
 #page-local-excursions-search table.events {
   width: 100%;
   table-layout: fixed;
-  min-width: 1690px;
+  min-width: 1200px;
 }
 #page-local-excursions-events table.events td,
 #page-local-excursions-index table.events td,
@@ -951,7 +951,32 @@
 #page-local-excursions-events table.events .th-time,
 #page-local-excursions-index table.events .th-time,
 #page-local-excursions-search table.events .th-time {
-  width: 325px;
+  width: 270px;
+}
+#page-local-excursions-events table.events .th-staff,
+#page-local-excursions-index table.events .th-staff,
+#page-local-excursions-search table.events .th-staff {
+  width: 180px;
+}
+#page-local-excursions-events table.events .th-status,
+#page-local-excursions-index table.events .th-status,
+#page-local-excursions-search table.events .th-status {
+  width: 180px;
+}
+#page-local-excursions-events table.events .th-title,
+#page-local-excursions-index table.events .th-title,
+#page-local-excursions-search table.events .th-title {
+  width: 200px;
+}
+#page-local-excursions-events table.events .th-location,
+#page-local-excursions-index table.events .th-location,
+#page-local-excursions-search table.events .th-location {
+  width: 180px;
+}
+#page-local-excursions-events table.events .th-actions,
+#page-local-excursions-index table.events .th-actions,
+#page-local-excursions-search table.events .th-actions {
+  width: 200px;
 }
 #page-local-excursions-events table.events .th-created,
 #page-local-excursions-index table.events .th-created,
@@ -961,11 +986,6 @@
 #page-local-excursions-events table.events .th-type,
 #page-local-excursions-index table.events .th-type,
 #page-local-excursions-search table.events .th-type {
-  width: 130px;
-}
-#page-local-excursions-events table.events .th-location,
-#page-local-excursions-index table.events .th-location,
-#page-local-excursions-search table.events .th-location {
   width: 130px;
 }
 #page-local-excursions-events table.events .th-categories,

@@ -41,13 +41,9 @@
               <div class="event-time">{{timeendReadable}}</div>
             </div>
           </div>
-          <div><small>{{duration}}</small></div>
         </div>
-        {{#issearch}}{{monyear}}{{/issearch}}
+        {{#issearch}}{{monyear}}{{/issearch}} <small>{{duration}}</small>
       </td>
-      {{#iseventreviewer}}
-        <td>{{createdreadabledate}}</td>
-      {{/iseventreviewer}}
       <td><strong>{{eventname}}</strong></td>
       <td>{{location}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
@@ -57,6 +53,9 @@
           <a class="btn btn-secondary" href="{{editurl}}">Edit</a>
         </div>
       </td>
+      {{#iseventreviewer}}
+        <td>{{createdreadabledate}}</td>
+      {{/iseventreviewer}}
     </tr>
 {{/calentryonly}}
 {{^calentryonly}}
@@ -78,18 +77,14 @@
                 <div class="event-time">{{timeendReadable}}</div>
               </div>
             </div>
-            <div><small>{{duration}}</small></div>
         </div>
-        {{#issearch}}{{monyear}}{{/issearch}}
+        {{#issearch}}{{monyear}}{{/issearch}} <small>{{duration}}</small>
         {{/isstaff}}
         {{^isstaff}}
           <div class="badge badge-secondary">{{timestartFullReadable}}</div> - <div class="badge badge-secondary">{{timeendFullReadable}}</div>
           <br><div class="badge">{{duration}}</div>
         {{/isstaff}}
       </td>
-      {{#iseventreviewer}}
-        <td>{{createdreadabledate}}</td>
-      {{/iseventreviewer}}
       <td class="cell c-name"><strong>{{activityname}}</strong></td>
       <td class="cell c-location">{{^isexcursion}}(Incursion) {{/isexcursion}}{{location}}</td>
       <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
@@ -158,6 +153,9 @@
           {{/permissions}}{{/isstaff}}{{/isparent}}
         </div>
       </td>
+      {{#iseventreviewer}}
+        <td>{{createdreadabledate}}</td>
+      {{/iseventreviewer}}
 
   </tr>
 {{/calentryonly}}
