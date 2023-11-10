@@ -956,12 +956,12 @@
 #page-local-excursions-events table.events .th-staff,
 #page-local-excursions-index table.events .th-staff,
 #page-local-excursions-search table.events .th-staff {
-  width: 180px;
+  width: 140px;
 }
 #page-local-excursions-events table.events .th-status,
 #page-local-excursions-index table.events .th-status,
 #page-local-excursions-search table.events .th-status {
-  width: 150px;
+  width: 120px;
 }
 #page-local-excursions-events table.events .th-title,
 #page-local-excursions-index table.events .th-title,
