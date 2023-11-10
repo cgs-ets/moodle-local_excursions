@@ -79,7 +79,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $destinationCalendars = array($config->livecalupn);
             } else {
                 $destinationCalendars = array();
-                if (!$event->deleted) {
+                if (!$event->deleted && $approved) {
                     // Determine which calendars this event needs to go to based on category selection.
                     $categories = json_decode($event->areasjson);
                     $destinationCalendars = [];
@@ -99,7 +99,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                     }
                     $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
                 } else {
-                    $this->log("Event is deleted ($event->deleted)", 2);
+                    $this->log("Event is deleted ($event->deleted) or unapproved ($approved)", 2);
                 }
             }
 
@@ -123,7 +123,7 @@ class cron_sync_events extends \core\task\scheduled_task {
 
             foreach($externalevents as $externalevent) {
                 $calIx = array_search($externalevent->calendar, $destinationCalendars);
-                if ($calIx === false || $event->deleted) {
+                if ($search === false || $event->deleted || !$approved) {
                     // The event was deleted, or entry not in a valid destination calendar, delete.
                     try {
                         $this->log("Deleting existing entry in calendar $externalevent->calendar", 2);
@@ -139,7 +139,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                     $this->log("Updating existing entry in calendar $destCal", 2);
                     $categories = json_decode($event->areasjson);
                     // Public will only be added to SS cal.
-                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic) {
+                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && $approved) {
                         $categories = $this->make_public_categories($categories);
                     }
                     // Update calendar event
@@ -180,7 +180,7 @@ class cron_sync_events extends \core\task\scheduled_task {
             foreach($destinationCalendars as $destCal) {
                 $this->log("Creating new entry in calendar $destCal", 2);
                 $categories = json_decode($event->areasjson);
-                $categories = $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+                $categories = $approved && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;
@@ -232,6 +232,9 @@ class cron_sync_events extends \core\task\scheduled_task {
             $event->timesynclive = time();
             if ($error) {
                 $event->timesynclive = -1;
+            }
+            if (!$approved) {
+                $event->timesynclive = 0;
             }
             $DB->update_record('excursions_events', $event);
 

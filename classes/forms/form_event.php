@@ -225,7 +225,7 @@ class form_event extends \moodleform {
         
         $mform->addElement('text', 'assessmenturl', "Assessment URL", 'size="48"');
         $mform->setType('assessmenturl', PARAM_TEXT);
-        $mform->addRule('assessmenturl', get_string('required'), 'required', null, 'client');
+        //$mform->addRule('assessmenturl', get_string('required'), 'required', null, 'client');
         $mform->hideIf('assessmenturl', 'assessment', 'neq', 1);
         //$modinfo = get_fast_modinfo($courseobj)
 
