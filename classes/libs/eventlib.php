@@ -180,6 +180,10 @@ class eventlib {
         if ($formdata->entrytype == 'excursion') {  
             // Sync with activity data.
             if (!empty($event->activityid)) {
+                // Make sure this is marked as activity. This is because it can be unmarked from a previous excursion-to-event conversion.
+                $event->isactivity = 1;
+                $DB->update_record('excursions_events', $event);
+
                 $originalactivity = new activity($event->activityid);
                 $activity = new activity($event->activityid);
                 // Copy values from event.
@@ -192,7 +196,7 @@ class eventlib {
                 }
                 $activity->set('location', $formdata->location);
                 $activity->set('notes', $formdata->notes);
-
+                $activity->set('deleted', 0);
                 $activity->save();
                  // If sending for review or saving after already in review, regenerate approvals.
                 if ($activity->get('status') == locallib::ACTIVITY_STATUS_INREVIEW ||
@@ -228,10 +232,22 @@ class eventlib {
                 // Create activity.
                 $activity = new activity(0, $data);
                 $activity->save();
-                // Insert reference into event.
+                // Insert reference to excursion.
                 $event->isactivity = 1;
                 $event->activityid = $activity->get('id');
                 $DB->update_record('excursions_events', $event);
+            }
+        } else {
+            // Convert excursion into simple event.
+            if (isset($event->isactivity) && $event->isactivity == 1) {
+                $event->isactivity = 0;
+                $DB->update_record('excursions_events', $event);
+                // Soft delete the excursion.
+                if (!empty($event->activityid)) {
+                    $activity = new activity($event->activityid);
+                    $activity->set('deleted', 1);
+                    $activity->save();
+                }
             }
         }
     

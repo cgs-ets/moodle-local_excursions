@@ -63,7 +63,26 @@ if ($edit) {
         $canedit = true;
     } else if ($event->owner == $USER->username || $event->creator == $USER->username) {
         $canedit = true;
+    } else {
+        // if this is an activity, check if user is a staff in charge or additional planning staff.
+        if ($event->isactivity) {
+            $activity = new activity($event->activityid);
+            if ($USER->username == $activity->get('staffincharge')) {
+                $canedit = true;
+            } else {
+                $planning = json_decode($activity->get('planningstaffjson'));
+                if ($planning) {
+                    foreach ($planning as $user) {
+                        if ($USER->username == $user->idfield) {
+                            $canedit = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
+
     if (!$canedit) {
         $notice = 'You do not have permission to edit this calendar event.';
         redirect(
