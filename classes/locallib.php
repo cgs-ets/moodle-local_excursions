@@ -177,7 +177,7 @@ class locallib extends local_excursions_config {
 
         $imonth = $thismonth;
         $i = 1; 
-        while ($i <= 16 || $imonth < $nextnav) 
+        while ($i <= 18 || $imonth < $nextnav) 
         {
             $monstr = strtotime( date( 'Y-m-01' )." +$i months");
             $imonth = date("Y-m", $monstr);

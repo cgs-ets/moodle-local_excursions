@@ -588,7 +588,11 @@ class eventlib {
         }
         $broken = explode('-', $current);
         $currentstart = strtotime($broken[0] . '-' . $broken[1] . '-1 00:00');
-        $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
+        if ($broken[1] == 12) {
+            $currentend = strtotime($broken[0]+1 . '-1-1 00:00');
+        } else {
+            $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
+        }
 
         $sql = "SELECT * 
                 FROM {excursions_events}

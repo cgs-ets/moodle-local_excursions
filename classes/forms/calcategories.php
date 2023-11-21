@@ -7,12 +7,22 @@ $categories = array(
             'title' => 'Whole School',
             'value' => 'Whole School',
         ],
+        [
+            'id' => 'wscocurricular',
+            'title' => 'Co-curricular',
+            'value' => 'Whole School/Co-curricular',
+        ],
     ],
     'primaryschool' => [
         [
             'id' => 'PrimarySchool',
             'title' => 'Primary School',
             'value' => 'Primary School',
+        ],
+        [
+            'id' => 'pscocurricular',
+            'title' => 'Co-curricular',
+            'value' => 'Primary School/Co-curricular',
         ],
         [
             'id' => 'ELC',
@@ -82,6 +92,11 @@ $categories = array(
             'value' => 'Senior School',
         ],
         [
+            'id' => 'sscocurricular',
+            'title' => 'Co-curricular',
+            'value' => 'Senior School/Co-curricular',
+        ],
+        [
             'id' => 'Academic',
             'title' => 'Academic',
             'value' => 'Senior School/Academic',
@@ -120,13 +135,6 @@ $categories = array(
             'id' => 'Year12',
             'title' => 'Year 12',
             'value' => 'Senior School/Year 12',
-        ],
-    ],
-    'cocurricular' => [
-        [
-            'id' => 'cocurricular',
-            'title' => 'Co-curricular',
-            'value' => 'Co-curricular',
         ],
     ],
 );
