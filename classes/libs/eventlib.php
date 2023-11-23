@@ -685,6 +685,8 @@ class eventlib {
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),
             'status' => $event->status,
             'syncon' => $approved,
+            'pushpublic' => $event->pushpublic,
+            'displaypublic' => $event->displaypublic,
             'location' => $event->location,
             'isactivity' => $event->isactivity,
         );
@@ -933,6 +935,19 @@ class eventlib {
         }
 
         $theEvent->status = $syncon;
+        $theEvent->timemodified = time();
+        $DB->update_record('excursions_events', $theEvent);
+    }
+
+    public static function set_push_public($eventid, $pushon = 0) {
+        global $DB;
+
+        $theEvent = $DB->get_record('excursions_events', array('id' => $eventid));
+        if (empty($theEvent)) {
+            return;
+        }
+
+        $theEvent->pushpublic = $pushon;
         $theEvent->timemodified = time();
         $DB->update_record('excursions_events', $theEvent);
     }

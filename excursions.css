@@ -951,7 +951,7 @@
 #page-local-excursions-events table.events .th-time,
 #page-local-excursions-index table.events .th-time,
 #page-local-excursions-search table.events .th-time {
-  width: 190px;
+  width: 240px;
 }
 #page-local-excursions-events table.events .th-title,
 #page-local-excursions-index table.events .th-title,
@@ -1117,6 +1117,11 @@
 #page-local-excursions-events table.events tr[data-status="1"],
 #page-local-excursions-index table.events tr[data-status="1"],
 #page-local-excursions-search table.events tr[data-status="1"] {
+  background-color: #d4edda;
+}
+#page-local-excursions-events table.events tr[data-pushpublic="1"] .pushpublic,
+#page-local-excursions-index table.events tr[data-pushpublic="1"] .pushpublic,
+#page-local-excursions-search table.events tr[data-pushpublic="1"] .pushpublic {
   background-color: #d4edda;
 }
 .conflicts-wrap table {

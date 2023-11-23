@@ -144,7 +144,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/modal_factory', 'core/modal_eve
         })
       })
 
-      // Ignore checkbox action.
+      // Set up sync actions.
       document.querySelectorAll('.cb-syncevent').forEach(input => {
         input.addEventListener('change', e => {
           let eventid = e.currentTarget.value
@@ -165,7 +165,28 @@ define(['jquery', 'core/log', 'core/ajax', 'core/modal_factory', 'core/modal_eve
           }]);
         })
       })
-      
+      // Set up push public now action.
+      document.querySelectorAll('.cb-pushpublic').forEach(input => {
+        input.addEventListener('change', e => {
+          let eventid = e.currentTarget.value
+          let pushon = e.currentTarget.checked
+          Ajax.call([{
+            methodname: 'local_excursions_formcontrol',
+            args: { 
+              action: 'set_event_push_public',
+              data: JSON.stringify({
+                eventid: eventid,
+                pushon: pushon ? 1 : 0,
+              })
+            },
+            done: function(response) {
+              let tr = document.querySelector('tr[data-eventid="' + eventid + '"]');
+              tr.dataset.pushpublic = pushon ? 1 : 0
+            },
+          }]);
+        })
+      })
+
     };
 
     Events.prototype.getForNextRow = function(i) {

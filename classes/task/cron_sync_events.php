@@ -180,7 +180,7 @@ class cron_sync_events extends \core\task\scheduled_task {
             foreach($destinationCalendars as $destCal) {
                 $this->log("Creating new entry in calendar $destCal", 2);
                 $categories = json_decode($event->areasjson);
-                $categories = $approved && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+                $categories = ($approved || $event->pushpublic) && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;

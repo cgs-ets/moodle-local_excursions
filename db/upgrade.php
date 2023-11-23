@@ -307,5 +307,20 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023110900, 'local', 'excursions');
     }
 
+    if ($oldversion < 2023110901) {
+
+        // Define field pushpublic to be added to excursions_events.
+        $table = new xmldb_table('excursions_events');
+        $field = new xmldb_field('pushpublic', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'status');
+
+        // Conditionally launch add field pushpublic.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023110901, 'local', 'excursions');
+    }
+
     return true;
 }

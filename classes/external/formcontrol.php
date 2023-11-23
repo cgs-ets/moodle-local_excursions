@@ -194,6 +194,11 @@ trait formcontrol {
             return eventlib::set_sync_status($data->eventid, $data->syncon);
         }
 
+        if ($action == 'set_event_push_public') {
+            $data = json_decode($data);
+            return eventlib::set_push_public($data->eventid, $data->pushon);
+        }
+
         if ($action == 'delete_event') {
             $eventid = json_decode($data);
             return eventlib::soft_delete($eventid);

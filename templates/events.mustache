@@ -47,7 +47,7 @@
       <th class="th-sync">Public now</th>
     </tr>
   {{#events}}
-    <tr class="event" data-eventid="{{id}}" data-status="{{status}}">
+    <tr class="event" data-eventid="{{id}}" data-status="{{status}}" data-pushpublic="{{pushpublic}}">
       <td>
         <div class="times">
           <div class="daystart">
@@ -108,9 +108,9 @@
           <input {{#isactivity}}disabled="true"{{/isactivity}} type="checkbox" class="cb-syncevent" value="{{id}}" {{#syncon}}checked="true"{{/syncon}}>
         </div>
       </td>
-      <td>
-        <div class="sync">
-          <input disabled="true" type="checkbox" class="cb-pushpublic" value="{{id}}" {{#publicnow}}checked="true"{{/publicnow}}>
+      <td class="pushpublic">
+        <div>
+          <input {{#syncon}}disabled="true"{{/syncon}} {{^displaypublic}}disabled="true"{{/displaypublic}} type="checkbox" class="cb-pushpublic" value="{{id}}" {{#pushpublic}}checked="true"{{/pushpublic}}>
         </div>
       </td>
     </tr>

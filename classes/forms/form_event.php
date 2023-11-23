@@ -166,11 +166,6 @@ class form_event extends \moodleform {
         require_once('calcategories.php');
         if ($edit) {
             $currentcats = json_decode($event->categoriesjson);
-            foreach($categories['cocurricular'] as $i => $cocurricular) {
-                if (in_array($cocurricular['value'], $currentcats)) {
-                    $categories['cocurricular'][$i]['checked'] = true;
-                }
-            }
             foreach($categories['wholeschool'] as $i => $wholeschool) {
                 if (in_array($wholeschool['value'], $currentcats)) {
                     $categories['wholeschool'][$i]['checked'] = true;
