@@ -4,26 +4,91 @@ $categories = array(
     'wholeschool' => [
         [
             'id' => 'WholeSchool',
-            'title' => 'Whole School',
+            'title' => '<b>Whole School</b>',
             'value' => 'Whole School',
         ],
         [
-            'id' => 'wscocurricular',
-            'title' => 'Co-curricular',
-            'value' => 'Whole School/Co-curricular',
+            'id' => 'wsstaff',
+            'title' => 'Staff',
+            'value' => 'Whole School/Staff',
+        ],
+        //[
+        //    'id' => 'wscocurricular',
+        //    'title' => 'Co-curricular',
+        //    'value' => 'Whole School/Co-curricular',
+        //],
+        [
+            'id' => 'wssports',
+            'title' => 'Sports',
+            'value' => 'Whole School/Sports',
+        ],
+        [
+            'id' => 'wscreative',
+            'title' => 'Creative & Performing Arts',
+            'value' => 'Whole School/Creative & Performing Arts',
+        ],
+        [
+            'id' => 'wsoutdoor',
+            'title' => 'Outdoor Education',
+            'value' => 'Whole School/Outdoor Education',
+        ],
+        [
+            'id' => 'wsedop',
+            'title' => 'Educational Opportunity',
+            'value' => 'Whole School/Educational Opportunity',
+        ],
+
+
+
+        [
+            'id' => 'Community',
+            'title' => 'Community',
+            'value' => 'Whole School/Community',
+        ],
+        [
+            'id' => 'CGSBoard',
+            'title' => 'CGS Board',
+            'value' => 'Whole School/CGS Board',
         ],
     ],
     'primaryschool' => [
         [
             'id' => 'PrimarySchool',
-            'title' => 'Primary School',
+            'title' => '<b>Primary School</b>',
             'value' => 'Primary School',
         ],
         [
-            'id' => 'pscocurricular',
-            'title' => 'Co-curricular',
-            'value' => 'Primary School/Co-curricular',
+            'id' => 'psstaff',
+            'title' => 'Staff',
+            'value' => 'Primary School/Staff',
         ],
+        //[
+        //    'id' => 'pscocurricular',
+        //    'title' => 'Co-curricular',
+        //    'value' => 'Primary School/Co-curricular',
+        //],
+        [
+            'id' => 'pssports',
+            'title' => 'Sports',
+            'value' => 'Primary School/Sports',
+        ],
+        [
+            'id' => 'pscreative',
+            'title' => 'Creative & Performing Arts',
+            'value' => 'Primary School/Creative & Performing Arts',
+        ],
+        [
+            'id' => 'psoutdoor',
+            'title' => 'Outdoor Education',
+            'value' => 'Primary School/Outdoor Education',
+        ],
+        [
+            'id' => 'psedop',
+            'title' => 'Educational Opportunity',
+            'value' => 'Primary School/Educational Opportunity',
+        ],
+
+
         [
             'id' => 'ELC',
             'title' => 'ELC',
@@ -87,15 +152,41 @@ $categories = array(
     ],
     'seniorschool' => [
         [
-            'id' => 'SeniorSchool',
-            'title' => 'Senior School',
+            'id' => 'Senior School',
+            'title' => '<b>SeniorSchool</b>',
             'value' => 'Senior School',
         ],
         [
-            'id' => 'sscocurricular',
-            'title' => 'Co-curricular',
-            'value' => 'Senior School/Co-curricular',
+            'id' => 'pssstaff',
+            'title' => 'Staff',
+            'value' => 'Senior School/Staff',
         ],
+        //[
+        //    'id' => 'sscocurricular',
+        //    'title' => 'Co-curricular',
+        //    'value' => 'Senior School/Co-curricular',
+        //],
+        [
+            'id' => 'sssports',
+            'title' => 'Sports',
+            'value' => 'Senior School/Sports',
+        ],
+        [
+            'id' => 'sscreative',
+            'title' => 'Creative & Performing Arts',
+            'value' => 'Senior School/Creative & Performing Arts',
+        ],
+        [
+            'id' => 'ssoutdoor',
+            'title' => 'Outdoor Education',
+            'value' => 'Senior School/Outdoor Education',
+        ],
+        [
+            'id' => 'ssedop',
+            'title' => 'Educational Opportunity',
+            'value' => 'Senior School/Educational Opportunity',
+        ],
+
         [
             'id' => 'Academic',
             'title' => 'Academic',
@@ -105,6 +196,11 @@ $categories = array(
             'id' => 'House',
             'title' => 'House',
             'value' => 'Senior School/House',
+        ],
+        [
+            'id' => 'Boarding',
+            'title' => 'Boarding',
+            'value' => 'Senior School/Boarding',
         ],
         [
             'id' => 'Year7',

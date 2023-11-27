@@ -185,7 +185,7 @@ class form_event extends \moodleform {
         //echo "<pre>"; var_export($categories); exit;
         $catsel = $staffselectorhtml = $OUTPUT->render_from_template('local_excursions/categories_selector', $categories);
         $html = '
-        <div class="form-group row fitem"><div class="col-md-3">Calendar categories</div><div class="col-md-9">
+        <div class="form-group row fitem"><div class="col-md-12">Calendar categories</div><div class="col-md-12">
         <div class="categoriescontainerx">' . $catsel . '
         </div>
         </div></div>';

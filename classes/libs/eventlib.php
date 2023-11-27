@@ -95,11 +95,10 @@ class eventlib {
         $areas = array_map(function($cat) {
             return explode('/', $cat);
         }, $areas);
-        //$areas = array_values(array_unique(array_merge(...$areas)));
         $areas = call_user_func_array('array_merge', $areas);
         $areas = array_values(array_unique($areas));
         $event->areasjson = json_encode($areas);
-        if (!count($areas)) {
+        if (!count($areas) || in_array('CGS Board', $areas)) {
             $event->displaypublic = 0;
         }
 

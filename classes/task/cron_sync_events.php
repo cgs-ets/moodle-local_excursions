@@ -179,8 +179,12 @@ class cron_sync_events extends \core\task\scheduled_task {
             // Create entries in remaining calendars. There won't be any dest cals if the event was deleted.
             foreach($destinationCalendars as $destCal) {
                 $this->log("Creating new entry in calendar $destCal", 2);
+
                 $categories = json_decode($event->areasjson);
-                $categories = ($approved || $event->pushpublic) && $event->displaypublic ? $this->make_public_categories($categories) : $categories;
+                if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && ($approved || $event->pushpublic)) {
+                    $categories = $this->make_public_categories($categories);
+                }
+
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;

@@ -366,10 +366,12 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       }
       var categoriesjson = $('input[name="categoriesjson"]')
       categoriesjson.val(JSON.stringify(selected))
-      if (selected.length) {
-        self.rootel.find('#id_displaypublic').closest('.form-group').show();
-      } else {
+      // If CGS Board is selected, hide public option.
+      var hasBoard = selected.includes('Whole School/CGS Board')
+      if (!selected.length || hasBoard) {
         self.rootel.find('#id_displaypublic').closest('.form-group').hide();
+      } else {
+        self.rootel.find('#id_displaypublic').closest('.form-group').show();
       }
     } 
 
@@ -422,6 +424,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
             }
           }
         }
+
       })
 
     };
