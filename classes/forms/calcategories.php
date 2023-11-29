@@ -153,7 +153,7 @@ $categories = array(
     'seniorschool' => [
         [
             'id' => 'Senior School',
-            'title' => '<b>SeniorSchool</b>',
+            'title' => '<b>Senior School</b>',
             'value' => 'Senior School',
         ],
         [

@@ -142,6 +142,8 @@ class cron_sync_events extends \core\task\scheduled_task {
                     if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && $approved) {
                         $categories = $this->make_public_categories($categories);
                     }
+                    // Colouring category.
+                    $categories = $this->sort_for_colouring_category($event->colourcategory, $categories);
                     // Update calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;
@@ -179,12 +181,13 @@ class cron_sync_events extends \core\task\scheduled_task {
             // Create entries in remaining calendars. There won't be any dest cals if the event was deleted.
             foreach($destinationCalendars as $destCal) {
                 $this->log("Creating new entry in calendar $destCal", 2);
-
                 $categories = json_decode($event->areasjson);
+                // Public categories.
                 if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && ($approved || $event->pushpublic)) {
                     $categories = $this->make_public_categories($categories);
                 }
-
+                // Colouring category.
+                $categories = $this->sort_for_colouring_category($event->colourcategory, $categories);
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;
@@ -256,6 +259,16 @@ class cron_sync_events extends \core\task\scheduled_task {
         return $categories;
     }
 
+    private function sort_for_colouring_category($colourcategory, $categories) {
+        // Make sure colouring category is first.
+        if (in_array($colourcategory, $categories)) {
+            $colouringix = array_search($colourcategory, $categories);
+            $movecat = $categories[$colouringix];
+            unset($categories[$colouringix]);
+            array_unshift($categories, $movecat);
+        }
+        return $categories;
+    }
     
     public function can_run(): bool {
         return true;

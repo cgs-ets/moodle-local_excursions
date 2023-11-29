@@ -166,6 +166,7 @@ else
         $data->assessment = $event->assessment;
         $data->courseselect = $event->courseid;
         $data->assessmenturl = $event->assessmenturl;
+        $data->colourselect = $event->colourcategory;
         $data->notes = $event->notes;
         $data->categoriesjson = $event->categoriesjson;
         $data->areasjson = $event->areasjson;

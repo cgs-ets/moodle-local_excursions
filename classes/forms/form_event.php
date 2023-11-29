@@ -186,14 +186,25 @@ class form_event extends \moodleform {
         $catsel = $staffselectorhtml = $OUTPUT->render_from_template('local_excursions/categories_selector', $categories);
         $html = '
         <div class="form-group row fitem"><div class="col-md-12">Calendar categories</div><div class="col-md-12">
-        <div class="categoriescontainerx">' . $catsel . '
-        </div>
+        <div>' . $catsel . '</div>
         </div></div>';
         $mform->addElement('html', $html);
         $mform->addElement('text', 'categoriesjson', 'CategoriesJSON');
         $mform->setType('categoriesjson', PARAM_RAW);
 
-
+        // Colouring category. Need to load initially otherwise the select will not work.
+        require_once('calcategories.php');
+        $catsarr = [];
+        foreach ($categories as $toplevel) {
+            foreach ($toplevel as $cat) {
+                $val = $cat['value'];
+                $catsarr[$val] = $val;
+            }
+        }
+        $mform->addElement('select', 'colourselect', 'Select the colouring category', $catsarr, ['data-selected' => $event->colourcategory]); // Loaded initially, although changed by JS.
+        $mform->setType('colourselect', PARAM_RAW);
+        
+        // Display Public.
         $mform->addElement('advcheckbox', 'displaypublic', 'Display this event on the public calendar', '', [], [0,1]);
 
 
@@ -259,14 +270,12 @@ class form_event extends \moodleform {
         $mform->setDefault('entrytype', 'excursion');
         $mform->addGroup($radioarray, 'entrytype', '', array(' '), false);
 
-
         // Submit.
         $this->add_action_buttons(true, 'Submit');
 
         if ($edit) {
             $mform->addElement('html', '<a id="btn-delete" data-eventid="'. $edit .'" href="#" >Delete event</a>');
         }
-
 
         // Hidden fields.
         $mform->addElement('hidden', 'edit');

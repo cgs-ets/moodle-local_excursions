@@ -137,7 +137,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       */
 
       self.watchCategories();
-      self.generateCategoriesJSON();
+      self.categoryChanged();
 
       var btndelete = document.getElementById('btn-delete');
       btndelete && btndelete.addEventListener('click', e => {
@@ -257,7 +257,6 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       //self.setupCheckRecurring();
       self.getDayCycle(['timestart', 'timeend']);
       self.initDatesChanged();
-      self.initCategorySelect();
     }
 
     EventForm.prototype.getDayCycle = function (inputs) {
@@ -349,13 +348,34 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     EventForm.prototype.watchCategories = function () {
       var self = this;
       $('input[name="categories"]').change(function(e){
-        self.generateCategoriesJSON();
+        var checkbox = this;
+        self.categoryChanged(checkbox);
       })
-      
     }
 
-    EventForm.prototype.generateCategoriesJSON = function ()  {  
+    EventForm.prototype.categoryChanged = function (checkbox)  {
       var self = this;
+
+      // If checked, make sure parent is select too.
+      if (checkbox) {
+        if (checkbox.checked) {
+          var first = $(checkbox).parent().children(":first")
+          if (!first.checked) {
+            first.prop( "checked", true );
+          }
+        } else {
+          // If any children are still checked, make sure parent is selected too.
+          var checkedchildren = $(checkbox).parent().children(":not(:first):checked")
+          if (checkedchildren.length) {
+            var first = $(checkbox).parent().children(":first")
+            if (!first.checked) {
+              first.prop( "checked", true );
+            }
+          }
+        }
+      }
+
+      // Generate the categories JSON.
       var checkboxes = document.getElementsByName("categories")
       var selected = [] 
       for (var i = 0; i < checkboxes.length; i++)  
@@ -366,12 +386,30 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       }
       var categoriesjson = $('input[name="categoriesjson"]')
       categoriesjson.val(JSON.stringify(selected))
+
       // If CGS Board is selected, hide public option.
       var hasBoard = selected.includes('Whole School/CGS Board')
       if (!selected.length || hasBoard) {
         self.rootel.find('#id_displaypublic').closest('.form-group').hide();
       } else {
         self.rootel.find('#id_displaypublic').closest('.form-group').show();
+      }
+
+      // If more than one category selected, fill and show the colouring category select box.
+      console.log(selected.length)
+      if (selected.length > 1) {
+        var select = self.rootel.find('#fitem_id_colourselect select');
+        select.empty();
+        for (var i = 0; i < selected.length; i++){
+          var opt = document.createElement('option');
+          opt.value = opt.innerHTML = selected[i];
+          select.append(opt);
+        }
+        self.rootel.find('#fitem_id_colourselect').show();
+        // Reselect current colour.
+        select.val(select.data('selected'));
+      } else {
+        self.rootel.find('#fitem_id_colourselect').hide();
       }
     } 
 
@@ -407,25 +445,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
     EventForm.prototype.initCategorySelect = function () {
       
-      $('.category-group input').change(function(){
-        // If checked, make sure parent is select too.
-        if (this.checked) {
-          var first = $(this).parent().children(":first")
-          if (!first.checked) {
-            first.prop( "checked", true );
-          }
-        } else {
-          // If any children are still checked, make sure parent is selected too.
-          var checkedchildren = $(this).parent().children(":not(:first):checked")
-          if (checkedchildren.length) {
-            var first = $(this).parent().children(":first")
-            if (!first.checked) {
-              first.prop( "checked", true );
-            }
-          }
-        }
-
-      })
+      
 
     };
 

@@ -322,5 +322,21 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023110901, 'local', 'excursions');
     }
 
+    if ($oldversion < 2023110902) {
+
+        // Define field colourcategory to be added to excursions_events.
+        $table = new xmldb_table('excursions_events');
+        $field = new xmldb_field('colourcategory', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null, 'categoriesjson');
+
+        // Conditionally launch add field colourcategory.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023110902, 'local', 'excursions');
+    }
+
+
     return true;
 }
