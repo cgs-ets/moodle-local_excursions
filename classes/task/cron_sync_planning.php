@@ -111,7 +111,9 @@ class cron_sync_planning extends \core\task\scheduled_task {
                         $categories = $this->make_public_categories($categories);
                     }
                     // Colouring category.
-                    $categories = $this->sort_for_colouring_category($event->colourcategory, $categories);
+                    $colourcat = explode('/', $event->colourcategory);
+                    $colourcat = end($colourcat);
+                    $categories = $this->sort_for_colouring_category($colourcat, $categories);
                     // Update calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;
@@ -153,7 +155,9 @@ class cron_sync_planning extends \core\task\scheduled_task {
                     $categories = json_decode($event->areasjson);
                     $categories = $event->displaypublic ? $this->make_public_categories($categories) : $categories;
                     // Colouring category.
-                    $categories = $this->sort_for_colouring_category($event->colourcategory, $categories);
+                    $colourcat = explode('/', $event->colourcategory);
+                    $colourcat = end($colourcat);
+                    $categories = $this->sort_for_colouring_category($colourcat, $categories);
                     // Create calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;

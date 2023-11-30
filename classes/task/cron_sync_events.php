@@ -84,10 +84,10 @@ class cron_sync_events extends \core\task\scheduled_task {
                     $categories = json_decode($event->areasjson);
                     $destinationCalendars = [];
                     foreach ($categories as $cat) {
-                        if (in_array($cat, ['Whole School', 'Primary School', 'ELC', 'Northside', 'Red Hill'])) {
+                        if (in_array($cat, ['Whole School', 'Primary School'])) {
                             $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
                         }
-                        if (in_array($cat, ['Whole School', 'Senior School', 'Co-curricular', 'Website', 'Alumni'])) {
+                        if (in_array($cat, ['Whole School', 'Senior School'])) {
                             $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                         }
                     }
@@ -143,7 +143,9 @@ class cron_sync_events extends \core\task\scheduled_task {
                         $categories = $this->make_public_categories($categories);
                     }
                     // Colouring category.
-                    $categories = $this->sort_for_colouring_category($event->colourcategory, $categories);
+                    $colourcat = explode('/', $event->colourcategory);
+                    $colourcat = end($colourcat);
+                    $categories = $this->sort_for_colouring_category($colourcat, $categories);
                     // Update calendar event
                     $eventdata = new \stdClass();
                     $eventdata->subject = $event->activityname;
@@ -187,7 +189,9 @@ class cron_sync_events extends \core\task\scheduled_task {
                     $categories = $this->make_public_categories($categories);
                 }
                 // Colouring category.
-                $categories = $this->sort_for_colouring_category($event->colourcategory, $categories);
+                $colourcat = explode('/', $event->colourcategory);
+                $colourcat = end($colourcat);
+                $categories = $this->sort_for_colouring_category($colourcat, $categories);
                 // Create calendar event
                 $eventdata = new \stdClass();
                 $eventdata->subject = $event->activityname;
