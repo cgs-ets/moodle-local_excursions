@@ -201,7 +201,11 @@ class form_event extends \moodleform {
                 $catsarr[$val] = $val;
             }
         }
-        $mform->addElement('select', 'colourselect', 'Select the colouring category', $catsarr, ['data-selected' => $event->colourcategory]); // Loaded initially, although changed by JS.
+        $attrs = [];
+        if (isset($event->colourcategory)) {
+            $attrs['data-selected'] = $event->colourcategory;
+        }
+        $mform->addElement('select', 'colourselect', 'Select the colouring category', $catsarr, $attrs); // Loaded initially, although changed by JS.
         $mform->setType('colourselect', PARAM_RAW);
         
         // Display Public.
