@@ -66,6 +66,15 @@ class activity_exporter extends persistent_exporter {
             'eventurl' => [
                 'type' => PARAM_RAW,
             ],
+            'eventid' => [
+                'type' => PARAM_INT,
+            ],
+            'isassessment' => [
+                'type' => PARAM_INT,
+            ],
+            'assessmenturl' => [
+                'type' => PARAM_RAW,
+            ],
             'startreadabletime' => [
                 'type' => PARAM_RAW,
             ],
@@ -232,11 +241,17 @@ class activity_exporter extends persistent_exporter {
         ));
 
         $eventurl = '';
+        $eventid = 0;
+        $isassessment = 0;
+        $assessmenturl = '';
         $event = eventlib::get_by_activityid($this->data->id);
         if ($event) {
             $eventurl = new \moodle_url('/local/excursions/event.php', array(
                 'edit' => $event->id,
             ));
+            $eventid = $event->id;
+            $isassessment = $event->assessment;
+            $assessmenturl = $event->assessmenturl;
         }
 
         $startreadabletime = '';
@@ -503,6 +518,9 @@ class activity_exporter extends persistent_exporter {
             'permissionsurl' => $permissionsurl->out(false),
             'summaryurl' => $summaryurl->out(false),
             'eventurl' => $eventurl ? $eventurl->out(false) : '',
+            'eventid' => $eventid,
+            'isassessment' => $isassessment,
+            'assessmenturl' => $assessmenturl,
             'createdreadabletime' => $createdreadabletime,
             'createdreadabledate' => date('j M y', $this->data->timecreated),
             'startreadabletime' => $startreadabletime,

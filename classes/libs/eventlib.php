@@ -326,7 +326,7 @@ class eventlib {
         return ['dates'=> $dates, 'datesReadable'=> $datesReadable];
     }*/
 
-    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws', $user = '') {
+    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws', $user = '', $assessment = 0) {
         // If no month-year nav supplied, load for current month-year.
         if (empty($current)) {
             $current = date('Y-m', time());
@@ -339,11 +339,15 @@ class eventlib {
             $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
         }
 
-        return static::get_for_date_range($currentstart, $currentend, $status, $campus, $user);
+        if ($assessment) {
+            return static::get_assessments($currentstart, $currentend);
+        } else {
+            return static::get_for_date_range($currentstart, $currentend, $status, $campus, $user);
+        }
     }
 
 
-    public static function get_for_date_range($currentstart, $currentend, $status = 0, $campus = 'ws', $user = '') {
+    public static function get_for_date_range($currentstart, $currentend, $status = 0, $campus = 'ws', $user = '', $assessment = 0) {
         global $DB, $OUTPUT, $USER;
 
         // Sanitise status.
@@ -376,7 +380,9 @@ class eventlib {
             $campussql = " AND campus = 'primary' ";
         }
 
-        // Get activities.
+        /* ----
+        * Get activities. 
+        * ----*/
         $sql = "";
         // If status not provided, then we want to get all approved activities + draft/inreview activities for this user only.
         // In the case of auditors/approvers, we need to get the above + all inreview activities.
@@ -524,6 +530,20 @@ class eventlib {
         usort($merged, fn($a, $b) => strcmp($a->timestart, $b->timestart));
 
         return $merged;
+    }
+
+    public static function get_assessments($currentstart, $currentend) {
+        // Get everything and filter out non-assessments
+        $events = static::get_for_date_range($currentstart, $currentend);
+
+        foreach ($events as $i => $event) {
+            if (!$event->isassessment) {
+                // A non-assessment calendar entry
+                unset($events[$i]);
+            }
+        }
+
+        return $events;
     }
 
 
@@ -689,6 +709,8 @@ class eventlib {
             'displaypublic' => $event->displaypublic,
             'location' => $event->location,
             'isactivity' => $event->isactivity,
+            'isassessment' => $event->assessment,
+            'assessmenturl' => $event->assessmenturl,
         );
     }
 

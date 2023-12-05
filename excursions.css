@@ -865,6 +865,7 @@
   display: flex;
   padding: 20px 0;
   gap: 15px;
+  align-items: center;
 }
 #page-local-excursions-events .nav-bar .pagination,
 #page-local-excursions-index .nav-bar .pagination,

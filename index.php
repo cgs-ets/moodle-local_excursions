@@ -37,12 +37,14 @@ $nav = optional_param('nav', '', PARAM_RAW);
 $status = optional_param('status', '', PARAM_RAW);
 $campus = optional_param('campus', 'ws', PARAM_RAW);
 $user = optional_param('user', '', PARAM_RAW);
+$assessment = optional_param('assessment', 0, PARAM_INT);
 $baseindexurl = new moodle_url('/local/excursions/index.php', array());
 $indexurl = new moodle_url('/local/excursions/index.php', array(
 	'nav' => $nav,
 	'status' => $status,
 	'campus' => $campus,
 	'user' => $user,
+	'assessment' => $assessment,
 ));
 
 $context = context_system::instance();
@@ -63,7 +65,7 @@ $filters_user = locallib::get_events_filter_user($user);
 $events = array();
 $isparent = false;
 if ($isstaff) {
-    $events = eventlib::get_all_events_activities($paginaton->current, $status, $campus, $user);
+    $events = eventlib::get_all_events_activities($paginaton->current, $status, $campus, $user, $assessment);
 } else {
     $parentactivities = activity::get_for_parent($USER->username);
     $isparent = count($parentactivities);
@@ -85,7 +87,8 @@ $data = array(
     'filters_status' => $filters_status,
     'filters_campus' => $filters_campus,
     'filters_user' => $filters_user,
-    'hasfilters' => $status || $campus != 'ws' || $user,
+    'assessment' => $assessment,
+    'hasfilters' => $status || $campus != 'ws' || $user || $assessment,
     'baseurl' => $baseindexurl->out(),
     'eventcreateurl' => $eventcreateurl->out(),
     'eventreviewurl' => $eventreviewurl->out(),
