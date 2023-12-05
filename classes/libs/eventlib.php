@@ -543,7 +543,7 @@ class eventlib {
             }
         }
 
-        return $events;
+        return array_values($events);
     }
 
 
