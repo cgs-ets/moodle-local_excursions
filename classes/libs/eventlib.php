@@ -534,6 +534,10 @@ class eventlib {
 
     public static function get_assessments($currentstart, $currentend) {
         // Get everything and filter out non-assessments
+        
+        $currentstart = strtotime('2000-1-1 00:00');
+        $currentend = strtotime('3000-1-1 00:00');
+        
         $events = static::get_for_date_range($currentstart, $currentend);
 
         foreach ($events as $i => $event) {

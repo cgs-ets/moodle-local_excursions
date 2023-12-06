@@ -216,18 +216,27 @@ class form_event extends \moodleform {
         * Is event an assessment?
         * ----------------*/
         $mform->addElement('advcheckbox', 'assessment', 'This is an assessment', '', [], [0,1]);
+        
         // Get courses under Senior Academic
         $cat = $DB->get_record('course_categories', array('idnumber' => 'SEN-ACADEMIC'));
-        if (!$cat) {
-            $this->log("Category 'SEN-ACADEMIC' not found");
-            return;
+        if ($cat) {
+            $cat = \core_course_category::get($cat->id);
+            $coursesinfo = $cat->get_courses(['recursive'=>true]);
+            foreach($coursesinfo as $courseinfo) {
+                $courses[$courseinfo->id] = $courseinfo->fullname;
+            }
         }
-        $cat = \core_course_category::get($cat->id);
-        $coursesinfo = $cat->get_courses(['recursive'=>true]);
-        $courses = array();
-        foreach($coursesinfo as $courseinfo) {
-            $courses[$courseinfo->id] = $courseinfo->fullname;
+
+        // Get courses under 2024
+        $cat = $DB->get_record('course_categories', array('idnumber' => '2024'));
+        if ($cat) {
+            $cat = \core_course_category::get($cat->id);
+            $coursesinfo = $cat->get_courses(['recursive'=>true]);
+            foreach($coursesinfo as $courseinfo) {
+                $courses[$courseinfo->id] = $courseinfo->fullname;
+            }
         }
+
         sort($courses);
         $mform->addElement('select', 'courseselect', 'Course', $courses);
         $mform->setType('courseselect', PARAM_RAW);

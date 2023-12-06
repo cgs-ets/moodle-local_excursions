@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-        {{#issearch}}{{monyear}}{{/issearch}} <small>{{duration}}</small>
+        {{#issearch}}{{monyear}}{{/issearch}}{{#assessment}}{{monyear}}{{/assessment}} <small>{{duration}}</small>
       </td>
       <td><strong>{{eventname}}</strong></td>
       <td>{{#isassessment}}<a target="_blank" href="{{assessmenturl}}">Link</a>{{/isassessment}} {{location}}</td>
@@ -78,7 +78,7 @@
               </div>
             </div>
         </div>
-        {{#issearch}}{{monyear}}{{/issearch}} <small>{{duration}}</small>
+        {{#issearch}}{{monyear}}{{/issearch}} {{#assessment}}{{monyear}}{{/assessment}} <small>{{duration}}</small>
         {{/isstaff}}
         {{^isstaff}}
           <div class="badge badge-secondary">{{timestartFullReadable}}</div> - <div class="badge badge-secondary">{{timeendFullReadable}}</div>
