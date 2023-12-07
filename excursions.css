@@ -580,31 +580,31 @@
 #page-local-excursions-activity:not(.activity-canedit) .alert {
   display: none !important;
 }
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_general > .fcontainer input,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_staff > .fcontainer input,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .permissions input,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_riskassessment input,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_attachments input,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_general > .fcontainer select,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_staff > .fcontainer select,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .permissions select,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_riskassessment select,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_attachments select,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_general > .fcontainer textarea,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_staff > .fcontainer textarea,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .permissions textarea,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_riskassessment textarea,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_attachments textarea,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_general > .fcontainer a,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_staff > .fcontainer a,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .permissions a,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_riskassessment a,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_attachments a,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_general > .fcontainer .form-check-label,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #id_staff > .fcontainer .form-check-label,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .permissions .form-check-label,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_riskassessment .form-check-label,
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) #fitem_id_attachments .form-check-label {
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_general > .fcontainer input,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_staff > .fcontainer input,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .permissions input,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_riskassessment input,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_attachments input,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_general > .fcontainer select,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_staff > .fcontainer select,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .permissions select,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_riskassessment select,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_attachments select,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_general > .fcontainer textarea,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_staff > .fcontainer textarea,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .permissions textarea,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_riskassessment textarea,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_attachments textarea,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_general > .fcontainer a,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_staff > .fcontainer a,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .permissions a,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_riskassessment a,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_attachments a,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_general > .fcontainer .form-check-label,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #id_staff > .fcontainer .form-check-label,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .permissions .form-check-label,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_riskassessment .form-check-label,
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) #fitem_id_attachments .form-check-label {
   background-color: #e9ecef !important;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -612,10 +612,10 @@
   user-select: none !important;
   pointer-events: none !important;
 }
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .prepare-message {
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .prepare-message {
   display: none !important;
 }
-#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator) .alert {
+#page-local-excursions-activity.activity-accompanying:not(.activity-staffincharge):not(.activity-creator):not(.activity-planner) .alert {
   display: none !important;
 }
 #page-local-excursions-activity:not(.activity-canedit) .approvals .reply-form,

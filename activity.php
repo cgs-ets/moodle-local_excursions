@@ -273,6 +273,9 @@ if ($activity->usercanedit) {
 if ($activity->isstaffincharge) {
     $PAGE->add_body_class('activity-staffincharge');
 }
+if ($activity->isplanner) {
+    $PAGE->add_body_class('activity-planner');
+}
 if ($activity->isapprover) {
     $PAGE->add_body_class('activity-approver');
 }
