@@ -237,7 +237,8 @@ class form_event extends \moodleform {
             }
         }
 
-        sort($courses);
+
+        asort($courses);
         $mform->addElement('select', 'courseselect', 'Course', $courses);
         $mform->setType('courseselect', PARAM_RAW);
         $mform->hideIf('courseselect', 'assessment', 'neq', 1);
