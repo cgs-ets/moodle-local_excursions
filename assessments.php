@@ -41,7 +41,7 @@ $PAGE->set_url('/local/excursions/assessments.php', array('user' => $user,));
 $PAGE->set_title('Assessments');
 $PAGE->set_heading('Assessments');
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursions.css', array('nocache' => rand())));
-$PAGE->requires->js_call_amd('local_excursions/index', 'init');
+$PAGE->requires->js_call_amd('local_excursions/assessments', 'init');
 
 $output = $OUTPUT->header();
 

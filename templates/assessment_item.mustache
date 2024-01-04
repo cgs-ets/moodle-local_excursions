@@ -30,12 +30,13 @@
         {{dayStart}}<small>{{dayStartSuffix}}</small> {{monyear}} {{timeendReadable}}
       </td>
       <td><strong>{{eventname}}</strong></td>
-      <td>{{#assessmenturl}}<a target="_blank" href="{{assessmenturl}}">Link</a>{{/assessmenturl}} {{location}}</td>
+      <td>{{#assessmenturl}}<strong><a class="assessmentlink" data-eventid="{{id}}" target="_blank" href="{{assessmenturl}}">Link</a></strong>{{/assessmenturl}} {{location}}</td>
       <td><div><img class="round userphoto" height="24" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
       <td>Calendar entry only</td>
       <td>
         <div class="actions">
-          <a class="btn btn-secondary" href="{{editurl}}">Edit</a>
+          <a class="btn btn-secondary btn-edit-link" href="#" data-url="{{assessmenturl}}" data-eventid="{{id}}">Edit Link</a>
+          <a class="btn btn-secondary" href="{{editurl}}"><i class="fa fa-cog" aria-hidden="true"></i></a>
         </div>
       </td>
     </tr>
@@ -46,7 +47,7 @@
       {{dayStart}}<small>{{dayStartSuffix}}</small> {{monyear}} {{timeendReadable}}
     </td>
     <td class="cell c-name"><strong>{{activityname}}</strong></td>
-    <td class="cell c-location">{{#assessmenturl}}<a target="_blank" href="{{assessmenturl}}">Link</a>{{/assessmenturl}}{{location}}</td>
+    <td class="cell c-location">{{#assessmenturl}}<strong><a class="assessmentlink" data-eventid="{{eventid}}" target="_blank" href="{{assessmenturl}}">Link</a></strong>{{/assessmenturl}} {{location}}</td>
     <td class="cell c-staffincharge"><img class="round userphoto" height="24" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
     <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">
         {{#statushelper.isautosave}}
@@ -82,7 +83,8 @@
     </td>
     <td class="cell c-actions lastcol">
       <div class="actions">
-        <a class="btn btn-secondary" href="{{editurl}}">Edit</a>
+        <a class="btn btn-secondary btn-edit-link" href="#" data-url="{{assessmenturl}}" data-eventid="{{eventid}}">Edit Link</a>
+        <a class="btn btn-secondary" href="{{editurl}}"><i class="fa fa-cog" aria-hidden="true"></i></a>
       </div>
     </td>
   </tr>

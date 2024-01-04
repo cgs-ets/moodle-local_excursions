@@ -208,6 +208,11 @@ trait formcontrol {
             $data = json_decode($data);
             return json_encode(eventlib::get_day_cycle($data->datetime));
         }
+
+        if ($action == 'update_assessmenturl') {
+            $data = json_decode($data);
+            eventlib::set_assessmenturl($data->eventid, $data->url);
+        }
         
         return 1;
     }

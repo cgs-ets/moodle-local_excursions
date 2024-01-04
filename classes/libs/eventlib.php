@@ -1018,6 +1018,23 @@ class eventlib {
         $DB->update_record('excursions_events', $theEvent);
     }
 
+    public static function set_assessmenturl($eventid, $url) {
+        global $DB, $USER;
+
+        $theEvent = $DB->get_record('excursions_events', array('id' => $eventid));
+        if (empty($theEvent)) {
+            throw new \Exception('Event not found', 100);
+        }
+
+        if ($theEvent->owner == $USER->username || $theEvent->creator == $USER->username) {
+            $theEvent->assessmenturl = $url;
+            $theEvent->timemodified = time();
+            $DB->update_record('excursions_events', $theEvent);
+        } else {
+            throw new \Exception('Only event owner can update', 100);
+        }
+    }
+
 
     public static function soft_delete($id) {
         global $DB, $USER;
