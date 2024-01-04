@@ -61,10 +61,11 @@
         {{{filters_user}}}
       </div>
 
+      {{#isstaff}}
       <div class="filter-wrap">
-        {{#assessment}}<span style="background:yellow"><b>Viewing assessments</b></span>{{/assessment}}
-        {{^assessment}}<a class="btn btn-light" href="{{baseurl}}?assessment=1">Assessments</a>{{/assessment}}
+        <a class="btn btn-secondary" href="{{assessmentsurl}}">Assessments</a>
       </div>
+      {{/isstaff}}
 
       {{#hasfilters}}
         <a class="btn btn-secondary" href="{{baseurl}}">clear all</a>

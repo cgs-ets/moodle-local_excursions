@@ -326,7 +326,7 @@ class eventlib {
         return ['dates'=> $dates, 'datesReadable'=> $datesReadable];
     }*/
 
-    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws', $user = '', $assessment = 0) {
+    public static function get_all_events_activities($current = '', $status = 0, $campus = 'ws', $user = '') {
         // If no month-year nav supplied, load for current month-year.
         if (empty($current)) {
             $current = date('Y-m', time());
@@ -339,15 +339,12 @@ class eventlib {
             $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
         }
 
-        if ($assessment) {
-            return static::get_assessments($currentstart, $currentend);
-        } else {
-            return static::get_for_date_range($currentstart, $currentend, $status, $campus, $user);
-        }
+
+        return static::get_for_date_range($currentstart, $currentend, $status, $campus, $user);
     }
 
 
-    public static function get_for_date_range($currentstart, $currentend, $status = 0, $campus = 'ws', $user = '', $assessment = 0) {
+    public static function get_for_date_range($currentstart, $currentend, $status = 0, $campus = 'ws', $user = '') {
         global $DB, $OUTPUT, $USER;
 
         // Sanitise status.
@@ -532,22 +529,86 @@ class eventlib {
         return $merged;
     }
 
-    public static function get_assessments($currentstart, $currentend) {
+    /*public static function get_assessments($user) {
+        global $USER;
+
+        // Formulate the user condition.
+        $usersql = '';
+        if ($user == 'self') {
+            $usersql = "AND (creator = '$USER->username' OR owner = '$USER->username') ";
+        } 
+
+
         // Get everything and filter out non-assessments
-        
         $currentstart = strtotime('2000-1-1 00:00');
         $currentend = strtotime('3000-1-1 00:00');
-        
         $events = static::get_for_date_range($currentstart, $currentend);
-
         foreach ($events as $i => $event) {
             if (!$event->isassessment) {
                 // A non-assessment calendar entry
                 unset($events[$i]);
             }
         }
-
         return array_values($events);
+    }*/
+
+    public static function get_assessments($user) {
+        global $DB, $OUTPUT, $USER;
+    
+        $events = array();
+        $thisyear = strtotime(date('Y-1-1 00:00', time()));
+
+        // Formulate the user condition.
+        $usersql = '';
+        if ($user == 'self') {
+            $usersql = "AND (ee.creator = '$USER->username' OR ee.owner = '$USER->username') ";
+        }
+
+        // Get assessments that are activities.
+        $draft = locallib::ACTIVITY_STATUS_DRAFT;
+        $inreview = locallib::ACTIVITY_STATUS_INREVIEW;
+        $approved = locallib::ACTIVITY_STATUS_APPROVED;
+        $sql = "SELECT e.*, ee.id as eventid
+                  FROM {excursions} e
+                  INNER JOIN {excursions_events} ee ON e.id = ee.activityid
+                 WHERE e.deleted = 0
+                   AND ee.isactivity = 1
+                   AND e.timestart >= $thisyear
+                   $usersql
+        ";
+        $activities = array();
+        $records = $DB->get_records_sql($sql, []);
+        foreach ($records as $record) {
+            $activity = new activity($record->id, $record);
+            $activityexporter = new activity_exporter($activity, array('minimal' => true));
+            $exported = $activityexporter->export($OUTPUT);
+            // Use edit url instead of manage.
+            $exported->editurl = new \moodle_url('/local/excursions/event.php', array('edit' => $record->eventid));
+            $activities[] = $exported;
+        }
+
+
+        // Get cal entry only assessments.
+        $sql = "SELECT ee.* 
+            FROM {excursions_events} ee
+            WHERE isactivity = 0
+            AND deleted = 0
+            AND assessment = 1
+            AND timestart >= $thisyear
+        ";
+        $records = $DB->get_records_sql($sql, []);
+        foreach ($records as $event) {
+            $event = (object) static::export_event($event);
+            $event->calentryonly = true;
+            $events[] = $event;
+        }
+
+        // Merge and sort activities and events.
+        $merged = array_merge($activities, $events);
+        usort($merged, fn($a, $b) => strcmp($a->timestart, $b->timestart));
+
+        return $merged;
+
     }
 
 

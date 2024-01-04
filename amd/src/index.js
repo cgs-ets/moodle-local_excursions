@@ -35,10 +35,10 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
     function init() {
         Log.debug('local_excursions/index: initializing');
 
-        var rootel = $('#page-local-excursions-index');
+        var rootel = $('#page-content');
 
         if (!rootel.length) {
-            Log.error('local_excursions/index: #page-local-excursions-index not found!');
+            Log.error('local_excursions/index: #page-content not found!');
             return;
         }
 

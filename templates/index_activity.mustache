@@ -86,7 +86,7 @@
         {{/isstaff}}
       </td>
       <td class="cell c-name"><strong>{{activityname}}</strong></td>
-      <td class="cell c-location">{{#isassessment}}<a target="_blank" href="{{assessmenturl}}">Link</a>{{/isassessment}}   {{^isexcursion}}(Incursion) {{/isexcursion}}  {{location}}</td>
+      <td class="cell c-location">{{#isassessment}}{{#assessmenturl}}<a target="_blank" href="{{assessmenturl}}">Link</a>{{/assessmenturl}}{{/isassessment}}   {{^isexcursion}}(Incursion) {{/isexcursion}}  {{location}}</td>
       <td class="cell c-staffincharge"><img class="round userphoto" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
       {{#isstaff}}
           <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">

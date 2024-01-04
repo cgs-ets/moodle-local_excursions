@@ -1174,7 +1174,7 @@ class locallib extends local_excursions_config {
     }
 
     public static function tokenTruncate($string, $width, $ellipsis = '...') {
-        $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/([\s\n\r]+)/', $string, 0, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
       
         $length = 0;

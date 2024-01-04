@@ -1645,7 +1645,7 @@ class activity extends persistent {
     }
 
 
-    protected static function send_next_approval_email($activity, $step = '', $recipient, $email = null, $bccaddressextra = []) {
+    protected static function send_next_approval_email($activity, $step = '', $recipient = '', $email = null, $bccaddressextra = []) {
         global $USER, $PAGE;
 
         $toUser = \core_user::get_user_by_username($recipient);
