@@ -573,6 +573,7 @@ class eventlib {
             AND deleted = 0
             AND assessment = 1
             AND timestart >= $thisyear
+            $usersql
         ";
         $records = $DB->get_records_sql($sql, []);
         foreach ($records as $event) {
