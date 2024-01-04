@@ -529,29 +529,6 @@ class eventlib {
         return $merged;
     }
 
-    /*public static function get_assessments($user) {
-        global $USER;
-
-        // Formulate the user condition.
-        $usersql = '';
-        if ($user == 'self') {
-            $usersql = "AND (creator = '$USER->username' OR owner = '$USER->username') ";
-        } 
-
-
-        // Get everything and filter out non-assessments
-        $currentstart = strtotime('2000-1-1 00:00');
-        $currentend = strtotime('3000-1-1 00:00');
-        $events = static::get_for_date_range($currentstart, $currentend);
-        foreach ($events as $i => $event) {
-            if (!$event->isassessment) {
-                // A non-assessment calendar entry
-                unset($events[$i]);
-            }
-        }
-        return array_values($events);
-    }*/
-
     public static function get_assessments($user) {
         global $DB, $OUTPUT, $USER;
     
@@ -573,6 +550,7 @@ class eventlib {
                   INNER JOIN {excursions_events} ee ON e.id = ee.activityid
                  WHERE e.deleted = 0
                    AND ee.isactivity = 1
+                   AND ee.assessment = 1
                    AND e.timestart >= $thisyear
                    $usersql
         ";
