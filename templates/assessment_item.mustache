@@ -34,10 +34,12 @@
       <td><div><img class="round userphoto" height="24" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
       <td>Calendar entry only</td>
       <td>
-        <div class="actions">
-          <a class="btn btn-secondary btn-edit-link" href="#" data-url="{{assessmenturl}}" data-eventid="{{id}}">Edit Link</a>
-          <a class="btn btn-secondary" href="{{editurl}}"><i class="fa fa-cog" aria-hidden="true"></i></a>
-        </div>
+        {{#usercanedit}}
+          <div class="actions">
+            <a class="btn btn-secondary btn-edit-link" href="#" data-url="{{assessmenturl}}" data-eventid="{{id}}">Edit Link</a>
+            <a class="btn btn-secondary" href="{{editurl}}"><i class="fa fa-cog" aria-hidden="true"></i></a>
+          </div>
+        {{/usercanedit}}
       </td>
     </tr>
 {{/calentryonly}}
@@ -82,10 +84,12 @@
         {{/statushelper.iscancelled}}
     </td>
     <td class="cell c-actions lastcol">
-      <div class="actions">
-        <a class="btn btn-secondary btn-edit-link" href="#" data-url="{{assessmenturl}}" data-eventid="{{eventid}}">Edit Link</a>
-        <a class="btn btn-secondary" href="{{editurl}}"><i class="fa fa-cog" aria-hidden="true"></i></a>
-      </div>
+      {{#usercanedit}}
+        <div class="actions">
+          <a class="btn btn-secondary btn-edit-link" href="#" data-url="{{assessmenturl}}" data-eventid="{{eventid}}">Edit Link</a>
+          <a class="btn btn-secondary" href="{{editurl}}"><i class="fa fa-cog" aria-hidden="true"></i></a>
+        </div>
+      {{/usercanedit}}
     </td>
   </tr>
 {{/calentryonly}}

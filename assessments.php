@@ -49,6 +49,7 @@ $filters_user = locallib::get_events_filter_user($user);
 $data = new \stdClass();
 $data->events = [];
 $data->events = eventlib::get_assessments($user);
+//echo "<pre>"; var_export($data->events); exit;
 $data->user = $user;
 $data->indexurl = $indexurl;
 $data->issearch = true;

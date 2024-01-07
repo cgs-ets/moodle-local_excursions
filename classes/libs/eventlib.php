@@ -707,6 +707,7 @@ class eventlib {
     }
 
     public static function export_event($event) {
+        
         $owner = json_decode($event->ownerjson, true);
         $owner = array_pop($owner);
         $areas = $event->areasjson ? json_decode($event->areasjson, true) : [];
@@ -724,6 +725,8 @@ class eventlib {
             $activity = new activity($event->activityid);
             $approved = locallib::status_helper($activity->get('status'))->isapproved;
         }
+
+        $usercanedit = eventlib::can_user_edit($event->id);
 
         return array(
             'id' => $event->id,
@@ -755,6 +758,7 @@ class eventlib {
             'isactivity' => $event->isactivity,
             'isassessment' => $event->assessment,
             'assessmenturl' => $event->assessmenturl,
+            'usercanedit' => $usercanedit,
         );
     }
 
@@ -1066,6 +1070,43 @@ class eventlib {
             return "Term $daycycleinfo->term Week $daycycleinfo->weeknumber Day $daycycleinfo->daynumber";
         }
         return "";
+    }
+
+    public static function can_user_edit($eventid) {
+        global $USER;
+
+        $event = eventlib::get_event($eventid);
+        if (!$event) {
+            return false;
+        }
+
+        // Is this user allowed to edit this event?
+        if (locallib::is_event_reviewer()) {
+            return true;
+        } else if ($event->owner == $USER->username || $event->creator == $USER->username) {
+            return true;
+        } else {
+            // if this is an activity, check if user is a staff in charge or additional planning staff.
+            if ($event->isactivity) {
+                $activity = new activity($event->activityid);
+                if ($USER->username == $activity->get('staffincharge')) {
+                    return true;
+                } else {
+                    $planning = json_decode($activity->get('planningstaffjson'));
+                    if ($planning) {
+                        foreach ($planning as $user) {
+                            if ($USER->username == $user->idfield) {
+                                return true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+
     }
 
 }
