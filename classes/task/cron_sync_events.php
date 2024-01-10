@@ -121,6 +121,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $externalevents = $DB->get_records_sql($sql, $params);
             }
 
+            // Update existing entries.
             foreach($externalevents as $externalevent) {
                 $calIx = array_search($externalevent->calendar, $destinationCalendars);
                 if ($calIx === false || $event->deleted) {
@@ -138,9 +139,15 @@ class cron_sync_events extends \core\task\scheduled_task {
                     // Entry in a valid destination calendar, update entry.
                     $this->log("Updating existing entry in calendar $destCal", 2);
                     $categories = json_decode($event->areasjson);
-                    // Public will only be added to SS cal for approved events.
-                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && $approved) {
-                        $categories = $this->make_public_categories($categories);
+                    // If entry appears in ps and ss calendars, public will only be added to SS cal for approved events.
+                    if (in_array('cgs_calendar_ss@cgs.act.edu.au', $destinationCalendars) && in_array('cgs_calendar_ps@cgs.act.edu.au', $destinationCalendars)) {
+                        if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && ($approved || $event->pushpublic)) {
+                            $categories = $this->make_public_categories($categories);
+                        }
+                    } else {
+                        if ($event->displaypublic && ($approved || $event->pushpublic)) {
+                            $categories = $this->make_public_categories($categories);
+                        }
                     }
                     // Colouring category.
                     $colourcat = explode('/', $event->colourcategory);
@@ -185,8 +192,15 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $this->log("Creating new entry in calendar $destCal", 2);
                 $categories = json_decode($event->areasjson);
                 // Public categories.
-                if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && ($approved || $event->pushpublic)) {
-                    $categories = $this->make_public_categories($categories);
+                // If entry appears in ps and ss calendars, public will only be added to SS cal for approved events.
+                if (in_array('cgs_calendar_ss@cgs.act.edu.au', $destinationCalendars) && in_array('cgs_calendar_ps@cgs.act.edu.au', $destinationCalendars)) {
+                    if ($destCal == 'cgs_calendar_ss@cgs.act.edu.au' && $event->displaypublic && ($approved || $event->pushpublic)) {
+                        $categories = $this->make_public_categories($categories);
+                    }
+                } else {
+                    if ($event->displaypublic && ($approved || $event->pushpublic)) {
+                        $categories = $this->make_public_categories($categories);
+                    }
                 }
                 // Colouring category.
                 $colourcat = explode('/', $event->colourcategory);
