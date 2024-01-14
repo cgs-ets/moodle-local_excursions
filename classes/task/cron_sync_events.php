@@ -271,6 +271,7 @@ class cron_sync_events extends \core\task\scheduled_task {
             if (in_array($cat, $publiccats)) {
                 return [$cat, $cat . ' Public'];
             }
+            return [$cat];
         }, $categories);
         $categories = call_user_func_array('array_merge', $categories);
         $categories = array_values(array_unique($categories));
