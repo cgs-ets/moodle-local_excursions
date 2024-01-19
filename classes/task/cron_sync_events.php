@@ -211,7 +211,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $eventdata->subject = $event->activityname;
                 $eventdata->body = new \stdClass();
                 $eventdata->body->contentType = "HTML";
-                $eventdata->body->content = $event->notes;
+                $eventdata->body->content = nl2br($event->notes);
                 if (!empty($categories)) {
                     $eventdata->categories = $categories;
                 }
