@@ -218,6 +218,7 @@ class form_event extends \moodleform {
         $mform->addElement('advcheckbox', 'assessment', 'This is an assessment', '', [], [0,1]);
         
         // Get courses under Senior Academic
+        $courses = array();
         $cat = $DB->get_record('course_categories', array('idnumber' => 'SEN-ACADEMIC'));
         if ($cat) {
             $cat = \core_course_category::get($cat->id);
@@ -226,7 +227,6 @@ class form_event extends \moodleform {
                 $courses[$courseinfo->id] = $courseinfo->fullname;
             }
         }
-
         // Get courses under 2024
         $cat = $DB->get_record('course_categories', array('idnumber' => '2024'));
         if ($cat) {
@@ -236,9 +236,9 @@ class form_event extends \moodleform {
                 $courses[$courseinfo->id] = $courseinfo->fullname;
             }
         }
-
-
-        asort($courses);
+        if ($courses) {
+            asort($courses);
+        }
         $mform->addElement('select', 'courseselect', 'Course', $courses);
         $mform->setType('courseselect', PARAM_RAW);
         $mform->hideIf('courseselect', 'assessment', 'neq', 1);
@@ -252,7 +252,7 @@ class form_event extends \moodleform {
         /*----------------------
         *   Notes
         *----------------------*/
-        $mform->addElement('textarea', 'notes', "Details", 'wrap="virtual" rows="7" cols="30"');
+        $mform->addElement('textarea', 'notes', 'Details <span style="display: block;font-weight: 400;font-size: 90%;">Information placed here will flow through to the staff and public calendars, please include a brief description, who is attending or is required to attend</span>', 'wrap="virtual" rows="7" cols="30"');
         $mform->setType('notes', PARAM_TEXT);
 
         
