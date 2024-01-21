@@ -265,6 +265,9 @@ class cron_sync_events extends \core\task\scheduled_task {
     }
 
     private function make_public_categories($categories) {
+        if (in_array("CGS Board", $categories)) {
+            return $categories;
+        }
         // Some categories need 'public' appended.
         $publiccats = ['Primary School', 'Senior School', 'Whole School', 'ELC', 'Red Hill', 'Northside', 'Website', 'Alumni'];
         $categories = array_map(function($cat) use ($publiccats) {
