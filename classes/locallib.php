@@ -493,6 +493,9 @@ class locallib extends local_excursions_config {
             );
         }
 
+        // Sort by course name.
+        usort($out, fn($a, $b) => $a['txt'] <=> $b['txt']);
+
         return $out;
     }
 
@@ -513,6 +516,10 @@ class locallib extends local_excursions_config {
                 );
             }
         }
+        
+        // Sort by course name.
+        usort($out, fn($a, $b) => $a['txt'] <=> $b['txt']);
+        
         return $out;
     }
 
