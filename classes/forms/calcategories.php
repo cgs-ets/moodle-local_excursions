@@ -37,9 +37,6 @@ $categories = array(
             'title' => 'Educational Opportunity',
             'value' => 'Whole School/Educational Opportunity',
         ],
-
-
-
         [
             'id' => 'Community',
             'title' => 'Community',
@@ -49,6 +46,16 @@ $categories = array(
             'id' => 'CGSBoard',
             'title' => 'CGS Board',
             'value' => 'Whole School/CGS Board',
+        ],
+        [
+            "id" => "websiteexternal",
+            'title' => 'Website External',
+            'value' => 'Whole School/Website External',
+        ],
+        [
+            "id" => "Alumni",
+            'title' => 'Alumni Website',
+            'value' => 'Whole School/Alumni Website',
         ],
     ],
     'primaryschool' => [
