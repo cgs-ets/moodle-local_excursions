@@ -32,7 +32,6 @@
       <td><strong>{{eventname}}</strong></td>
       <td>{{#assessmenturl}}<strong><a class="assessmentlink" data-eventid="{{id}}" target="_blank" href="{{assessmenturl}}">Link</a></strong>{{/assessmenturl}} {{location}}</td>
       <td><div><img class="round userphoto" height="24" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
-      <td>Calendar entry only</td>
       <td>
         {{#usercanedit}}
           <div class="actions">
@@ -51,38 +50,6 @@
     <td class="cell c-name"><strong>{{activityname}}</strong></td>
     <td class="cell c-location">{{#assessmenturl}}<strong><a class="assessmentlink" data-eventid="{{eventid}}" target="_blank" href="{{assessmenturl}}">Link</a></strong>{{/assessmenturl}} {{location}}</td>
     <td class="cell c-staffincharge"><img class="round userphoto" height="24" title="{{staffinchargeinfo.fullname}}" src="{{{staffinchargeinfo.userphoto}}}"> {{staffinchargeinfo.fullname}}</td>
-    <td class="cell c-status {{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}">
-        {{#statushelper.isautosave}}
-            <span class="badge badge-secondary">
-                {{#str}}status:autosave, local_excursions{{/str}}
-            </span>
-        {{/statushelper.isautosave}}
-        {{#statushelper.isdraft}}
-            <span class="badge badge-secondary">
-                {{#str}}status:draft, local_excursions{{/str}}
-            </span>
-        {{/statushelper.isdraft}}
-        {{#statushelper.inreview}}
-            <span class="badge badge-warning">
-                {{#str}}status:inreview, local_excursions, {{stepname}}{{/str}}
-            </span>
-            {{#iswaitingforyou}}
-                <span class="badge badge-danger">
-                    {{#str}}status:waitingforyou, local_excursions{{/str}}
-                </span>
-            {{/iswaitingforyou}}
-        {{/statushelper.inreview}}
-        {{#statushelper.isapproved}}
-            <span class="badge badge-success">
-                {{#str}}status:approved, local_excursions{{/str}}
-            </span>
-        {{/statushelper.isapproved}}
-        {{#statushelper.iscancelled}}
-            <span class="badge badge-danger">
-                {{#str}}status:cancelled, local_excursions{{/str}}
-            </span>
-        {{/statushelper.iscancelled}}
-    </td>
     <td class="cell c-actions lastcol">
       {{#usercanedit}}
         <div class="actions">
