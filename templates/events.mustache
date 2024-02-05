@@ -74,7 +74,19 @@
       <td>{{#areas}}<span class="badge badge-pill badge-light">{{.}}</span>{{/areas}}</td>
       <!--<td>{{shortdetails}}</td>-->
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
-      <td>{{#isactivity}}Excursion{{/isactivity}}{{^isactivity}}Cal entry{{/isactivity}} </td>
+      <td>
+        {{#isassessment}}
+          Assessment
+        {{/isassessment}}
+        {{^isassessment}}
+          {{#isactivity}}
+            Excursion
+          {{/isactivity}}
+          {{^isactivity}}
+            Cal entry
+          {{/isactivity}} 
+        {{/isassessment}}
+      </td>
       <td>
         <div class="actions">
           

@@ -273,14 +273,10 @@ class form_event extends \moodleform {
         *   Excursion or Event
         *----------------------*/
         $attributes = '';
-        // Disable conversion from excursion to event.
-            //if ($edit && isset($event->isactivity) && $event->isactivity) {
-            //    $attributes = array('disabled' => 'true');
-            //}
         $radioarray = array();
         $radioarray[] = $mform->createElement('radio', 'entrytype', '', '<b>Excursion or Incursion</b> Select this option if you need access to admin/budget approval, staffing list, student list, parent permissions, or risk assessment approval.', 'excursion', $attributes);
         $radioarray[] = $mform->createElement('radio', 'entrytype', '', '<b>Calendar entry only</b> Do not select this option if paperwork and approvals will be required later', 'event', $attributes);
-        $mform->addElement('html', '<br><strong>What type of entry is this?</strong>');
+        $mform->addElement('html', '<div class="entry-type-heading"><br><strong>What type of entry is this?</strong></div>');
         $mform->setDefault('entrytype', 'excursion');
         $mform->addGroup($radioarray, 'entrytype', '', array(' '), false);
 

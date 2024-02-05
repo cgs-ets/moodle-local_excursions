@@ -38,15 +38,15 @@ module.exports = function(grunt) {
      * the rename property of files array when building dynamically:
      * http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
      *
-     * @param {String} destPath the current destination
-     * @param {String} srcPath the  matched src path
+     * @param {String} dst the current destination
+     * @param {String} src the  matched src path
      * @return {String} The rewritten destination path.
      */
-    var uglifyRename = function(destPath, srcPath) {
-        destPath = srcPath.replace('src', 'build');
-        destPath = destPath.replace('.js', '.min.js');
-        destPath = path.resolve(cwd, destPath);
-        return destPath;
+    var uglifyRename = function (dst, src) {
+        dst = src.replace('src', 'build');
+        dst = dst.replace('.js', '.min.js');
+        dst = path.resolve(cwd, dst);
+        return dst;
     };
 
     // Project configuration.
@@ -55,8 +55,16 @@ module.exports = function(grunt) {
             amd: {
                 files: [{
                     expand: true,
-                    src: '**/amd/src/*.js',
-                    rename: uglifyRename
+                    src: 'amd/src/*.js',
+                    dest: '',
+                    cwd: '.',
+                    rename: function (dst, src) {
+                      // To keep the source js files and make new files as `*.min.js`:
+                      dst = src.replace('src', 'build');
+                      dst = dst.replace('.js', '.min.js');
+                      console.log(dst)
+                      return dst;
+                    }
                 }],
                 options: {report: 'min'}
             }

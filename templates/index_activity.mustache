@@ -47,7 +47,14 @@
       <td><strong>{{eventname}}</strong></td>
       <td>{{#isassessment}}<a target="_blank" href="{{assessmenturl}}">Link</a>{{/isassessment}} {{location}}</td>
       <td><div><img class="rounded-circle" height="18" src="{{owner.photourl}}"> <span>{{owner.fullname}}</span></div></td>
-      <td>Calendar entry only</td>
+      <td>
+        {{#isassessment}}
+          Assessment
+        {{/isassessment}}
+        {{^isassessment}}
+            Calendar entry
+        {{/isassessment}}
+      </td>
       <td>
         <div class="actions">
           <a class="btn btn-secondary" href="{{editurl}}">Edit</a>

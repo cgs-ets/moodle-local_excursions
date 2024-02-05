@@ -100,6 +100,20 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       // Initialise owner.
       self.owner = RecipientSelector.init('owner', 'staff', 0);
 
+      // Assessment
+      self.rootel.on('change', 'input[name="assessment"]', function(e) {
+        var checkbox = $(this);
+        if(checkbox.is(':checked')) {
+          self.rootel.find('.entry-type-heading').hide();
+          self.rootel.find('#fgroup_id_entrytype').hide();
+          var $radios = $('input:radio[name=entrytype]');
+          $radios.filter('[value=event]').prop('checked', true);
+        } else {
+          self.rootel.find('.entry-type-heading').show();
+          self.rootel.find('#fgroup_id_entrytype').show();
+        }
+    });
+
       /*
       // Set up categories tree.
       if(typeof Tree != 'undefined' && typeof calcategories != 'undefined') {
