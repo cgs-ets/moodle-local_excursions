@@ -740,6 +740,7 @@ class eventlib {
             'dateendReadable' => date('j M', $event->timeend),
             'dayStart' => date('j', $event->timestart),
             'monyear' => date('M Y', $event->timestart),
+            'monyearEnd' => date('M Y', $event->timeend),
             'dayEnd' => date('j', $event->timeend),
             'dayStartSuffix' => date('S', $event->timestart),
             'dayEndSuffix' => date('S', $event->timeend),
