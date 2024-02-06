@@ -48,12 +48,12 @@ $categories = array(
             'value' => 'Whole School/CGS Board',
         ],
         [
-            "id" => "websiteexternal",
+            "id" => "wsWebsite",
             'title' => 'Website External',
             'value' => 'Whole School/Website External',
         ],
         [
-            "id" => "Alumni",
+            "id" => "wsAlumni",
             'title' => 'Alumni Website',
             'value' => 'Whole School/Alumni Website',
         ],
@@ -93,6 +93,11 @@ $categories = array(
             'id' => 'psedop',
             'title' => 'Educational Opportunity',
             'value' => 'Primary School/Educational Opportunity',
+        ],
+        [
+            'id' => 'Community',
+            'title' => 'Community',
+            'value' => 'Primary School/Community',
         ],
 
 
@@ -156,6 +161,16 @@ $categories = array(
             'title' => 'Year 6',
             'value' => 'Primary School/Year 6',
         ],
+        [
+            "id" => "psWebsite",
+            'title' => 'Website External',
+            'value' => 'Primary School/Website External',
+        ],
+        [
+            "id" => "psAlumni",
+            'title' => 'Alumni Website',
+            'value' => 'Primary School/Alumni Website',
+        ],
     ],
     'seniorschool' => [
         [
@@ -193,7 +208,11 @@ $categories = array(
             'title' => 'Educational Opportunity',
             'value' => 'Senior School/Educational Opportunity',
         ],
-
+        [
+            'id' => 'Community',
+            'title' => 'Community',
+            'value' => 'Senior School/Community',
+        ],
         [
             'id' => 'Academic',
             'title' => 'Academic',
@@ -238,6 +257,16 @@ $categories = array(
             'id' => 'Year12',
             'title' => 'Year 12',
             'value' => 'Senior School/Year 12',
+        ],
+        [
+            "id" => "ssWebsite",
+            'title' => 'Website External',
+            'value' => 'Senior School/Website External',
+        ],
+        [
+            "id" => "ssAlumni",
+            'title' => 'Alumni Website',
+            'value' => 'Senior School/Alumni Website',
         ],
     ],
 );

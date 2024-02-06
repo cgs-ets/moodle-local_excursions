@@ -401,6 +401,16 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
       var categoriesjson = $('input[name="categoriesjson"]')
       categoriesjson.val(JSON.stringify(selected))
 
+      // If Website or Alumni is selected, tick public.
+      var hasExternal = 
+        selected.includes('Whole School/Website External') || selected.includes('Whole School/Alumni Website') ||
+        selected.includes('Primary School/Website External') || selected.includes('Primary School/Alumni Website') ||
+        selected.includes('Senior School/Website External') || selected.includes('Senior School/Alumni Website')
+      if (hasExternal) {
+        var checkbox = $('input:checkbox[name=displaypublic]');
+        checkbox.prop('checked', true);
+      }
+
       // If CGS Board is selected, hide public option.
       var hasBoard = selected.includes('Whole School/CGS Board')
       if (!selected.length || hasBoard) {
