@@ -197,6 +197,9 @@ class activity_exporter extends persistent_exporter {
             'monyear' => [
                 'type' => PARAM_RAW,
             ],
+            'monyearEnd' => [
+                'type' => PARAM_RAW,
+            ],
         ];
     }
 
@@ -302,6 +305,11 @@ class activity_exporter extends persistent_exporter {
         $monyear = '';
         if ($this->data->timestart > 0) {
             $monyear = date('M Y', $this->data->timestart);
+        }
+
+        $monyearEnd = '';
+        if ($this->data->timestart > 0) {
+            $monyearEnd = date('M Y', $this->data->timeend);
         }
 
         $statushelper = locallib::status_helper($this->data->status);
@@ -561,6 +569,7 @@ class activity_exporter extends persistent_exporter {
             'dayEndSuffix' => date('S', $this->data->timeend),
             'duration' => $duration,
             'monyear' => $monyear,
+            'monyearEnd' => $monyearEnd,
 	    ];
     }
 

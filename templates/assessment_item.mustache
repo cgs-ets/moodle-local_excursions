@@ -27,7 +27,7 @@
 {{#calentryonly}}
   <tr class="event" data-eventid={{id}}>
       <td>
-        {{dayStart}}<small>{{dayStartSuffix}}</small> {{monyear}} {{timeendReadable}}
+        {{dayEnd}}<small>{{dayEndSuffix}}</small> {{monyearend}} {{timeendReadable}}
       </td>
       <td><strong>{{eventname}}</strong></td>
       <td>{{#assessmenturl}}<strong><a class="assessmentlink" data-eventid="{{id}}" target="_blank" href="{{assessmenturl}}">Link</a></strong>{{/assessmenturl}} {{location}}</td>
@@ -45,7 +45,7 @@
 {{^calentryonly}}
   <tr data-id="{{id}}" class="activity {{#statushelper.isautosave}}is-autosave{{/statushelper.isautosave}}{{#statushelper.isdraft}}is-draft{{/statushelper.isdraft}}{{#statushelper.inreview}}in-review{{/statushelper.inreview}}{{#ispast}}past{{/ispast}}">
     <td class="cell">
-      {{dayStart}}<small>{{dayStartSuffix}}</small> {{monyear}} {{timeendReadable}}
+      {{dayEnd}}<small>{{dayEndSuffix}}</small> {{monyearend}} {{timeendReadable}}
     </td>
     <td class="cell c-name"><strong>{{activityname}}</strong></td>
     <td class="cell c-location">{{#assessmenturl}}<strong><a class="assessmentlink" data-eventid="{{eventid}}" target="_blank" href="{{assessmenturl}}">Link</a></strong>{{/assessmenturl}} {{location}}</td>

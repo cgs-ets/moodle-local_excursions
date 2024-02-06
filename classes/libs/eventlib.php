@@ -551,7 +551,7 @@ class eventlib {
                  WHERE e.deleted = 0
                    AND ee.isactivity = 1
                    AND ee.assessment = 1
-                   AND e.timestart >= $thisyear
+                   AND (e.timestart >= $thisyear OR e.timeend >= $thisyear)
                    $usersql
         ";
         $activities = array();
