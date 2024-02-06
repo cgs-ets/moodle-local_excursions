@@ -572,7 +572,7 @@ class eventlib {
             WHERE isactivity = 0
             AND deleted = 0
             AND assessment = 1
-            AND timestart >= $thisyear
+            AND (timestart >= $thisyear OR timeend >= $thisyear)
             $usersql
         ";
         $records = $DB->get_records_sql($sql, []);
