@@ -370,11 +370,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     EventForm.prototype.categoryChanged = function (checkbox)  {
       var self = this;
 
-      // If checked, make sure parent is select too.
+      // If checked, make sure parent is select too - BUT NOT FOR PS.
       if (checkbox) {
         if (checkbox.checked) {
           var first = $(checkbox).parent().children(":first")
-          if (!first.checked) {
+          if (!first.checked && first.val() != "Primary School") {
             first.prop( "checked", true );
           }
         } else {
@@ -382,7 +382,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
           var checkedchildren = $(checkbox).parent().children(":not(:first):checked")
           if (checkedchildren.length) {
             var first = $(checkbox).parent().children(":first")
-            if (!first.checked) {
+            if (!first.checked && first.val() != "Primary School") {
               first.prop( "checked", true );
             }
           }

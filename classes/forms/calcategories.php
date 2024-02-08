@@ -38,7 +38,7 @@ $categories = array(
             'value' => 'Whole School/Educational Opportunity',
         ],
         [
-            'id' => 'Community',
+            'id' => 'wsCommunity',
             'title' => 'Community',
             'value' => 'Whole School/Community',
         ],
@@ -95,7 +95,7 @@ $categories = array(
             'value' => 'Primary School/Educational Opportunity',
         ],
         [
-            'id' => 'Community',
+            'id' => 'psCommunity',
             'title' => 'Community',
             'value' => 'Primary School/Community',
         ],
@@ -209,7 +209,7 @@ $categories = array(
             'value' => 'Senior School/Educational Opportunity',
         ],
         [
-            'id' => 'Community',
+            'id' => 'ssCommunity',
             'title' => 'Community',
             'value' => 'Senior School/Community',
         ],
