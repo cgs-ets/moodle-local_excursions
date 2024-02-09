@@ -315,6 +315,7 @@ class activity extends persistent {
             }
             $event->location = $activity->get('location');
             $event->notes = $activity->get('notes');
+            $event->timemodified = time();
             $DB->update_record('excursions_events', $event);
         }
 
