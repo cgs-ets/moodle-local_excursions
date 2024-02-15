@@ -126,6 +126,7 @@ class form_activity extends \moodleform {
             $radioarray = array();
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Primary School', 'primary', '');
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Senior School', 'senior', '');
+            $radioarray[] = $mform->createElement('radio', 'campus', '', 'Whole School', 'whole', '');
             $mform->addGroup($radioarray, 'campus', get_string('activityform:campus', 'local_excursions'), array(' '), false);
             //$mform->addElement('html', '<div id="fitem_id_campusdesc" class="form-group row fitem"><div class="col-md-3"></div><div class="campus-desc col-md-9">' . get_string('activityform:campus_desc', 'local_excursions') . "</div></div>");
 

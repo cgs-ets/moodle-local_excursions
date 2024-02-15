@@ -296,7 +296,7 @@ class activity extends persistent {
         // Generate permissions based on student list.
         static::generate_permissions($data->id);
 
-        // If sending for review or saving after already in review, determine the approvers based on student list campuses.
+        // If sending for review or saving after already in review, determine the approvers based on campus.
         if ($data->status == locallib::ACTIVITY_STATUS_INREVIEW ||
             $data->status == locallib::ACTIVITY_STATUS_APPROVED) {
             static::generate_approvals($originalactivity, $activity);
@@ -394,15 +394,11 @@ class activity extends persistent {
         // Workflow.
         switch ($newactivity->get('campus')) {
             case 'senior': {
-                // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, July 21, 2021 9:44:18 AM.
-                $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1626824658);
-                if (!$ignoreactivity) { 
-                    // Senior School - 1st approver.
-                    $approval->type = 'senior_ra';
-                    $approval->sequence = 1;
-                    $approval->description = locallib::WORKFLOW['senior_ra']['name'];
-                    $approvals[] = clone $approval;
-                }
+                // Senior School - 1st approver.
+                $approval->type = 'senior_ra';
+                $approval->sequence = 1;
+                $approval->description = locallib::WORKFLOW['senior_ra']['name'];
+                $approvals[] = clone $approval;
 
                 // Senior School - 2nd approver.
                 $approval->type = 'senior_admin';
@@ -418,27 +414,36 @@ class activity extends persistent {
                 break;
             }
             case 'primary': {
-
-                // To prevent this from affecting old activites, do not apply to old approved activities. Activities prior to Wednesday, Nov 23, 2021 11:18 AM.
-                $ignoreactivity = ($originalactivity->get('status') == locallib::ACTIVITY_STATUS_APPROVED && $originalactivity->get('timecreated') < 1637626717);
-                if (!$ignoreactivity) { 
-                    // Primary School - 1st approver.
-                    $approval->type = 'primary_ra';
-                    $approval->sequence = 1;
-                    $approval->description = locallib::WORKFLOW['primary_ra']['name'];
-                    $approvals[] = clone $approval;
-                }
-
                 // Primary School - 1st approver.
-                $approval->type = 'primary_admin';
+                $approval->type = 'primary_ra';
                 $approval->sequence = 1;
-                $approval->description = locallib::WORKFLOW['primary_admin']['name'];
+                $approval->description = locallib::WORKFLOW['primary_ra']['name'];
                 $approvals[] = clone $approval;
 
                 // Primary School - 2nd approver.
-                $approval->type = 'primary_hops';
+                $approval->type = 'primary_admin';
                 $approval->sequence = 2;
+                $approval->description = locallib::WORKFLOW['primary_admin']['name'];
+                $approvals[] = clone $approval;
+
+                // Primary School - 3rd approver.
+                $approval->type = 'primary_hops';
+                $approval->sequence = 3;
                 $approval->description = locallib::WORKFLOW['primary_hops']['name'];
+                $approvals[] = clone $approval;
+                break;
+            }
+            case 'whole': {    
+                // Whole School - 1st approver.
+                $approval->type = 'whole_admin';
+                $approval->sequence = 1;
+                $approval->description = locallib::WORKFLOW['whole_admin']['name'];
+                $approvals[] = clone $approval;
+
+                // Whole School - 2nd approver.
+                $approval->type = 'whole_final';
+                $approval->sequence = 2;
+                $approval->description = locallib::WORKFLOW['whole_final']['name'];
                 $approvals[] = clone $approval;
                 break;
             }
@@ -1098,7 +1103,7 @@ class activity extends persistent {
                 $approval->skip == 0 ) {
 
                 $config = get_config('local_excursions');
-                if ($config->checkabsencesql) {
+                if ($config->checkabsencesql && $config->dbhost) {
                     $externalDB = \moodle_database::get_driver_instance($config->dbtype, 'native', true);
                     $externalDB->connect($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname, '');
                     $sql = $config->checkabsencesql . ' :username, :leavingdate, :returningdate, :comment';
