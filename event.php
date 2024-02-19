@@ -102,7 +102,7 @@ if (!empty($formdata)) {
     $event = $DB->get_record('excursions_events', array('id' => $eventid));
 
     // Creating a new excursion.
-    if ($formdata->entrytype == 'excursion') {
+    if ($formdata->entrytype == 'excursion' && $formdata->assessment != 1) {
         // Redirect to edit.
         $activitymanageurl = new moodle_url('/local/excursions/activity.php', array(
             'edit' => $event->activityid,

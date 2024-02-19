@@ -256,7 +256,6 @@ class eventlib {
         }
     
         return $event->id;
-       
     }
 
     /*public static function create_new_series_from_data($event, $dates) {
