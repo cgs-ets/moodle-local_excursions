@@ -177,6 +177,10 @@ class eventlib {
             $DB->update_record('excursions_events', $event);
         }
 
+        if ($formdata->assessment == 1) {
+            $formdata->entrytype = 'event';
+        }
+
         if ($formdata->entrytype == 'excursion') {  
             // Sync with activity data.
             if (!empty($event->activityid)) {
