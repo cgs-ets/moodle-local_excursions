@@ -958,6 +958,7 @@ class activity extends persistent {
         $sql = "SELECT *
                   FROM {" . static::TABLE . "}
                  WHERE remindersprocessed = 0
+                   AND deleted = 0
                    AND timeend <= {$now}
                    AND status = " . locallib::ACTIVITY_STATUS_APPROVED;
         $records = $DB->get_records_sql($sql, null);
@@ -982,7 +983,8 @@ class activity extends persistent {
                    AND (
                     status = " . locallib::ACTIVITY_STATUS_DRAFT ." OR 
                     status = " . locallib::ACTIVITY_STATUS_INREVIEW . "
-                   )";
+                   )
+                   AND deleted = 0";
         $records = $DB->get_records_sql($sql, null);
         $activities = array();
         foreach ($records as $record) {
