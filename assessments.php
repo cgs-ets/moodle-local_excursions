@@ -34,6 +34,7 @@ require_login();
 locallib::require_cgs_staff();
 
 $user = optional_param('user', '', PARAM_RAW);
+$course = optional_param('course', 0, PARAM_INT);
 $indexurl = new moodle_url('/local/excursions/index.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -46,14 +47,16 @@ $PAGE->requires->js_call_amd('local_excursions/assessments', 'init');
 $output = $OUTPUT->header();
 
 $filters_user = locallib::get_events_filter_user($user);
+$filters_course = locallib::get_events_filter_course($course);
 $data = new \stdClass();
 $data->events = [];
-$data->events = eventlib::get_assessments($user);
+$data->events = eventlib::get_assessments($user, $course);
 //echo "<pre>"; var_export($data->events); exit;
 $data->user = $user;
 $data->indexurl = $indexurl;
 $data->issearch = true;
 $data->filters_user = $filters_user;
+$data->filters_course = $filters_course;
 
 
 // Render the announcement list.

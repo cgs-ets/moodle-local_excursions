@@ -435,14 +435,20 @@ class activity extends persistent {
             }
             case 'whole': {    
                 // Whole School - 1st approver.
-                $approval->type = 'whole_admin';
+                $approval->type = 'whole_ra';
                 $approval->sequence = 1;
-                $approval->description = locallib::WORKFLOW['whole_admin']['name'];
+                $approval->description = locallib::WORKFLOW['whole_ra']['name'];
                 $approvals[] = clone $approval;
 
                 // Whole School - 2nd approver.
-                $approval->type = 'whole_final';
+                $approval->type = 'whole_admin';
                 $approval->sequence = 2;
+                $approval->description = locallib::WORKFLOW['whole_admin']['name'];
+                $approvals[] = clone $approval;
+
+                // Whole School - 3rd approver.
+                $approval->type = 'whole_final';
+                $approval->sequence = 3;
                 $approval->description = locallib::WORKFLOW['whole_final']['name'];
                 $approvals[] = clone $approval;
                 break;

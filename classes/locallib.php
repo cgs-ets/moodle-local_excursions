@@ -252,6 +252,47 @@ class locallib extends local_excursions_config {
         return $filters;
     }
 
+    public static function get_events_filter_course($current = 0) {
+        global $USER;
+        $options = array(0 => 'Any');
+        $options = $options + static::get_course_list();
+        $filters  = '<select class="filter-select" name="course">';
+        $filters .= implode("", array_map(function($o, $i) use ($current) { 
+            $selected = ($i ==  $current) ? 'selected="true"' : '';
+            return '<option ' . $selected . ' value="' . $i . '">' . $o . '</option>';
+        }, $options, array_keys($options)));
+        $filters .= '</select>';
+        return $filters;
+    }
+
+    public static function get_course_list() {
+        global $DB;
+
+        // Get courses under Senior Academic
+        $courses = array();
+        $cat = $DB->get_record('course_categories', array('idnumber' => 'SEN-ACADEMIC'));
+        if ($cat) {
+            $cat = \core_course_category::get($cat->id);
+            $coursesinfo = $cat->get_courses(['recursive'=>true]);
+            foreach($coursesinfo as $courseinfo) {
+                $courses[$courseinfo->id] = $courseinfo->fullname;
+            }
+        }
+        // Get courses under current year
+        $cat = $DB->get_record('course_categories', array('idnumber' => date("Y")));
+        if ($cat) {
+            $cat = \core_course_category::get($cat->id);
+            $coursesinfo = $cat->get_courses(['recursive'=>true]);
+            foreach($coursesinfo as $courseinfo) {
+                $courses[$courseinfo->id] = $courseinfo->fullname;
+            }
+        }
+        if ($courses) {
+            asort($courses);
+        }
+        return $courses;
+    }
+
     public static function get_approver_types($username = null) {
         global $USER;
 

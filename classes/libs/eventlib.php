@@ -532,7 +532,7 @@ class eventlib {
         return $merged;
     }
 
-    public static function get_assessments($user) {
+    public static function get_assessments($user, $course) {
         global $DB, $OUTPUT, $USER;
     
         $events = array();
@@ -542,6 +542,12 @@ class eventlib {
         $usersql = '';
         if ($user == 'self') {
             $usersql = "AND (ee.creator = '$USER->username' OR ee.owner = '$USER->username') ";
+        }       
+        
+        // Formulate the course condition.
+        $coursesql = '';
+        if ($course) {
+            $coursesql = "AND ee.courseid = $course ";
         }
 
         // Get assessments that are activities.
@@ -556,6 +562,7 @@ class eventlib {
                    AND ee.assessment = 1
                    AND (e.timestart >= $thisyear OR e.timeend >= $thisyear)
                    $usersql
+                   $coursesql
         ";
         $activities = array();
         $records = $DB->get_records_sql($sql, []);
@@ -577,6 +584,7 @@ class eventlib {
             AND assessment = 1
             AND (timestart >= $thisyear OR timeend >= $thisyear)
             $usersql
+            $coursesql
         ";
         $records = $DB->get_records_sql($sql, []);
         foreach ($records as $event) {
