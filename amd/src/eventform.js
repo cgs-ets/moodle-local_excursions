@@ -60,6 +60,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.areastree = null;
         self.categoriestree = null;
         self.conflictCheckDone = false;
+        self.doingsum = false;
 
         ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(function(modal) {
           modal.setTitle('Conflicts found');
@@ -112,43 +113,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
           self.rootel.find('.entry-type-heading').show();
           self.rootel.find('#fgroup_id_entrytype').show();
         }
-    });
-
-      /*
-      // Set up categories tree.
-      if(typeof Tree != 'undefined' && typeof calcategories != 'undefined') {
-        var categoriesjson = $('input[name="categoriesjson"]').first();
-        var categoriesval = categoriesjson.val()
-        var values = categoriesval ? JSON.parse(categoriesval) : [];
-        self.categoriestree = new Tree('.categoriescontainer', {
-          data: calcategories,
-          closeDepth: 3,
-          loaded: function() {
-            this.values = values;
-          },
-          onChange: function () {
-            categoriesjson.val(JSON.stringify(this.values));
-          }
-        });
-      }
-
-      // Set up areas tree.
-      if(typeof Tree != 'undefined' && typeof eventareas != 'undefined') {
-        var areasjson = $('input[name="areasjson"]').first();
-        var areasval = areasjson.val()
-        var values = areasval ? JSON.parse(areasval) : [];
-        self.areastree = new Tree('.areascontainer', {
-          data: eventareas,
-          closeDepth: 3,
-          loaded: function() {
-            this.values = values;
-          },
-          onChange: function () {
-            areasjson.val(JSON.stringify(this.values));
-          }
-        });
-      }
-      */
+      });
 
       self.watchCategories();
       self.categoryChanged();
@@ -173,9 +138,11 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
       self.rootel.on('click', '#id_submitbutton', function(e) {
         
-        if (self.conflictCheckDone) {
+        if (self.conflictCheckDone || self.doingsum) {
           return;
         }
+
+        self.doingsum = true;
 
         e.preventDefault()
 
@@ -294,68 +261,12 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     };
 
 
-      
-
-
-    /*EventForm.prototype.checkRecurring = function () {
-      var self = this;
-      $('#calculated-dates').html('')
-
-      let editseries = $('input[name="editseries"]:checked').val()
-      if (editseries == 'event') {
-        return;
-      }
-
-      let recurring = $('input[name="recurring"]:checked').val()
-      if (!recurring) {
-        return
-      }
-      let timestart = self.convertFieldsToDate('timestart');
-      let timeend = self.convertFieldsToDate('timeend');
-      let recurringpattern = $('input[name="recurringpattern"]:checked').val()
-      let recurringdailypattern = $('input[name="recurringdailypattern"]:checked').val()
-      let recuruntil =self.convertFieldsToDate('recuruntil');
-      
-      Ajax.call([{
-        methodname: 'local_excursions_formcontrol',
-        args: { 
-          action: 'expand_dates',
-          data: JSON.stringify({
-            recurring: {
-              recurringdailypattern: recurringdailypattern,
-              recurringpattern: recurringpattern,
-              recuruntil: recuruntil,
-            },
-            timestart: timestart,
-            timeend: timeend,
-          })
-        },
-        done: function (response) {
-          let data = JSON.parse(response);
-          if (data.datesReadable === undefined) {
-            return;
-          }
-          if (data.datesReadable.length) {
-            let dates = data.datesReadable.map(date => {
-              return '<li>' + date.start + ' - ' + date.end + '</li>'
-            })
-            $('#calculated-dates').html('The following occurrences will be created: <br><ul>' + dates.join(' ') + '</ul>')
-          }
-        }
-      }]);
-    }*/
-
-
     EventForm.prototype.submitForm = function () {
       var self = this;
 
-      //window.addEventListener('beforeunload', function (event) {
-      //  event.stopImmediatePropagation();
-      //});
-
       self.modal.hide()
-      //self.form.submit()
       self.conflictCheckDone = true;
+      self.doingsum = false;
       $('#id_submitbutton').click()
     }
 
@@ -470,72 +381,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
     EventForm.prototype.initCategorySelect = function () {
       
       
-
     };
-
-
-    /*EventForm.prototype.setupCheckRecurring = function () {
-      var self = this;
-      $('input[name="editseries"]').change(function(){
-        self.checkRecurring()
-      })
-      $('input[name="recurring"]').change(function(){
-        self.checkRecurring()
-      })
-      $('input[name="recurringpattern"]').change(function(){
-        self.checkRecurring()
-      })
-      $('input[name="recurringdailypattern"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="recuruntil[day]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="recuruntil[month]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="recuruntil[year]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="recuruntil[hour]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="recuruntil[minute]"]').change(function(){
-        self.checkRecurring()
-      })
-      
-      $('select[name="timestart[day]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timestart[month]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timestart[year]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timestart[hour]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timestart[minute]"]').change(function(){
-        self.checkRecurring()
-      })
-
-      $('select[name="timeend[day]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timeend[month]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timeend[year]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timeend[hour]"]').change(function(){
-        self.checkRecurring()
-      })
-      $('select[name="timeend[minute]"]').change(function(){
-        self.checkRecurring()
-      })
-    };*/
 
     return {
         init: init

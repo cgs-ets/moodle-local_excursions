@@ -131,7 +131,8 @@ class cron_sync_planning extends \core\task\scheduled_task {
                     $eventdata->end->timeZone = "AUS Eastern Standard Time";
                     $eventdata->location = new \stdClass();
                     $eventdata->location->displayName = $event->location;
-                    $eventdata->showAs = $approved ? 'busy' : 'tentative';
+                    $multiday = date('Y-m-d', $event->timestart) !== date('Y-m-d', $event->timeend);
+                    $eventdata->showAs = $approved ? ($multiday ? 'free': 'busy') : 'tentative';
                     if (strpos($eventdata->start->dateTime, 'T00:00:00') !== false &&
                         strpos($eventdata->end->dateTime, 'T00:00:00') !== false) {
                         $eventdata->isAllDay = true;
@@ -176,7 +177,8 @@ class cron_sync_planning extends \core\task\scheduled_task {
                     $eventdata->location = new \stdClass();
                     $eventdata->location->displayName = $event->location;
                     $eventdata->isOnlineMeeting = false;
-                    $eventdata->showAs = $approved ? 'busy' : 'tentative';
+                    $multiday = date('Y-m-d', $event->timestart) !== date('Y-m-d', $event->timeend);
+                    $eventdata->showAs = $approved ? ($multiday ? 'free': 'busy') : 'tentative';
                     if (strpos($eventdata->start->dateTime, 'T00:00:00') !== false &&
                         strpos($eventdata->end->dateTime, 'T00:00:00') !== false) {
                         $eventdata->isAllDay = true;
