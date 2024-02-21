@@ -60,7 +60,7 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
         self.areastree = null;
         self.categoriestree = null;
         self.conflictCheckDone = false;
-        self.doingsum = false;
+        self.submitting = false;
 
         ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(function(modal) {
           modal.setTitle('Conflicts found');
@@ -137,24 +137,25 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
 
       self.rootel.on('click', '#id_submitbutton', function(e) {
+
+        if (self.submitting) {
+          // Do not submit form multiple times as it is already submitting.
+          e.preventDefault()
+          return;
+        }
         
-        if (self.conflictCheckDone || self.doingsum) {
+        if (self.conflictCheckDone) {
+          self.submitting = true;
+          // Allow form submission.
           return;
         }
 
-        self.doingsum = true;
-
+        // Do conflick check instead of default form submit.
         e.preventDefault()
-
         var timestart = self.convertFieldsToDate('timestart');
         var timeend = self.convertFieldsToDate('timeend');
 
-        /*var recurring = $('input[name="recurring"]:checked').val()
-        if (recurring) {
-          var recurringpattern = $('input[name="recurringpattern"]:checked').val()
-          var recurringdailypattern = $('input[name="recurringdailypattern"]:checked').val()
-          var recuruntil =self.convertFieldsToDate('recuruntil');
-        }*/
+        console.log("Checking conflicts.")
 
         Ajax.call([{
           methodname: 'local_excursions_formcontrol',
@@ -164,12 +165,6 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
                 'timestart' : timestart,
                 'timeend' : timeend,
                 'eventid' : self.eventid,
-                /*'recurringsettings' : recurring ? {
-                  recurring: recurring, 
-                  recurringpattern: recurringpattern, 
-                  recurringdailypattern: recurringdailypattern, 
-                  recuruntil: recuruntil
-                } : null,*/
               }),
           },
           done: function(response) {
@@ -266,7 +261,6 @@ define(['jquery', 'local_excursions/recipientselector', 'core/log', 'core/templa
 
       self.modal.hide()
       self.conflictCheckDone = true;
-      self.doingsum = false;
       $('#id_submitbutton').click()
     }
 
