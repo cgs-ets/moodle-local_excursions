@@ -84,6 +84,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
         var response = checkbox.val();
 
         var permission = checkbox.closest('.permission');
+        permission.find('.c-errormsg').html("");
         var permissionid = permission.data('id');
 
         permission.addClass('submitting');
@@ -105,6 +106,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/str' ],
                 permission.removeClass('submitting');
                 Log.error('local_excursions/permissions: failed to submit permission.');
                 Log.debug(reason);
+                permission.find('.c-errormsg').html(reason);
             }
         }]);
     };
