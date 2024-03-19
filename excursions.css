@@ -2014,6 +2014,10 @@
 #page-local-excursions-permissions .permissions .permission .c-responsemessage {
   display: none;
 }
+#page-local-excursions-permissions .permissions .permission .c-errormsg {
+  border: 0 none !important;
+  background: white;
+}
 #page-local-excursions-permissions .permissions .permission.submitting {
   pointer-events: none;
   opacity: 0.6;
