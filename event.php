@@ -166,11 +166,9 @@ $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/local/excursions/excursion
 // Add scripts.
 $PAGE->requires->js_call_amd('local_excursions/eventform', 'init');
 // https://github.com/daweilv/treejs
-$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/tree.min.js'), true );
-$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/calcategories.js', array('nocache' => rand())), true );
-$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/eventareas.js', array('nocache' => rand())), true );
-
-
+//$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/tree.min.js'), true );
+//$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/calcategories.js', array('nocache' => rand())), true );
+//$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/local/excursions/js/eventareas.js', array('nocache' => rand())), true );
 
 // Body classes.
 $PAGE->add_body_class('limitedwidth');

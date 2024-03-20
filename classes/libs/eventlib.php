@@ -94,7 +94,8 @@ class eventlib {
         }
         $areas = json_decode($formdata->categoriesjson);
         $areas = array_map(function($cat) {
-            return explode('/', $cat);
+            $split = explode('/', $cat);
+            return [end($split)];
         }, $areas);
         $areas = call_user_func_array('array_merge', $areas);
         $areas = array_values(array_unique($areas));
