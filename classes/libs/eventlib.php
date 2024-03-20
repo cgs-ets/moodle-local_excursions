@@ -484,9 +484,9 @@ class eventlib {
         // Formulate the areas conition.
         $areassql = '';
         if ($campus == 'ss') {
-            $areassql = " AND categoriesjson LIKE '%Senior school%' ";
+            $areassql = " AND categoriesjson LIKE '%Senior School%' ";
         } else if ($campus == 'ps') {
-            $areassql = " AND categoriesjson LIKE '%Primary school%' ";
+            $areassql = " AND categoriesjson LIKE '%Primary School%' ";
         }
 
         $statussql = '';
@@ -672,9 +672,9 @@ class eventlib {
         // Formulate the areas conition.
         $areassql = '';
         if ($campus == 'ss') {
-            $areassql = " AND categoriesjson LIKE '%Senior school%' ";
+            $areassql = " AND categoriesjson LIKE '%Senior School%' ";
         } else if ($campus == 'ps') {
-            $areassql = " AND categoriesjson LIKE '%Primary school%' ";
+            $areassql = " AND categoriesjson LIKE '%Primary School%' ";
         }
 
         $sql = "SELECT * 
