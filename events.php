@@ -32,8 +32,9 @@ require_login();
 $isstaff = locallib::is_cgs_staff();
 
 $nav = optional_param('nav', '', PARAM_RAW);
+$campus = optional_param('campus', 'ws', PARAM_RAW);
 
-$url = new moodle_url('/local/excursions/events.php', array('nav' => $nav));
+$url = new moodle_url('/local/excursions/events.php', array('nav' => $nav, 'campus' => $campus));
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url($url);
@@ -46,13 +47,16 @@ $PAGE->requires->js_call_amd('local_excursions/events', 'init');
 $output = $OUTPUT->header();
 
 // Get events.
+$filters_campus = locallib::get_events_filter_campus($campus);
 $paginaton = locallib::get_events_pagination($nav);
 $events = [];
 if (locallib::is_event_reviewer()) {
-    $events = eventlib::get_all_events($paginaton->current);
+    $events = eventlib::get_all_events($paginaton->current, $campus);
 }
 //$events = eventlib::get_user_events($paginaton->current);
 $data = array(
+    'filters_campus' => $filters_campus,
+    'hasfilters' => $campus != 'ws',
     'events' => $events,
     'nav' => $paginaton->nav,
 );

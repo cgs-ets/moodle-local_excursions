@@ -655,7 +655,7 @@ class eventlib {
     }
 
     
-    public static function get_all_events($current = '') {
+    public static function get_all_events($current = '', $campus = 'ws') {
         global $DB;
 
         if (empty($current)) {
@@ -669,18 +669,29 @@ class eventlib {
             $currentend = strtotime($broken[0] . '-' . ($broken[1]+1) . '-1 00:00');
         }
 
+        // Formulate the areas conition.
+        $areassql = '';
+        if ($campus == 'ss') {
+            $areassql = " AND categoriesjson LIKE '%Senior school%' ";
+        } else if ($campus == 'ps') {
+            $areassql = " AND categoriesjson LIKE '%Primary school%' ";
+        }
+
         $sql = "SELECT * 
                 FROM {excursions_events}
                 WHERE timestart >= ? 
                 AND timestart < ?
                 AND deleted = 0
+                $areassql
                 ORDER BY timestart ASC
         ";
+
         $events = array();
         $records = $DB->get_records_sql($sql, array($currentstart, $currentend));
         foreach ($records as $event) {
             $events[] = static::export_event($event);
         }
+
         return $events;
     }
 
