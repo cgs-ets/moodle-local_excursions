@@ -81,15 +81,12 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $destinationCalendars = array();
                 if (!$event->deleted) {
                     // Determine which calendars this event needs to go to based on category selection.
-                    $categories = json_decode($event->areasjson);
                     $destinationCalendars = [];
-                    foreach ($categories as $cat) {
-                        if (in_array($cat, ['Whole School', 'Primary School'])) {
-                            $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
-                        }
-                        if (in_array($cat, ['Whole School', 'Senior School'])) {
-                            $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
-                        }
+                    if (strpos($event->categoriesjson, 'Primary School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
+                        $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
+                    }
+                    if (strpos($event->categoriesjson, 'Senior School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
+                        $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
                     $destinationCalendars = array_unique($destinationCalendars);
                     $destinationCalendars = array_filter($destinationCalendars);
@@ -102,6 +99,8 @@ class cron_sync_events extends \core\task\scheduled_task {
                     $this->log("Event is deleted ($event->deleted)", 2);
                 }
             }
+
+            var_export($destinationCalendars); exit;
 
             // Get existing sync entries.
             $externalevents = array();
