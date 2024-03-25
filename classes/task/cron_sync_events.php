@@ -100,8 +100,6 @@ class cron_sync_events extends \core\task\scheduled_task {
                 }
             }
 
-            var_export($destinationCalendars); exit;
-
             // Get existing sync entries.
             $externalevents = array();
             if (!empty($config->livecalupn)) {
