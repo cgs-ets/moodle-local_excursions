@@ -94,7 +94,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                     if (empty($destinationCalendars)) {
                         $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
-                    $this->log("Event has the categories: " . implode(', ', $categories) . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
+                    $this->log("Event has the categories: " . $event->categoriesjson . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
                 } else {
                     $this->log("Event is deleted ($event->deleted)", 2);
                 }
