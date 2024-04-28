@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 use local_excursions\external\activity_exporter;
 use \local_excursions\forms\form_activity;
 use \local_excursions\locallib;
+use \local_excursions\libs\eventlib;
 use \core\persistent;
 use \core_user;
 use \context_user;
@@ -1518,6 +1519,15 @@ class activity extends persistent {
         }
         $activity->set('status', $status);
         $activity->save();
+
+        // if approved, update the event status to 1 also.
+        if ($status == locallib::ACTIVITY_STATUS_APPROVED) {
+            $event = eventlib::get_by_activityid($activityid);
+            if ($event) {
+                eventlib::set_sync_status($event->id, 1);
+            }
+        }
+
         $newstatus = locallib::status_helper($status);
 
         // Send emails depending on status change.

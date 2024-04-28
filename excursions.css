@@ -322,7 +322,10 @@
 }
 #page-local-excursions-activity .approvals .workflow tr.submitting {
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.8;
+}
+#page-local-excursions-activity .approvals .workflow tr.submitting .c-photo .spinner {
+  display: block;
 }
 #page-local-excursions-activity .approvals .workflow tr.nominated .nominate-approver-btn {
   display: none;
@@ -390,14 +393,25 @@
   width: 46px;
   text-align: center;
   padding: 7px 0 7px 10px;
+  position: relative;
 }
 #page-local-excursions-activity .approvals .workflow .c-photo img {
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
+}
+#page-local-excursions-activity .approvals .workflow .c-photo .spinner {
+  display: none;
+  position: absolute;
+  height: 23px;
+  width: 23px;
+  top: 12px;
+  left: 16px;
 }
 #page-local-excursions-activity .approvals .workflow .c-status {
   width: 65px;
   text-align: center;
+  padding-top: 5px;
+  padding-bottom: 0;
 }
 #page-local-excursions-activity .approvals .workflow i {
   font-size: 15px;

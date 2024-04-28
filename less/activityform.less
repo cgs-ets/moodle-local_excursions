@@ -192,7 +192,12 @@
 		    	transition: opacity 0.3s;
 		    	&.submitting {
 				    pointer-events: none;
-				    opacity: 0.4;
+				    opacity: 0.8;
+            .c-photo {
+              .spinner {
+                display: block;
+              }
+            }
 				  }
           &.nominated {
             .nominate-approver-btn {
@@ -263,14 +268,25 @@
 			    width: 46px;
 			    text-align: center;
 			    padding: 7px 0 7px 10px;
+          position: relative;
 			    img {
-			    	width: 35px;
-			    	height: 35px;
+			    	width: 32px;
+			    	height: 32px;
 			    }
+          .spinner {
+            display: none;
+            position: absolute;
+            height: 23px;
+            width: 23px;
+            top: 12px;
+            left: 16px;
+          }
 			  }
         .c-status {
           width: 65px;
           text-align: center;
+          padding-top: 5px;
+          padding-bottom: 0;
         }
         i {
           font-size: 15px;

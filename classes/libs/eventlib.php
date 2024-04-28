@@ -774,7 +774,7 @@ class eventlib {
             'owner' => $owner,
             'nonnegotiable' => $event->nonnegotiable,
             'editurl' => new \moodle_url('/local/excursions/event.php', array('edit' => $event->id)),
-            'status' => $event->status,
+            'status' => ($approved && !$event->status) ? 1 : $event->status,
             'syncon' => $approved,
             'pushpublic' => $event->pushpublic,
             'displaypublic' => $event->displaypublic,
