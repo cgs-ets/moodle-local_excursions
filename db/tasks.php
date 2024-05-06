@@ -98,4 +98,13 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*'
     ),
+    array(
+        'classname' => 'local_excursions\task\cron_send_emails',
+        'blocking' => 0,
+        'minute' => '*',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*'
+    ),
 );

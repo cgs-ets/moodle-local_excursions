@@ -1532,11 +1532,9 @@ class activity extends persistent {
 
         // Send emails depending on status change.
         // Approver needs to be notified when:
-        // - Draft to in review
-        // - In review to in review
-        // - Approved back to in review
-        // - Basically whenever the new status is in review.
+        // When workflow has progressed, or moving in-review from another status.
         if ($newstatus->inreview) {
+        //if ($newstatus->inreview && ($oldstatus->status != $newstatus->status || $progressed)) {
             static::notify_next_approver($activityid);
         }
 
@@ -1611,7 +1609,7 @@ class activity extends persistent {
 
         $toUser = \core_user::get_user_by_username($activity->username);
         $fromUser = \core_user::get_noreply_user();
-        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array(); //array("lms.archive@cgs.act.edu.au"); 
 
         $data = array(
             'activity' => $activity,
@@ -1636,7 +1634,7 @@ class activity extends persistent {
 
         $toUser = \core_user::get_user_by_username($activity->username);
         $fromUser = \core_user::get_noreply_user();
-        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array(); //$fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
 
         $subject = "Activity workflow update: " . $activity->activityname;
         $messageText = $output->render_from_template('local_excursions/email_workflow_text', $activity);
@@ -1662,7 +1660,7 @@ class activity extends persistent {
                         static::send_next_approval_email($activity, locallib::WORKFLOW[$nextapproval->type]['name'], $approver['username'], $email);
                     }
                 } else {
-                     static::send_next_approval_email($activity, locallib::WORKFLOW[$nextapproval->type]['name'], $approver['username']);
+                    static::send_next_approval_email($activity, locallib::WORKFLOW[$nextapproval->type]['name'], $approver['username']);
                 }
             }
         }
@@ -1678,7 +1676,7 @@ class activity extends persistent {
             $toUser->email = $email;
         }
         $fromUser = \core_user::get_noreply_user();
-        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array(); //$fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
         $fromUser->bccaddress = array_merge($fromUser->bccaddress, $bccaddressextra);
 
         $activityexporter = new activity_exporter($activity);
@@ -1916,7 +1914,7 @@ class activity extends persistent {
         }
 
         $fromUser = \core_user::get_noreply_user();
-        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array(); //$fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
 
         $data = array(
             'activity' => $activity,
@@ -2005,7 +2003,7 @@ class activity extends persistent {
         }
 
         $fromUser = \core_user::get_noreply_user();
-        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array(); //$fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
 
         $subject = "Activity information changed: " . $activity->activityname;
         $output = $PAGE->get_renderer('core');
@@ -2178,7 +2176,7 @@ class activity extends persistent {
         // Get the email users.
         $toUser = \core_user::get_user_by_username($permission->studentusername);
         $fromUser = \core_user::get_noreply_user();
-        $fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
+        $fromUser->bccaddress = array(); //$fromUser->bccaddress = array("lms.archive@cgs.act.edu.au"); 
 
         // Get the activity for the permission.
         $activity = new activity($permission->activityid);

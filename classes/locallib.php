@@ -842,6 +842,36 @@ class locallib extends local_excursions_config {
         return $sisconsent;
     }
 
+    /**
+     * ------------------------------------------------------
+     * Create a queue for emails to be sent via scheduled task.
+     * ------------------------------------------------------
+     *
+     * Send an email to a specified user
+     *
+     * @param stdClass $user A {@link $USER} object
+     * @param stdClass $from A {@link $USER} object
+     * @param string $subject plain text subject line of the email
+     * @param string $messagetext plain text version of the message
+     * @param string $messagehtml complete html version of the message (optional)
+     * @param string $attachments
+     */
+    public static function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachments = []) {
+        global $DB;
+
+        $email = new \stdClass();
+        $email->data = json_encode([
+            $user,
+            $from, 
+            $subject, 
+            $messagetext, 
+            $messagehtml, 
+            $attachments
+        ]);
+        $email->timecreated = time();
+        $DB->insert_record('excursions_email_queue', $email);
+    }
+
 
     /**
      * ------------------------------------------------------
@@ -869,7 +899,7 @@ class locallib extends local_excursions_config {
      * @param int $wordwrapwidth custom word wrap width, default 79
      * @return bool Returns true if mail was sent OK and false if there was an error.
      */
-    public static function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachments = [],
+    public static function real_email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', $attachments = [],
                            $usetrueaddress = true, $replyto = '', $replytoname = '', $wordwrapwidth = 79) {
 
         global $CFG, $PAGE, $SITE;
