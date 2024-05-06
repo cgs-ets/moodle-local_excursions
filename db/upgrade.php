@@ -337,13 +337,14 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023110902, 'local', 'excursions');
     }
 
-    if ($oldversion < 2023110903) {
+    if ($oldversion < 2023110905) {
 
         // Define table excursions_email_queue to be created.
         $table = new xmldb_table('excursions_email_queue');
 
         // Adding fields to table excursions_email_queue.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('log', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
         $table->add_field('data', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
         $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
 
@@ -356,7 +357,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
 
         // Excursions savepoint reached.
-        upgrade_plugin_savepoint(true, 2023110903, 'local', 'excursions');
+        upgrade_plugin_savepoint(true, 2023110905, 'local', 'excursions');
     }
 
     return true;
