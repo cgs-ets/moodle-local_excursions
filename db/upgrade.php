@@ -337,7 +337,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023110902, 'local', 'excursions');
     }
 
-    if ($oldversion < 2023110905) {
+    if ($oldversion < 2023110906) {
 
         // Define table excursions_email_queue to be created.
         $table = new xmldb_table('excursions_email_queue');
@@ -357,7 +357,7 @@ function xmldb_local_excursions_upgrade($oldversion) {
         }
 
         // Excursions savepoint reached.
-        upgrade_plugin_savepoint(true, 2023110905, 'local', 'excursions');
+        upgrade_plugin_savepoint(true, 2023110906, 'local', 'excursions');
     }
 
     return true;
