@@ -300,8 +300,8 @@ class activity extends persistent {
         // If sending for review or saving after already in review, determine the approvers based on campus.
         if ($data->status == locallib::ACTIVITY_STATUS_INREVIEW ||
             $data->status == locallib::ACTIVITY_STATUS_APPROVED) {
-            $progressed = isset($data->oldstatus) ? $data->oldstatus != $data->status : false;
-            static::generate_approvals($originalactivity, $activity, $progressed);
+            //$progressed = isset($data->oldstatus) ? $data->oldstatus != $data->status : false;
+            static::generate_approvals($originalactivity, $activity);
         }
 
         // Update the associated event.
@@ -366,7 +366,7 @@ class activity extends persistent {
     }
 
 
-    public static function generate_approvals($originalactivity, $newactivity, $progressed) {
+    public static function generate_approvals($originalactivity, $newactivity) {
         global $DB, $USER;
 
         // Check if changed fields cause an approval state to be invalidated.
@@ -478,6 +478,7 @@ class activity extends persistent {
             ));
             if (!$exists) {
                 $DB->insert_record(static::TABLE_EXCURSIONS_APPROVALS, $approval);
+                $progressed = true; // If inserting new approvals, it is because this is just going into review, or campus has changed.
             }
         }
 
