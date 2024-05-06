@@ -300,7 +300,8 @@ class activity extends persistent {
         // If sending for review or saving after already in review, determine the approvers based on campus.
         if ($data->status == locallib::ACTIVITY_STATUS_INREVIEW ||
             $data->status == locallib::ACTIVITY_STATUS_APPROVED) {
-            static::generate_approvals($originalactivity, $activity);
+            $progressed = isset($data->oldstatus) ? $data->oldstatus != $data->status : false;
+            static::generate_approvals($originalactivity, $activity, $progressed);
         }
 
         // Update the associated event.
@@ -365,7 +366,7 @@ class activity extends persistent {
     }
 
 
-    public static function generate_approvals($originalactivity, $newactivity) {
+    public static function generate_approvals($originalactivity, $newactivity, $progressed) {
         global $DB, $USER;
 
         // Check if changed fields cause an approval state to be invalidated.
@@ -481,7 +482,7 @@ class activity extends persistent {
         }
 
         //Update activity status based on current state of approvals.
-        static::check_status($newactivity->get('id'), $fieldschanged);
+        static::check_status($newactivity->get('id'), $fieldschanged, $progressed);
 
     }
 

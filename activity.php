@@ -232,6 +232,7 @@ if (!empty($formdata)) {
     if ($formdata->action == 'sendforreview') {
         // if the activity is currently a draft, bump it to in-review.
         if ($statushelper->isautosave || $statushelper->isdraft) {
+            $data->oldstatus = $data->status;
             $data->status = locallib::ACTIVITY_STATUS_INREVIEW;
             $notice = get_string("activityform:sentforreviewsuccess", "local_excursions");
         }
