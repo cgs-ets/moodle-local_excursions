@@ -1533,8 +1533,8 @@ class activity extends persistent {
         // Send emails depending on status change.
         // Approver needs to be notified when:
         // When workflow has progressed, or moving in-review from another status.
-        if ($newstatus->inreview) {
-        //if ($newstatus->inreview && ($oldstatus->status != $newstatus->status || $progressed)) {
+        //if ($newstatus->inreview) {
+        if ($newstatus->inreview && ($oldstatus->status != $newstatus->status || $progressed)) {
             static::notify_next_approver($activityid);
         }
 
