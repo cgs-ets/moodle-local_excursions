@@ -59,8 +59,8 @@ class cron_send_emails extends \core\task\scheduled_task {
             $data = json_decode($email->data);
             list($user, $from, $subject, $messagetext, $messagehtml, $attachments) = $data;
             $this->log("Sending email '$subject' to '$user->email'");
-            $result = locallib::real_email_to_user($user, $from, $subject, $messageText, $messageHtml, $attachments);
             $DB->execute("DELETE FROM {excursions_email_queue} WHERE id = $email->id");
+            $result = locallib::real_email_to_user($user, $from, $subject, $messageText, $messageHtml, $attachments);
         }
         $this->log_finish("Finished sending emails.");
     }
