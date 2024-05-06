@@ -860,6 +860,7 @@ class locallib extends local_excursions_config {
         global $DB;
 
         $email = new \stdClass();
+        $email->log = "Email '$subject' for '$user->email'";
         $email->data = json_encode([
             $user,
             $from, 
