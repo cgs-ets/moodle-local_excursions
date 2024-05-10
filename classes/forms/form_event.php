@@ -93,6 +93,7 @@ class form_event extends \moodleform {
         *----------------------*/
         $mform->addElement('text', 'location', "Location", 'size="48"');
         $mform->setType('location', PARAM_TEXT);
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3"></div><div class="campus-desc col-md-9">You are responsible for booking arrangements. For internal bookings use SOBS.</div></div>');
 
 
         /*----------------------
