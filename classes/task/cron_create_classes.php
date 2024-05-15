@@ -99,7 +99,7 @@ class cron_create_classes extends \core\task\scheduled_task {
                 $params = array(
                     'fileyear' => $currentterminfo->fileyear,
                     'filesemester' => $currentterminfo->filesemester,
-                    'classcampus' => $activity->get('campus') == 'senior' ? 'SEN' : 'PRI',
+                    'classcampus' => $activity->get('campus') == 'senior' ? 'SEN' : 'PRH',
                     'classcode' => 'EX_' . $activity->get('id'),
                     'description' => $activity->get('activityname'),
                     'staffid' => $activity->get('staffincharge'),
