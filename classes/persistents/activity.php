@@ -2123,7 +2123,9 @@ class activity extends persistent {
 
         $sql = "SELECT DISTINCT p.studentusername
                   FROM {" . static::TABLE_EXCURSIONS_PERMISSIONS . "} p
-            INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s ON p.studentusername = s.username
+            INNER JOIN {" . static::TABLE_EXCURSIONS_STUDENTS . "} s 
+                ON p.studentusername = s.username 
+                AND p.activityid = s.activityid
                  WHERE p.activityid = ?
                    AND p.response = ?";
         $params = array($activityid, $response);
