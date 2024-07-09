@@ -128,7 +128,6 @@ class form_activity extends \moodleform {
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Senior School', 'senior', '');
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Whole School', 'whole', '');
             $mform->addGroup($radioarray, 'campus', get_string('activityform:campus', 'local_excursions'), array(' '), false);
-            //$mform->addElement('html', '<div id="fitem_id_campusdesc" class="form-group row fitem"><div class="col-md-3"></div><div class="campus-desc col-md-9">' . get_string('activityform:campus_desc', 'local_excursions') . "</div></div>");
 
             /*----------------------
              *   Location
@@ -254,8 +253,9 @@ class form_activity extends \moodleform {
         $activity->duebydatefield = $dueby->toHtml();
 
         // Finally add the rendered html for the student list and permissions area to the form.
+        // Change the classname to disable moodle's own js for this.
         $studentshtml = $OUTPUT->render_from_template('local_excursions/activityform_studentlist', $activity);
-        $mform->addElement('html', $studentshtml);
+        $mform->addElement('html', str_replace('fdate_time_selector', 'xfdate_time_selector', $studentshtml));
 
         /*----------------------
          *   Paperwork
