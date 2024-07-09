@@ -514,7 +514,7 @@ class activity_exporter extends persistent_exporter {
 
         $dateDiff = intval(($this->data->timeend-$this->data->timestart)/60);
         $days = intval($dateDiff/60/24);
-        $hours = intval($dateDiff/60%24);
+        $hours = (int) ($dateDiff/60)%24;
         $minutes = $dateDiff%60;
         $duration = '';
         $duration .= $days ? $days . 'd ' : '';

@@ -736,7 +736,7 @@ class eventlib {
         $areas = $event->areasjson ? json_decode($event->areasjson, true) : [];
         $dateDiff = intval(($event->timeend-$event->timestart)/60);
         $days = intval($dateDiff/60/24);
-        $hours = intval($dateDiff/60%24);
+        $hours = (int) ($dateDiff/60)%24;
         $minutes = $dateDiff%60;
         $duration = '';
         $duration .= $days ? $days . 'd ' : '';

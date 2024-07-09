@@ -144,6 +144,7 @@ class form_activity extends \moodleform {
             $mform->addElement('date_time_selector', 'timestart', get_string('activityform:timestart', 'local_excursions'));
             $mform->addElement('date_time_selector', 'timeend', get_string('activityform:timeend', 'local_excursions'));
 
+
             /*----------------------
              *   Notes
              *----------------------*/
