@@ -643,6 +643,12 @@
   background-color: #ca3120;
   border-color: #ca3120;
 }
+#page-local-excursions-activity #id_timestart_calendar {
+  display: none;
+}
+#page-local-excursions-activity #id_timeend_calendar {
+  display: none;
+}
 #page-local-excursions-event {
   /*#fgroup_id_recurringpatternar {
     margin-top: -25px;
@@ -729,7 +735,7 @@
 #page-local-excursions-event #fgroup_id_entrytype .d-flex.flex-wrap.align-items-center label {
   flex-direction: column;
   padding: 10px 0;
-  flex: 48%;
+  flex: 47%;
   margin: 0;
   display: flex;
   gap: 8px;
