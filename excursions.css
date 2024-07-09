@@ -649,6 +649,9 @@
 #page-local-excursions-activity #id_timeend_calendar {
   display: none;
 }
+#page-local-excursions-activity a[name="timedueby[calendar]"] {
+  display: none;
+}
 #page-local-excursions-event {
   /*#fgroup_id_recurringpatternar {
     margin-top: -25px;
