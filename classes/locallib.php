@@ -778,6 +778,11 @@ class locallib extends local_excursions_config {
     public static function get_studentdatacheck($username) {
         $studentdatacheck = true; // Assume data check done until proven otherwise to prevent false alarms.
 
+        // TODO: SQL issue in Synergetic Procedure was causing student list and permissions to fail.
+        // Run this to test: EXEC [CGSSQLC0102\SYNERGETIC].[Synergetic_AUACT_CGS_PRD].dbo.USP_IX_Get_SDF_Submission_By_StudentID 61027
+        // If this continues to be unstable, return early:
+        // return true;
+
         $config = get_config('local_excursions');
         if (empty($config->studentdatachecksql)) {
             return $studentdatacheck;
