@@ -781,7 +781,7 @@ class locallib extends local_excursions_config {
         // TODO: SQL issue in Synergetic Procedure was causing student list and permissions to fail.
         // Run this to test: EXEC [CGSSQLC0102\SYNERGETIC].[Synergetic_AUACT_CGS_PRD].dbo.USP_IX_Get_SDF_Submission_By_StudentID 61027
         // If this continues to be unstable, return early:
-        // return true;
+        return true;
 
         $config = get_config('local_excursions');
         if (empty($config->studentdatachecksql)) {
