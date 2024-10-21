@@ -470,6 +470,7 @@ class activity extends persistent {
         $DB->execute($sql, $params);
 
         // Insert the approval if it doesn't already exist.
+        $progressed = false;
         foreach ($approvals as $approval) {
             $exists = $DB->record_exists(static::TABLE_EXCURSIONS_APPROVALS, array(
                 'activityid' => $newactivity->get('id'), 

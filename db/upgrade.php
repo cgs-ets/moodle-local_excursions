@@ -360,5 +360,21 @@ function xmldb_local_excursions_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023110906, 'local', 'excursions');
     }
 
+    if ($oldversion < 2023110907) {
+
+        // Define field timesent to be added to excursions_email_queue.
+        $table = new xmldb_table('excursions_email_queue');
+        $field = new xmldb_field('timesent', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'timecreated');
+
+        // Conditionally launch add field timesent.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Excursions savepoint reached.
+        upgrade_plugin_savepoint(true, 2023110907, 'local', 'excursions');
+    }
+
+
     return true;
 }
