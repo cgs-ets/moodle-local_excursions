@@ -82,11 +82,15 @@ class cron_sync_events extends \core\task\scheduled_task {
                 if (!$event->deleted) {
                     // Determine which calendars this event needs to go to based on category selection.
                     $destinationCalendars = [];
-                    if (strpos($event->categoriesjson, 'Primary School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
-                        $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
-                    }
-                    if (strpos($event->categoriesjson, 'Senior School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
-                        $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
+                    if (strpos($event->categoriesjson, 'External Events') !== false || strpos($event->categoriesjson, 'Campus Management') !== false) {
+                        $destinationCalendars[] = 'cgs_calendar_cm@cgs.act.edu.au';
+                    } else {
+                        if (strpos($event->categoriesjson, 'Primary School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
+                            $destinationCalendars[] = 'cgs_calendar_ps@cgs.act.edu.au';
+                        }
+                        if (strpos($event->categoriesjson, 'Senior School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
+                            $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
+                        }
                     }
                     $destinationCalendars = array_unique($destinationCalendars);
                     $destinationCalendars = array_filter($destinationCalendars);
@@ -94,6 +98,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                     if (empty($destinationCalendars)) {
                         $destinationCalendars[] = 'cgs_calendar_ss@cgs.act.edu.au';
                     }
+                    var_export($destinationCalendars); exit;
                     $this->log("Event has the categories: " . $event->categoriesjson . ". Event will sync to: " . implode(', ', $destinationCalendars), 2);
                 } else {
                     $this->log("Event is deleted ($event->deleted)", 2);

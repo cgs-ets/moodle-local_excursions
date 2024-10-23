@@ -48,6 +48,16 @@ $categories = array(
             'value' => 'Whole School/CGS Board',
         ],
         [
+            'id' => 'wsExternal',
+            'title' => 'External Events',
+            'value' => 'Whole School/External Events',
+        ],
+        [
+            'id' => 'wsCampusMngment',
+            'title' => 'Campus Management',
+            'value' => 'Whole School/Campus Management',
+        ],
+        [
             "id" => "wsWebsite",
             'title' => 'Website External',
             'value' => 'Whole School/Website External',
