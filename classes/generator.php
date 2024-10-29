@@ -68,9 +68,11 @@ class generator {
             $attending = activity::get_all_attending($activityid);
             $students = array();
             foreach ($attending as $username) {
+                $user = \core_user::get_user_by_username($username);
                 // Add the student to the list.
                 $row = array(
                     'StudentID' => $username,
+                    'StudentName' => fullname($user),
                     'DebtorID' => '',
                     'FeeCode' => '',
                     'TransactionDate' => date('d/m/Y', $activity->timeend),
@@ -89,6 +91,7 @@ class generator {
             // Populate the header fields.
             $header = array(
                 'StudentID',
+                'StudentName',
                 'DebtorID',
                 'FeeCode',
                 'TransactionDate',
