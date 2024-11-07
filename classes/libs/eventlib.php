@@ -747,6 +747,7 @@ class eventlib {
         if ($event->isactivity) {
             $activity = new activity($event->activityid);
             $approved = locallib::status_helper($activity->get('status'))->isapproved;
+            $activitytype = $activity->get('activitytype');
         }
 
         $usercanedit = eventlib::can_user_edit($event->id);
@@ -780,6 +781,7 @@ class eventlib {
             'displaypublic' => $event->displaypublic,
             'location' => $event->location,
             'isactivity' => $event->isactivity,
+            'activitytype' => $activitytype,
             'isassessment' => $event->assessment,
             'assessmenturl' => $event->assessmenturl,
             'usercanedit' => $usercanedit,
