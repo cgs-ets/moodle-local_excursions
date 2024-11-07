@@ -117,8 +117,8 @@ class cron_sync_events extends \core\task\scheduled_task {
                 $sql = "SELECT *
                     FROM {excursions_events_sync}
                     WHERE eventid = ?
-                    AND (calendar = ? OR calendar = ?)";
-                $params = array($event->id, 'cgs_calendar_ss@cgs.act.edu.au', 'cgs_calendar_ps@cgs.act.edu.au');
+                    AND (calendar = ? OR calendar = ? OR calendar = ?)";
+                $params = array($event->id, 'cgs_calendar_ss@cgs.act.edu.au', 'cgs_calendar_ps@cgs.act.edu.au', 'cgs_calendar_cm@cgs.act.edu.au');
                 $externalevents = $DB->get_records_sql($sql, $params);
             }
 
