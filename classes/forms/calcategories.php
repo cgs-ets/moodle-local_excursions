@@ -67,6 +67,11 @@ $categories = array(
             'title' => 'Alumni Website',
             'value' => 'Whole School/Alumni Website',
         ],
+        [
+            "id" => "wsMusic",
+            'title' => 'Music',
+            'value' => 'Whole School/Music',
+        ],
     ],
     'primaryschool' => [
         [
@@ -181,6 +186,11 @@ $categories = array(
             'title' => 'Alumni Website',
             'value' => 'Primary School/Alumni Website',
         ],
+        [
+            "id" => "psMusic",
+            'title' => 'Music',
+            'value' => 'Primary School/Music',
+        ],
     ],
     'seniorschool' => [
         [
@@ -277,6 +287,11 @@ $categories = array(
             "id" => "ssAlumni",
             'title' => 'Alumni Website',
             'value' => 'Senior School/Alumni Website',
+        ],
+        [
+            "id" => "ssMusic",
+            'title' => 'Music',
+            'value' => 'Senior School/Music',
         ],
     ],
 );
