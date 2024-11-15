@@ -127,7 +127,8 @@ class form_activity extends \moodleform {
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Primary School', 'primary', '');
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Senior School', 'senior', '');
             $radioarray[] = $mform->createElement('radio', 'campus', '', 'Whole School', 'whole', '');
-            $mform->addGroup($radioarray, 'campus', get_string('activityform:campus', 'local_excursions'), array(' '), false);
+            $radioarray[] = $mform->createElement('radio', 'campus', '', 'Campus Management', 'campusmng', '');
+            $mform->addGroup($radioarray, 'campus', "Review workflow", array(' '), false);
 
             /*----------------------
              *   Location

@@ -455,6 +455,26 @@ class activity extends persistent {
                 $approvals[] = clone $approval;
                 break;
             }
+            case 'campusmng': {    
+                // campusmng - 1st approver.
+                $approval->type = 'campusmng_ra';
+                $approval->sequence = 1;
+                $approval->description = locallib::WORKFLOW['campusmng_ra']['name'];
+                $approvals[] = clone $approval;
+
+                // campusmng - 2nd approver.
+                $approval->type = 'campusmng_admin';
+                $approval->sequence = 2;
+                $approval->description = locallib::WORKFLOW['campusmng_admin']['name'];
+                $approvals[] = clone $approval;
+
+                // campusmng - 3rd approver.
+                $approval->type = 'campusmng_final';
+                $approval->sequence = 3;
+                $approval->description = locallib::WORKFLOW['campusmng_final']['name'];
+                $approvals[] = clone $approval;
+                break;
+            }
         }
 
         //echo "<pre>"; var_export($approvals); exit;
