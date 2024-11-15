@@ -311,9 +311,9 @@ class activity extends persistent {
             $event->activityname = $activity->get('activityname');
             $event->timestart = $activity->get('timestart');
             $event->timeend = $activity->get('timeend');
-            $event->campus = 'oncampus';
+            $event->activitytype = 'oncampus';
             if ($activity->get('activitytype') == 'excursion') {
-                $event->campus = 'offcampus';
+                $event->activitytype = 'offcampus';
             }
             $event->location = $activity->get('location');
             $event->notes = $activity->get('notes');

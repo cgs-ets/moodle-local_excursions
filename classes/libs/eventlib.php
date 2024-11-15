@@ -104,12 +104,18 @@ class eventlib {
             $event->displaypublic = 0;
         }
 
+        $campusguess = 'whole';
         $campuses = [];
         if (array_intersect($areas, ['Whole school', 'Primary school', 'Pre-School', 'Pre-Kindergarten', 'Kindergarten', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'])) {
             $campuses[] = 'primary';
+            $campusguess = 'primary';
         }
         if (array_intersect($areas, ['Whole school', 'Senior school', 'Academic', 'House', 'Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12'])) {
             $campuses[] = 'senior';
+            $campusguess = 'senior';
+        }
+        if (array_intersect($areas, ['Campus Management', 'External Events'])) {
+            $campusguess = 'campusmng';
         }
         $event->campus = implode(',', $campuses);
 
@@ -234,6 +240,8 @@ class eventlib {
                     $staffincharge = array_pop($staffincharge);
                     $data->staffincharge = $staffincharge->idfield;
                 }
+                
+                $data->campus = $campusguess;
                 // Create activity.
                 $activity = new activity(0, $data);
                 $activity->save();
