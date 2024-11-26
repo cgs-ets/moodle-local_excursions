@@ -45,8 +45,8 @@ $viewurl = new moodle_url('/local/excursions/index.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url($editurl);
-$PAGE->set_title('Event settings');
-$PAGE->set_heading('Event settings');
+$PAGE->set_title('Activity settings');
+$PAGE->set_heading('Activity settings');
 
 $event = null;
 //$recurring = 0;

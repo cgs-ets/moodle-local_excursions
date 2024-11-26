@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Activity planning';
+$string['pluginname'] = 'CGS Calendar Activity Planning and Management System';
 $string['searchtitle'] = 'Activity search: ';
 $string['pluginname_desc'] = 'An activity planning system for CGS.';
 

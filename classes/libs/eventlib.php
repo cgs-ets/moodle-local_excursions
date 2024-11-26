@@ -114,7 +114,7 @@ class eventlib {
             $campuses[] = 'senior';
             $campusguess = 'senior';
         }
-        if (array_intersect($areas, ['Campus Management', 'External Events'])) {
+        if (array_intersect($areas, ['Campus Management', 'Commercial Events'])) {
             $campusguess = 'campusmng';
         }
         $event->campus = implode(',', $campuses);

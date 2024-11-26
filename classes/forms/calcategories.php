@@ -48,9 +48,9 @@ $categories = array(
             'value' => 'Whole School/CGS Board',
         ],
         [
-            'id' => 'wsExternal',
-            'title' => 'External Events',
-            'value' => 'Whole School/External Events',
+            'id' => 'wsCommercial',
+            'title' => 'Commercial Events',
+            'value' => 'Whole School/Commercial Events',
         ],
         [
             'id' => 'wsCampusMngment',

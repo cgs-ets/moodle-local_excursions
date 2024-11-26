@@ -72,7 +72,7 @@ class form_event extends \moodleform {
         /*----------------------
         *   Name
         *----------------------*/
-        $mform->addElement('text', 'activityname', "Event name", 'size="48"');
+        $mform->addElement('text', 'activityname', "Activity name", 'size="48"');
         $mform->setType('activityname', PARAM_TEXT);
         $mform->addRule('activityname', get_string('required'), 'required', null, 'client');
 
@@ -154,7 +154,7 @@ class form_event extends \moodleform {
         /*----------
         * Non negotiable
         * ----------------*/
-        $mform->addElement('advcheckbox', 'nonnegotiable', 'The dates entered for this event are non negotiable', '', [], [0,1]);
+        $mform->addElement('advcheckbox', 'nonnegotiable', 'The dates entered for this activity are non negotiable', '', [], [0,1]);
         $mform->addElement('textarea', 'nonnegotiablereason', "Why is this event time non-negotiable?", 'wrap="virtual" rows="2" cols="30"');
         $mform->setType('notes', PARAM_TEXT);
         $mform->hideIf('nonnegotiablereason', 'nonnegotiable', 'neq', 1);
@@ -210,7 +210,7 @@ class form_event extends \moodleform {
         $mform->setType('colourselect', PARAM_RAW);
         
         // Display Public.
-        $mform->addElement('advcheckbox', 'displaypublic', 'Display this event on the public calendar', '', [], [0,1]);
+        $mform->addElement('advcheckbox', 'displaypublic', 'Display this activity on the public calendar', '', [], [0,1]);
 
 
         /*----------

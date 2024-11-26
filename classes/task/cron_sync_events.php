@@ -82,7 +82,7 @@ class cron_sync_events extends \core\task\scheduled_task {
                 if (!$event->deleted) {
                     // Determine which calendars this event needs to go to based on category selection.
                     $destinationCalendars = [];
-                    if (strpos($event->categoriesjson, 'External Events') !== false || strpos($event->categoriesjson, 'Campus Management') !== false) {
+                    if (strpos($event->categoriesjson, 'Commercial Events') !== false || strpos($event->categoriesjson, 'External Events') !== false || strpos($event->categoriesjson, 'Campus Management') !== false) {
                         $destinationCalendars[] = 'cgs_calendar_cm@cgs.act.edu.au';
                     } else {
                         if (strpos($event->categoriesjson, 'Primary School') !== false || strpos($event->categoriesjson, 'Whole School') !== false) {
