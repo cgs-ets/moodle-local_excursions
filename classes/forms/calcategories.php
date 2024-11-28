@@ -293,6 +293,11 @@ $categories = array(
             'title' => 'Music',
             'value' => 'Senior School/Music',
         ],
+        [
+            'id' => 'ssStudentProjects',
+            'title' => 'Student Projects',
+            'value' => 'Senior School/Student Projects',
+        ],
     ],
 );
 
