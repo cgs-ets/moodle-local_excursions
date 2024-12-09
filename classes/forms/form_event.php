@@ -228,8 +228,8 @@ class form_event extends \moodleform {
                 $courses[$courseinfo->id] = $courseinfo->fullname;
             }
         }
-        // Get courses under 2024
-        $cat = $DB->get_record('course_categories', array('idnumber' => '2024'));
+        // Get courses under 2025
+        $cat = $DB->get_record('course_categories', array('idnumber' => '2025'));
         if ($cat) {
             $cat = \core_course_category::get($cat->id);
             $coursesinfo = $cat->get_courses(['recursive'=>true]);
