@@ -116,7 +116,7 @@ $categories = array(
         ],
 
 
-        [
+        /*[
             'id' => 'ELC',
             'title' => 'ELC',
             'value' => 'Primary School/ELC',
@@ -130,7 +130,7 @@ $categories = array(
             'id' => 'Northside',
             'title' => 'Northside',
             'value' => 'Primary School/Northside',
-        ],
+        ],*/
         [
             'id' => 'PreS',
             'title' => 'Pre-School',
