@@ -1485,6 +1485,10 @@ class activity extends persistent {
     */
     public static function enable_permissions($activityid, $checked) {
         $activity = new static($activityid);
+        // Do not allow disabling of permissions if activity is already approved.
+        if (!$checked && $activity->get('status') == locallib::ACTIVITY_STATUS_APPROVED) {
+            return;
+        }
         $activity->set('permissions', $checked);
         $activity->save();
     }
