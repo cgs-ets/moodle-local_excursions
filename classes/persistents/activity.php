@@ -1024,6 +1024,34 @@ class activity extends persistent {
         return $activities;
     }
 
+    
+    public static function get_for_permission_reminders($rangestart, $rangeend) {
+        global $DB;
+
+        // Activies must:
+        // - be approved.
+        // - starting in x days ($rangestart)
+        // - have permissions enabled.
+        // - have not sent a perissions email.
+        $sql = "SELECT *
+                  FROM mdl_excursions e
+                  LEFT JOIN mdl_excursions_permissions_send p ON p.activityid = e.id
+                 WHERE e.timestart >= {$rangestart} AND e.timestart <= {$rangeend}
+                   AND e.status = " . locallib::ACTIVITY_STATUS_APPROVED ."
+                   AND e.permissions = 1
+                   AND e.permissionstype = 'system'
+                   AND p.activityid IS NULL
+                   AND e.deleted = 0";
+        $records = $DB->get_records_sql($sql, null);
+        $activities = array();
+        foreach ($records as $record) {
+            $activities[] = new static($record->id, $record);
+        }
+        
+        return $activities;
+    }
+
+
     public static function filter_approvals_with_prerequisites($approvals) {
         foreach ($approvals as $i => $approval) {
             // Exlude if waiting for a prerequisite.
