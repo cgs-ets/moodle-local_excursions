@@ -65,7 +65,7 @@ class cron_send_permission_reminders extends \core\task\scheduled_task {
         $plus8days = strtotime('+5 day', $today);
         $readableplus7days= date('Y-m-d H:i:s', $plus7days);
         $readableplus8days= date('Y-m-d H:i:s', $plus8days);
-        $this->log_start("Fetching unapproved activities starting between {$readableplus7days} and {$readableplus8days}.");
+        $this->log_start("Fetching approved activities with no permissions sent, starting between {$readableplus7days} ({$plus7days}) and {$readableplus8days} ({$plus8days}).");
         $activities = activity::get_for_permission_reminders($plus7days, $plus8days);
 
         foreach ($activities as $activity) {
