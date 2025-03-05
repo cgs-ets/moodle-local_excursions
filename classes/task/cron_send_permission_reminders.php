@@ -35,7 +35,7 @@ use local_excursions\locallib;
  * @copyright 2021 Michael Vangelovski
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class cron_permission_reminders extends \core\task\scheduled_task {
+class cron_send_permission_reminders extends \core\task\scheduled_task {
 
     // Use the logging trait to get some nice, juicy, logging.
     use \core\task\logging_trait;
@@ -46,7 +46,7 @@ class cron_permission_reminders extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('cron_permission_reminders', 'local_excursions');
+        return get_string('cron_send_permission_reminders', 'local_excursions');
     }
 
     /**
