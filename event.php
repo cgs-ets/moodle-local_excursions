@@ -37,6 +37,13 @@ $edit = optional_param('edit', 0, PARAM_INT);
 require_login();
 locallib::require_cgs_staff();
 
+
+// REDIRECT TO NEW SYSTEM
+$activitiesurl = new moodle_url('/local/activities/');
+redirect($activitiesurl->out(false));
+
+
+
 $editurl = new moodle_url('/local/excursions/event.php', array(
     'edit' => $edit,
 ));

@@ -28,8 +28,8 @@ $messageproviders = array (
     // Ordinary single notifications.
     'notifications' => array(
         'defaults' => array(
-            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF, // On by default
-            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF, // On by default
+            'popup' => MESSAGE_PERMITTED, // On by default
+            'email' => MESSAGE_PERMITTED, // On by default
             'airnotifier' => MESSAGE_DISALLOWED, // Always off. Use secial mobile notification instead.
         ),
     ),
@@ -38,7 +38,7 @@ $messageproviders = array (
         'defaults' => array(
             'popup' => MESSAGE_DISALLOWED, // Always off. Use normal notification instead.
             'email' => MESSAGE_DISALLOWED, // Always off. Use normal notification instead.
-            'airnotifier' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF, // On by default.
+            'airnotifier' => MESSAGE_PERMITTED, // On by default.
         ),
     ),
 );
