@@ -33,6 +33,13 @@ use \local_excursions\external\activity_exporter;
 require_login();
 $isstaff = locallib::is_cgs_staff();
 
+// Redirect to new system.
+if ($USER->username != '43563') {
+    $activitiesurl = new moodle_url('/local/activities/');
+    redirect($activitiesurl->out(false));
+    exit;
+}
+
 $nav = optional_param('nav', '', PARAM_RAW);
 $status = optional_param('status', '', PARAM_RAW);
 $campus = optional_param('campus', 'ws', PARAM_RAW);

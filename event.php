@@ -39,9 +39,11 @@ locallib::require_cgs_staff();
 
 
 // REDIRECT TO NEW SYSTEM
-$activitiesurl = new moodle_url('/local/activities/');
-redirect($activitiesurl->out(false));
-
+if ($USER->username != '43563') {
+    $activitiesurl = new moodle_url('/local/activities/');
+    redirect($activitiesurl->out(false));
+    exit;
+}
 
 
 $editurl = new moodle_url('/local/excursions/event.php', array(
